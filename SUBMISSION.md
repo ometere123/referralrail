@@ -43,7 +43,7 @@ Studio Next / Studionet Dev, chain ID 61997.
 
 ## Repository
 
-To be filled after the owner/repository is chosen and pushed.
+https://github.com/ometere123/referralrail
 
 ## Live app
 
