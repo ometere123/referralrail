@@ -1,0 +1,17 @@
+networks:
+  default: referralrail_studio_next
+
+  referralrail_studio_next:
+    url: "https://studio-next.genlayer.com/api"
+    accounts:
+      - "${STUDIO_NEXT_PRIVATE_KEY}"
+    from: "${STUDIO_NEXT_PRIVATE_KEY}"
+    leader_only: false
+    default_wait_interval: 10000
+    default_wait_retries: 90
+
+paths:
+  contracts: "contracts"
+  artifacts: "artifacts"
+
+environment: .env
