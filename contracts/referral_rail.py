@@ -1,4 +1,4 @@
-# { "Depends": "py-genlayer:9b8kjyda2ycxyq4ea6g4yfpnydxhd52gqba5rb8dw7krkh5mn9p0" }
+# { "Depends": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng" }
 """ReferralRail settlement contract.
 
 Referral attribution is economic protocol state. An employer fully funds one
@@ -12,6 +12,12 @@ from datetime import datetime, timezone
 import typing
 
 import genlayer as gl
+
+try:
+    allow_storage = gl.allow_storage
+except AttributeError:
+    # v0.19 SDK compatibility; the v0.6 runner exposes the top-level name.
+    allow_storage = gl.storage.allow
 
 
 # Opportunity lifecycle. Values are deliberately stable for frontend decoding.
@@ -55,7 +61,7 @@ class _Recipient:
         pass
 
 
-@gl.storage.allow
+@allow_storage
 @dataclass
 class Opportunity:
     employer: gl.Address

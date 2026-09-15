@@ -12,7 +12,7 @@ def test_exactly_two_contract_files():
     assert sorted(p.name for p in (ROOT/'contracts').glob('*.py')) == ['outcome_judge.py','referral_rail.py']
 
 def test_v06_dependency_is_consistent():
-    marker='py-genlayer:9b8kjyda2ycxyq4ea6g4yfpnydxhd52gqba5rb8dw7krkh5mn9p0'
+    marker='py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng'
     assert marker in SETTLE and marker in JUDGE
 
 def test_substantive_validator_refetches_and_reruns():

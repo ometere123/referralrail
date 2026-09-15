@@ -2,6 +2,8 @@ networks:
   default: referralrail_studio_next
 
   referralrail_studio_next:
+    id: 61997
+    chain_type: studionet
     url: "https://studio-next.genlayer.com/api"
     accounts:
       - "${STUDIO_NEXT_PRIVATE_KEY}"

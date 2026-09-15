@@ -1,4 +1,4 @@
-# { "Depends": "py-genlayer:9b8kjyda2ycxyq4ea6g4yfpnydxhd52gqba5rb8dw7krkh5mn9p0" }
+# { "Depends": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng" }
 """ReferralRail OutcomeJudge.
 
 The judge accepts evidence only from GitHub's public API for the repository
@@ -13,6 +13,12 @@ import typing
 
 import genlayer as gl
 from genlayer.types import Keccak256
+
+try:
+    allow_storage = gl.allow_storage
+except AttributeError:
+    # v0.19 SDK compatibility; the v0.6 runner exposes the top-level name.
+    allow_storage = gl.storage.allow
 
 
 OUTCOME_COMPLETED = 1
@@ -29,7 +35,7 @@ MAX_EVIDENCE_CHARS = 24000
 ZERO_ADDRESS = gl.Address("0x0000000000000000000000000000000000000000")
 
 
-@gl.storage.allow
+@allow_storage
 @dataclass
 class Judgment:
     opportunity_id: gl.u256
