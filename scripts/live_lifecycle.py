@@ -138,7 +138,7 @@ def finalize_trigger_tree(client, transaction_hash: str, seen: set[str] | None =
     seen.add(transaction_hash)
     children = []
     for _ in range(36):
-        children = client.get_triggered_transaction_ids(transaction_hash)
+        children = retry_read(lambda: client.get_triggered_transaction_ids(transaction_hash))
         if children:
             break
         time.sleep(10)
@@ -177,9 +177,21 @@ def retry_read(read_fn):
             return read_fn()
         except Exception as exc:
             message = str(exc)
-            if "Server busy" not in message and "Rate limit exceeded" not in message:
+            transient = (
+                "Server busy" in message
+                or "Rate limit exceeded" in message
+                or "unreachable host" in message
+                or "Max retries exceeded" in message
+                or "Request to" in message
+            )
+            if not transient:
                 raise
-            time.sleep(15 if "Rate limit exceeded" in message else 5)
+            if "Rate limit exceeded" in message:
+                time.sleep(15)
+            elif "unreachable host" in message or "Max retries exceeded" in message:
+                time.sleep(20)
+            else:
+                time.sleep(5)
     return read_fn()
 
 
