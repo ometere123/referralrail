@@ -221,7 +221,7 @@ def run_case(rail, client, employer, referrer, candidate, repo_owner, repo_name,
             168 * 3600,
         ], employer, client, value=3 * GEN,
     )
-    opportunities = rail.list_opportunities(args=[0, 100]).call()
+    opportunities = retry_read(lambda: rail.list_opportunities(args=[0, 100]).call())
     oid = max(int(x["id"]) for x in opportunities)
     open_state = assert_state(rail, oid, "OPEN")
 
@@ -235,7 +235,7 @@ def run_case(rail, client, employer, referrer, candidate, repo_owner, repo_name,
     settlement = send(rail, "settle_opportunity", [oid], employer, client, triggered=True)
     expected_state = "PAID" if label == "success" else "REFUNDED"
     judged_state = assert_state(rail, oid, expected_state)
-    accounting = rail.get_accounting(args=[]).call()
+    accounting = retry_read(lambda: rail.get_accounting(args=[]).call())
     return {
         "label": label,
         "repo": f"{repo_owner}/{repo_name}",
@@ -264,7 +264,7 @@ def main():
 
     factory = get_contract_factory(contract_file_path=Path("referral_rail.py"))
     rail = factory.build_contract(contract_address=RAIL_ADDRESS, account=employer)
-    config = rail.get_protocol_config(args=[]).call()
+    config = retry_read(lambda: rail.get_protocol_config(args=[]).call())
     if config["judge_address"].lower() != JUDGE_ADDRESS.lower():
         raise RuntimeError("deployed judge binding does not match deployment manifest")
 
