@@ -1,6 +1,7 @@
 name: ReferralRail integrations
 
 on:
+  workflow_dispatch:
   push:
     paths: ["integrations/**", ".agents/skills/referralrail/**", "docs/integrations/**", ".github/workflows/referralrail-integrations.yml"]
   pull_request:
