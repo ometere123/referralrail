@@ -88,6 +88,10 @@ def main() -> int:
         try:
             data=json.loads(evidence.read_text())
             txs=data.get("transactions",[])
+            if not isinstance(txs, list) or not txs:
+                txs=[]
+                for case in data.get("cases",[]):
+                    txs.extend((case.get("transactions") or {}).values())
             if txs and all(HASH.match(str(t.get("hash",""))) for t in txs): ok("live evidence transaction hashes")
             else: fail("live evidence transaction hashes"); good=False
         except Exception as exc: fail(f"live evidence parse: {exc}"); good=False
