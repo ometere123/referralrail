@@ -10,3 +10,6 @@ __pycache__/
 *.pyc
 .DS_Store
 coverage/
+integrations/**/dist/
+integrations/**/node_modules/
+.npm-cache/

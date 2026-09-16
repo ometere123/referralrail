@@ -1,0 +1,47 @@
+import { createAccount, createClient, isSuccessful } from "genlayer-js";
+import { TransactionHashVariant, type GenLayerClient } from "genlayer-js/types";
+import type { Address, Account } from "viem";
+import { CANONICAL, NETWORK, explorerTx } from "./constants.js";
+import { ConfigurationError, ReferralRailError, TransactionError, ValidationError, redactError } from "./errors.js";
+import { externalAllocations, fundingFor, quoteFees } from "./fees.js";
+import { getAvailableActions } from "./state.js";
+import type { Accounting, CreateOpportunityInput, JudgeConfig, Judgment, Opportunity, OpportunityState, ProtocolConfig, ReferralRailConfig, WriteResult } from "./types.js";
+
+const num = (x: unknown) => Number(x ?? 0); const big = (x: unknown) => BigInt(x as string | number | bigint);
+function normalize(raw: unknown): unknown { if (raw instanceof Map) return Object.fromEntries([...raw.entries()].map(([k, v]) => [String(k), normalize(v)])); if (Array.isArray(raw)) return raw.map(normalize); if (raw && typeof raw === "object") return Object.fromEntries(Object.entries(raw).map(([k, v]) => [k, normalize(v)])); return raw; }
+function opportunity(raw: unknown): Opportunity { const o = normalize(raw) as Record<string, unknown>; return { ...o, id: num(o.id), candidate_payment: big(o.candidate_payment), referral_reward: big(o.referral_reward), funded_amount: big(o.funded_amount), created_at: num(o.created_at), referral_deadline: num(o.referral_deadline), completion_deadline: num(o.completion_deadline), state: String(o.state) as OpportunityState, state_code: num(o.state_code), referred_at: num(o.referred_at), accepted_at: num(o.accepted_at), active_attempt: num(o.active_attempt), attempt_count: num(o.attempt_count), active_pr_number: num(o.active_pr_number), evidence_submitted_at: num(o.evidence_submitted_at), judgment_timeout_at: num(o.judgment_timeout_at), retry_deadline: num(o.retry_deadline), last_outcome_code: num(o.last_outcome_code), closed_at: num(o.closed_at), settlement_released: Boolean(o.settlement_released) } as Opportunity; }
+function address(value: string): Address { return value as Address; }
+
+export class ReferralRailClient {
+  readonly referralRailAddress: Address; readonly outcomeJudgeAddress: Address; readonly client: GenLayerClient<any>; readonly account?: Account;
+  constructor(config: ReferralRailConfig = {}) {
+    const chainId = config.chainId ?? CANONICAL.chainId, rpcUrl = config.rpcUrl ?? CANONICAL.rpcUrl;
+    if (chainId !== CANONICAL.chainId) throw new ConfigurationError(`ReferralRail is locked to chain ${CANONICAL.chainId}; received ${chainId}.`);
+    if (rpcUrl !== CANONICAL.rpcUrl && rpcUrl !== "https://studio-next.genlayer.com/api") throw new ConfigurationError(`ReferralRail is locked to ${CANONICAL.rpcUrl}; received ${rpcUrl}.`);
+    this.referralRailAddress = config.referralRailAddress ?? CANONICAL.referralRail; this.outcomeJudgeAddress = config.outcomeJudgeAddress ?? CANONICAL.outcomeJudge;
+    this.account = typeof config.account === "string" || !config.account ? undefined : config.account;
+    this.client = createClient({ chain: NETWORK, endpoint: CANONICAL.rpcUrl, ...(config.account ? { account: config.account } : {}) });
+  }
+  static fromPrivateKey(key: `0x${string}`, config: Omit<ReferralRailConfig, "account"> = {}) { return new ReferralRailClient({ ...config, account: createAccount(key) }); }
+  get signer(): Account { if (!this.account) throw new ConfigurationError("This operation requires a signing account."); return this.account; }
+  async read(address_: Address, functionName: string, args: unknown[] = []) { return this.client.readContract({ address: address_, functionName, args: args as never[], transactionHashVariant: TransactionHashVariant.LATEST_FINAL }); }
+  async getOpportunity(id: number) { return opportunity(await this.read(this.referralRailAddress, "get_opportunity", [id])); }
+  async listOpportunities(options: { offset?: number; limit?: number } = {}) { const raw = normalize(await this.read(this.referralRailAddress, "list_opportunities", [options.offset ?? 0, options.limit ?? 40])); return (Array.isArray(raw) ? raw : Object.values(raw as object)).map(opportunity); }
+  async getAccounting() { const o = normalize(await this.read(this.referralRailAddress, "get_accounting")) as Record<string, unknown>; return { total_funded: big(o.total_funded), total_paid: big(o.total_paid), total_refunded: big(o.total_refunded), locked_total: big(o.locked_total), conservation_delta: big(o.conservation_delta) } as Accounting; }
+  async getProtocolConfig() { return normalize(await this.read(this.referralRailAddress, "get_protocol_config")) as ProtocolConfig; }
+  async getJudgment(opportunityId: number, attemptId: number) { const raw = normalize(await this.read(this.outcomeJudgeAddress, "get_judgment", [opportunityId, attemptId])) as Record<string, unknown>; return Object.keys(raw).length ? { ...raw, opportunity_id: num(raw.opportunity_id), attempt_id: num(raw.attempt_id), outcome: String(raw.outcome), outcome_code: num(raw.outcome_code), decided_at: num(raw.decided_at) } as Judgment : null; }
+  async getJudgeConfig() { return normalize(await this.read(this.outcomeJudgeAddress, "get_config")) as JudgeConfig; }
+  async getAvailableActions(idOrOpportunity: number | Opportunity, context: { address?: Address; now?: number } = {}) { return getAvailableActions(typeof idOrOpportunity === "number" ? await this.getOpportunity(idOrOpportunity) : idOrOpportunity, context); }
+  async createOpportunity(input: CreateOpportunityInput): Promise<WriteResult> { const value = fundingFor(input.candidatePayment, input.referralReward); if (value !== input.candidatePayment + input.referralReward) throw new ValidationError("Payable value must equal candidate payment plus referral reward."); const before = undefined; const args = [input.title, input.brief, input.acceptanceCriteria, input.repoOwner, input.repoName, input.candidateAddress, input.candidatePayment, input.referralReward, input.referralWindowSeconds, input.completionWindowSeconds]; const result = await this.write("create_opportunity", args, value, undefined, before); const list = await this.listOpportunities({ offset: 0, limit: 40 }); const created = list.reduce((a, b) => a.id > b.id ? a : b); return { ...result, opportunity: created, stateAfter: created }; }
+  async createReferral(id: number, candidateAddress: Address) { return this.writeOpportunity("create_referral", id, [id, candidateAddress], undefined); }
+  async acceptReferral(id: number, githubLogin: string) { return this.writeOpportunity("accept_referral", id, [id, githubLogin], "ACCEPTED"); }
+  async submitWork(id: number, prNumber: number) { return this.writeOpportunity("submit_work", id, [id, prNumber], "JUDGING"); }
+  async retryInconclusive(id: number, prNumber: number) { return this.writeOpportunity("retry_inconclusive", id, [id, prNumber], "JUDGING"); }
+  async resolveJudgment(id: number, attemptId: number) { return this.writeOpportunity("resolve_judgment", id, [id, attemptId], undefined); }
+  async settleOpportunity(id: number) { return this.writeOpportunity("settle_opportunity", id, [id], undefined); }
+  async cancelUnreferred(id: number) { return this.writeOpportunity("cancel_unreferred", id, [id], "CANCELLED"); }
+  async expire(id: number) { return this.writeOpportunity("expire", id, [id], "EXPIRED"); }
+  async recover(id: number) { return this.writeOpportunity("recover", id, [id], "REFUNDED"); }
+  private async writeOpportunity(method: string, id: number, args: unknown[], expected?: string) { const before = await this.getOpportunity(id); const result = await this.write(method, args, 0n, before); const after = await this.getOpportunity(id); if (expected && after.state !== expected) throw new TransactionError(`${method} finalized but expected ${expected}, observed ${after.state}.`, { txHash: result.txHash }); return { ...result, stateBefore: before, stateAfter: after, opportunity: after, settlementReleased: after.settlement_released }; }
+  private async write(method: string, args: unknown[], value: bigint, before?: Opportunity, _unused?: unknown): Promise<WriteResult> { try { const fees = await quoteFees(this.client, method, args, this.signer, this.referralRailAddress, value, before ? (before.state === "PAID" ? [before.candidate, before.referrer] : before.state === "REFUNDED" ? [before.employer] : []) : []); const hash = await this.client.writeContract({ account: this.signer, address: this.referralRailAddress, functionName: method, args: args as never[], value, fees }); const txHash = hash as `0x${string}`; await this.client.waitForDecision({ hash: txHash as never, retries: 240, interval: 5000, fullTransaction: true }); try { await this.client.finalizeTransaction({ txId: txHash as never }); } catch { /* already finalized or keeper won the race */ } const transaction = await this.client.waitForFinalization({ hash: txHash as never, retries: 240, interval: 5000, fullTransaction: true }); const successful = isSuccessful(transaction as never); if (!successful) throw new TransactionError(`${method} finalized with unsuccessful execution.`, { transaction }); return { txHash, successful: true, finalized: true, explorerUrl: explorerTx(txHash), transaction }; } catch (error) { if (error instanceof ReferralRailError) throw error; throw new TransactionError(`${method} failed: ${redactError(error)}`, error); } }
+}

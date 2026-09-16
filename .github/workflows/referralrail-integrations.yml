@@ -1,0 +1,28 @@
+name: ReferralRail integrations
+
+on:
+  push:
+    paths: ["integrations/**", ".agents/skills/referralrail/**", "docs/integrations/**", ".github/workflows/referralrail-integrations.yml"]
+  pull_request:
+    paths: ["integrations/**", ".agents/skills/referralrail/**", "docs/integrations/**", ".github/workflows/referralrail-integrations.yml"]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm exec -- tsc -p integrations/sdk/tsconfig.json --noEmit
+      - run: npm exec -- vitest run integrations/sdk/tests
+      - run: npm run build --prefix integrations/sdk
+      - run: npm ci --prefix integrations/mcp
+      - run: npm run build --prefix integrations/mcp
+      - run: npm exec --prefix integrations/mcp tsc -p tsconfig.json --noEmit
+      - run: npm exec --prefix integrations/mcp vitest run tests
+      - run: npm pack --dry-run --prefix integrations/sdk
+      - run: npm pack --dry-run --prefix integrations/mcp
+      - name: Secret scan
+        shell: bash
+        run: '! rg -n "(PRIVATE_KEY|0x[a-fA-F0-9]{64})" integrations .agents/skills/referralrail --glob "!*.example"'
