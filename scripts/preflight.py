@@ -56,7 +56,7 @@ def main() -> int:
         ("inconclusive recovery", "def retry_inconclusive" in settle and "def recover" in settle),
         ("finalized judge message", 'emit(on="finalized").evaluate' in settle),
         ("finalized judgment with pull resolution", 'emit(on="finalized").evaluate' in settle and "def resolve_judgment" in settle),
-        ("substantive validator rerun", "independent = evaluate_once" in judge and "run_nondet_unsafe" in judge),
+        ("substantive validator rerun", "independent = evaluate_once" in judge and "run_nondet(" in judge),
         ("source restriction", "https://api.github.com/repos/" in judge),
     ]
     for label,match in static_markers:

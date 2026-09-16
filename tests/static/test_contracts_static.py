@@ -16,7 +16,7 @@ def test_v06_dependency_is_consistent():
     assert marker in SETTLE and marker in JUDGE
 
 def test_substantive_validator_refetches_and_reruns():
-    assert 'run_nondet_unsafe' in JUDGE
+    assert 'run_nondet(' in JUDGE
     assert 'independent = evaluate_once' in JUDGE
     assert 'github_json' in JUDGE
     assert 'objective_key' in JUDGE and 'evidence_digest' in JUDGE

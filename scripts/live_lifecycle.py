@@ -176,9 +176,10 @@ def retry_read(read_fn):
         try:
             return read_fn()
         except Exception as exc:
-            if "Server busy" not in str(exc):
+            message = str(exc)
+            if "Server busy" not in message and "Rate limit exceeded" not in message:
                 raise
-            time.sleep(5)
+            time.sleep(15 if "Rate limit exceeded" in message else 5)
     return read_fn()
 
 

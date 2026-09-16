@@ -443,7 +443,10 @@ class OutcomeJudge(gl.contract.Contract):
                 return False
             return int(candidate.get("outcome")) == int(independent.get("outcome"))
 
-        result = gl.vm.run_nondet_unsafe(leader_fn, validator_fn)
+        # Studio's currently pinned runner exposes the guarded custom
+        # validator entry point as run_nondet. Keep the validator defensive so
+        # malformed or failed external evidence becomes a disagreement.
+        result = gl.vm.run_nondet(leader_fn, validator_fn)
         if not valid_result(result):
             raise gl.vm.UserError("consensus returned an invalid judgment")
 
