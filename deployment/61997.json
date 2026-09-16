@@ -1,0 +1,28 @@
+{
+  "network": "Studio Next / Studionet Dev",
+  "chainId": 61997,
+  "rpc": "https://studio-dev.genlayer.com/api",
+  "explorer": "https://explorer-studio-dev.genlayer.com/",
+  "explorerReferralRail": "https://explorer-studio-dev.genlayer.com/address/0x96f9F65062f2E8468aa464B762C9104A07eCc1d3",
+  "explorerOutcomeJudge": "https://explorer-studio-dev.genlayer.com/address/0xA244a96168a4465A41f3D8371bE797106Cf8C273",
+  "explorerBindingTransaction": "https://explorer-studio-dev.genlayer.com/tx/0x2c3cbc9821d0edf4cd41aa6700ed60741de1ccfbcb6a2ee0a95cf1ec5e4daaaa",
+  "runtime": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng",
+  "referralRail": {
+    "txId": "0x6e45c021a50db3b7c7f2ba2f42d7fc0d0c51f1c0c7d8bea57e3645c4437d6598",
+    "address": "0x96f9F65062f2E8468aa464B762C9104A07eCc1d3"
+  },
+  "outcomeJudge": {
+    "txId": "0xf023a4a4ffa2fbd23a13f63e831fc0dfb3c04e6e1b4eb5be4f9534a7d29f8bf0",
+    "address": "0xA244a96168a4465A41f3D8371bE797106Cf8C273"
+  },
+  "bindingTransaction": "0x2c3cbc9821d0edf4cd41aa6700ed60741de1ccfbcb6a2ee0a95cf1ec5e4daaaa",
+  "protocolConfigReadback": {
+    "evidence_host": "api.github.com",
+    "inconclusive_cure_seconds": 86400,
+    "judge_address": "0xA244a96168a4465A41f3D8371bE797106Cf8C273",
+    "judgment_timeout_seconds": 86400,
+    "max_attempts": 2,
+    "owner": "0xfcef676044658B5402f590daBe9E04A0F640522f"
+  },
+  "generatedAt": "2026-09-16T12:35:04.872Z"
+}

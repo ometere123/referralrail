@@ -1,0 +1,5 @@
+import Link from "next/link";
+import { ExternalLink } from "lucide-react";
+import { EXPLORER_URL } from "@/lib/genlayer/network";
+
+export default async function TransactionPage({params}:{params:Promise<{hash:string}>}){const {hash}=await params; const tx=hash.startsWith('0x')?hash:`0x${hash}`; return <div className="container"><section className="section"><div className="eyebrow">Transaction evidence</div><h1 style={{margin:'10px 0 12px'}}>Finalized transaction</h1><p className="prose">Use the explorer for the authoritative consensus, execution, and lifecycle receipt. ReferralRail only treats a write as successful after finalized readback.</p><div className="panel panel-pad" style={{marginTop:24}}><code style={{wordBreak:'break-all'}}>{tx}</code><div className="hero-actions"><a className="button primary" href={`${EXPLORER_URL.replace(/\/$/,'')}/tx/${tx}`} target="_blank" rel="noreferrer">Open explorer <ExternalLink size={14}/></a><Link className="button secondary" href="/opportunities">Back to opportunities</Link></div></div></section></div>}

@@ -1,4 +1,4 @@
-# Final live handoff — ReferralRail
+# Final live handoff - ReferralRail
 
 Finish ReferralRail completely from the repository folder I have opened for you.
 
@@ -35,13 +35,13 @@ Preserve the product thesis:
 
 Do not expand ReferralRail into a recruiting marketplace, CV scorer, KYC product, chat system, generalized reputation protocol, DAO, token, cross-chain product, multi-category work marketplace, generic bounty system, generic escrow or generic dispute court.
 
-## Network lock — non-negotiable
+## Network lock - non-negotiable
 
 Use only:
 
 - Network: **Studio Next / Studionet Dev**
 - Chain ID: **61997**
-- RPC: `https://studio-next.genlayer.com/api`
+- RPC: `https://studio-dev.genlayer.com/api`
 - Explorer: `https://explorer-studio-dev.genlayer.com/`
 
 Never use chain `61999`, old Studionet, Bradbury, or a different RPC anywhere in product configuration, deployment scripts, documentation, screenshots or submission evidence.
@@ -253,7 +253,7 @@ The UI must make this lifecycle understandable without reading source code:
 
 Do not let the UI call a transaction successful merely because it was submitted. Preserve tracking through finalization and finalized contract readback.
 
-### 5. Real fee profiling — mandatory before deployment
+### 5. Real fee profiling - mandatory before deployment
 
 Do **not** invent `fee-profile.json` values.
 
@@ -299,7 +299,7 @@ Everything must pass before touching the funded deployer wallet.
 Use the funded authorized deployment wallet and run from the repository root:
 
 ```powershell
-npm run deploy -- --rpc https://studio-next.genlayer.com/api
+npm run deploy -- --rpc https://studio-dev.genlayer.com/api
 ```
 
 `deploy/001_deploy_referralrail.ts` must:
@@ -335,7 +335,7 @@ Keep:
 ```text
 NEXT_PUBLIC_GENLAYER_CHAIN_ID=61997
 NEXT_PUBLIC_GENLAYER_CHAIN_NAME=GenLayer Studio Next
-NEXT_PUBLIC_GENLAYER_RPC_URL=https://studio-next.genlayer.com/api
+NEXT_PUBLIC_GENLAYER_RPC_URL=https://studio-dev.genlayer.com/api
 NEXT_PUBLIC_GENLAYER_EXPLORER_URL=https://explorer-studio-dev.genlayer.com
 ```
 

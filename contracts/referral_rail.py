@@ -124,6 +124,21 @@ def now_ts() -> int:
     return int(datetime.now(timezone.utc).timestamp())
 
 
+def contract_at(address: gl.Address):
+    """Support both legacy and current GenVM cross-contract names."""
+    getter = getattr(gl, "get_contract_at", None)
+    if getter is not None:
+        return getter(address)
+    module = getattr(gl, "contract", None)
+    getter = getattr(module, "get_contract_at", None)
+    if getter is not None:
+        return getter(address)
+    getter = getattr(module, "get_at", None)
+    if getter is None:
+        raise AttributeError("GenVM internal contract proxy is unavailable")
+    return getter(address)
+
+
 def clean_text(value: typing.Any, max_len: int) -> str:
     return " ".join(str(value).strip().split())[:max_len]
 
@@ -194,10 +209,6 @@ class ReferralRail(gl.contract.Contract):
         self.owner = gl.message.sender_address
         self.judge_address = ZERO_ADDRESS
         self.next_opportunity_id = gl.u256(1)
-        self.total_funded = gl.u256(0)
-        self.total_paid = gl.u256(0)
-        self.total_refunded = gl.u256(0)
-        self.locked_total = gl.u256(0)
 
     def _opportunity(self, opportunity_id: gl.u256) -> Opportunity:
         oid = int(opportunity_id)
@@ -235,26 +246,92 @@ class ReferralRail(gl.contract.Contract):
         self._send_eoa(opp.employer, amount)
         OpportunitySettled(opportunity_id, gl.u256(terminal_state), terminal=state_name(terminal_state), amount=int(amount)).emit()
 
-    def _payout(self, opportunity_id: gl.u256, opp: Opportunity) -> None:
+    def _mark_paid(self, opportunity_id: gl.u256, opp: Opportunity) -> None:
         if int(opp.state) != STATE_JUDGING:
             raise gl.vm.UserError("opportunity is not awaiting judgment")
         total = int(opp.candidate_payment) + int(opp.referral_reward)
         if total != int(opp.funded_amount):
             raise gl.vm.UserError("accounting invariant violated: split does not equal funding")
 
-        self._release_lock(opp.funded_amount)
         opp.state = gl.u256(STATE_PAID)
+
+    def _mark_refunded(self, opportunity_id: gl.u256, opp: Opportunity) -> None:
+        if int(opp.state) != STATE_JUDGING:
+            raise gl.vm.UserError("opportunity is not awaiting judgment")
+        opp.state = gl.u256(STATE_REFUNDED)
+
+    def _settle_terminal(self, opportunity_id: gl.u256, opp: Opportunity) -> None:
+        if int(opp.state) not in (STATE_PAID, STATE_REFUNDED):
+            raise gl.vm.UserError("opportunity is not awaiting fund release")
+        if int(opp.closed_at) != 0:
+            raise gl.vm.UserError("opportunity funds are already released")
+
+        self._release_lock(opp.funded_amount)
         opp.closed_at = gl.u256(now_ts())
-        self.total_paid = gl.u256(int(self.total_paid) + total)
-        self._send_eoa(opp.candidate, opp.candidate_payment)
-        self._send_eoa(opp.referrer, opp.referral_reward)
+        if int(opp.state) == STATE_PAID:
+            total = int(opp.candidate_payment) + int(opp.referral_reward)
+            self.total_paid = gl.u256(int(self.total_paid) + total)
+            self._send_eoa(opp.candidate, opp.candidate_payment)
+            self._send_eoa(opp.referrer, opp.referral_reward)
+            terminal_state = STATE_PAID
+            blob = {
+                "terminal": "PAID",
+                "candidate_amount": int(opp.candidate_payment),
+                "referrer_amount": int(opp.referral_reward),
+            }
+        else:
+            self.total_refunded = gl.u256(int(self.total_refunded) + int(opp.funded_amount))
+            self._send_eoa(opp.employer, opp.funded_amount)
+            terminal_state = STATE_REFUNDED
+            blob = {"terminal": "REFUNDED", "amount": int(opp.funded_amount)}
         OpportunitySettled(
             opportunity_id,
-            gl.u256(STATE_PAID),
-            terminal="PAID",
-            candidate_amount=int(opp.candidate_payment),
-            referrer_amount=int(opp.referral_reward),
+            gl.u256(terminal_state),
+            **blob,
         ).emit()
+
+    def _apply_outcome(
+        self,
+        opportunity_id: gl.u256,
+        attempt_id: gl.u256,
+        outcome: gl.u256,
+        evidence_digest: str,
+        reason: str,
+        audit: str,
+    ) -> None:
+        opp = self._opportunity(opportunity_id)
+        if int(opp.state) != STATE_JUDGING:
+            raise gl.vm.UserError("opportunity is not awaiting a judgment")
+        if int(attempt_id) != int(opp.active_attempt):
+            raise gl.vm.UserError("stale or replayed judgment attempt")
+        result = int(outcome)
+        if result not in (OUTCOME_COMPLETED, OUTCOME_NOT_COMPLETED, OUTCOME_INCONCLUSIVE):
+            raise gl.vm.UserError("invalid judgment outcome")
+
+        opp.last_outcome = gl.u256(result)
+        opp.last_evidence_digest = clean_text(evidence_digest, 180)
+        opp.last_reason = clean_text(reason, MAX_REASON_LEN)
+        opp.last_audit = clean_text(audit, MAX_AUDIT_LEN)
+        OutcomeRecorded(
+            opportunity_id,
+            attempt_id,
+            gl.u256(result),
+            evidence_digest=opp.last_evidence_digest,
+        ).emit()
+
+        if result == OUTCOME_COMPLETED:
+            self._mark_paid(opportunity_id, opp)
+            return
+        if result == OUTCOME_NOT_COMPLETED:
+            self._mark_refunded(opportunity_id, opp)
+            return
+
+        opp.state = gl.u256(STATE_INCONCLUSIVE)
+        now = now_ts()
+        if int(opp.attempt_count) >= MAX_ATTEMPTS:
+            opp.retry_deadline = gl.u256(now)
+        else:
+            opp.retry_deadline = gl.u256(now + INCONCLUSIVE_CURE_SECONDS)
 
     def _to_dict(self, opportunity_id: gl.u256, opp: Opportunity) -> dict:
         return {
@@ -290,6 +367,7 @@ class ReferralRail(gl.contract.Contract):
             "last_reason": str(opp.last_reason),
             "last_audit": str(opp.last_audit),
             "closed_at": int(opp.closed_at),
+            "settlement_released": int(opp.closed_at) != 0,
         }
 
     @gl.public.write
@@ -461,7 +539,7 @@ class ReferralRail(gl.contract.Contract):
         opp.retry_deadline = gl.u256(0)
         opp.state = gl.u256(STATE_JUDGING)
 
-        judge = gl.get_contract_at(self.judge_address)
+        judge = contract_at(self.judge_address)
         judge.emit(on="finalized").evaluate(
             int(opportunity_id),
             attempt,
@@ -522,41 +600,45 @@ class ReferralRail(gl.contract.Contract):
         """Only the configured judge may commit a consensus result."""
         if gl.message.sender_address != self.judge_address:
             raise gl.vm.UserError("unauthorized outcome callback")
-        opp = self._opportunity(opportunity_id)
-        if int(opp.state) != STATE_JUDGING:
-            raise gl.vm.UserError("opportunity is not awaiting a judgment")
-        if int(attempt_id) != int(opp.active_attempt):
-            raise gl.vm.UserError("stale or replayed judgment attempt")
-        result = int(outcome)
-        if result not in (OUTCOME_COMPLETED, OUTCOME_NOT_COMPLETED, OUTCOME_INCONCLUSIVE):
-            raise gl.vm.UserError("invalid judgment outcome")
-
-        opp.last_outcome = gl.u256(result)
-        opp.last_evidence_digest = clean_text(evidence_digest, 180)
-        opp.last_reason = clean_text(reason, MAX_REASON_LEN)
-        opp.last_audit = clean_text(audit, MAX_AUDIT_LEN)
-        OutcomeRecorded(
+        self._apply_outcome(
             opportunity_id,
             attempt_id,
-            gl.u256(result),
-            evidence_digest=opp.last_evidence_digest,
-        ).emit()
+            outcome,
+            evidence_digest,
+            reason,
+            audit,
+        )
 
-        if result == OUTCOME_COMPLETED:
-            self._payout(opportunity_id, opp)
-            return
-        if result == OUTCOME_NOT_COMPLETED:
-            self._refund(opportunity_id, opp, STATE_REFUNDED)
-            return
+    @gl.public.write
+    def resolve_judgment(self, opportunity_id: gl.u256, attempt_id: gl.u256) -> None:
+        """Materialize a finalized OutcomeJudge result into settlement state."""
+        if self.judge_address == ZERO_ADDRESS:
+            raise gl.vm.UserError("outcome judge is not configured")
+        judgment = contract_at(self.judge_address).view().get_judgment(
+            int(opportunity_id), int(attempt_id)
+        )
+        if not isinstance(judgment, dict) or not judgment:
+            raise gl.vm.UserError("judgment is not finalized or does not exist")
+        self._apply_outcome(
+            opportunity_id,
+            attempt_id,
+            gl.u256(int(judgment["outcome_code"])),
+            str(judgment["evidence_digest"]),
+            str(judgment["reason"]),
+            str(judgment["audit"]),
+        )
 
-        # INCONCLUSIVE never traps funds indefinitely. One bounded cure attempt
-        # is permitted; after the maximum attempt or deadline, anyone can recover.
-        opp.state = gl.u256(STATE_INCONCLUSIVE)
-        now = now_ts()
-        if int(opp.attempt_count) >= MAX_ATTEMPTS:
-            opp.retry_deadline = gl.u256(now)
-        else:
-            opp.retry_deadline = gl.u256(now + INCONCLUSIVE_CURE_SECONDS)
+    @gl.public.write
+    def settle_opportunity(self, opportunity_id: gl.u256) -> None:
+        """Release terminal funds in a separate transaction.
+
+        Keeping value transfers out of the judge callback makes the callback a
+        single deterministic state update. The caller still receives the same
+        authenticated, one-time economic settlement, while each value message
+        gets its own ordinary fee allocation.
+        """
+        opp = self._opportunity(opportunity_id)
+        self._settle_terminal(opportunity_id, opp)
 
     @gl.public.write
     def cancel_unreferred(self, opportunity_id: gl.u256) -> None:

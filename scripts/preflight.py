@@ -9,7 +9,7 @@ import argparse, ast, json, re, subprocess, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_RPC = "https://studio-next.genlayer.com/api"
+EXPECTED_RPC = "https://studio-dev.genlayer.com/api"
 EXPECTED_CHAIN = 61997
 ADDR = re.compile(r"^0x[a-fA-F0-9]{40}$")
 HASH = re.compile(r"^0x[a-fA-F0-9]{64}$")
@@ -55,7 +55,7 @@ def main() -> int:
         ("candidate explicit acceptance", "def accept_referral" in settle),
         ("inconclusive recovery", "def retry_inconclusive" in settle and "def recover" in settle),
         ("finalized judge message", 'emit(on="finalized").evaluate' in settle),
-        ("finalized settlement callback", 'emit(on="finalized").record_outcome' in judge),
+        ("finalized judgment with pull resolution", 'emit(on="finalized").evaluate' in settle and "def resolve_judgment" in settle),
         ("substantive validator rerun", "independent = evaluate_once" in judge and "run_nondet_unsafe" in judge),
         ("source restriction", "https://api.github.com/repos/" in judge),
     ]

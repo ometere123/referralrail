@@ -10,7 +10,7 @@ export default function AppHeader(){
     <Link className="brand" href="/" aria-label="ReferralRail home">
       <span className="brand-mark"><Link2 size={17}/></span><span>ReferralRail</span>
     </Link>
-    <nav className="nav-links"><Link href="/">Opportunities</Link><Link href="/opportunities/new">Create</Link></nav>
+    <nav className="nav-links"><Link href="/opportunities">Opportunities</Link><Link href="/dashboard">Dashboard</Link><Link href="/protocol">Protocol</Link><Link href="/docs">Docs</Link><Link href="/opportunities/new">Create</Link></nav>
     <div className="wallet-zone">
       <span className={`network-chip ${w.correctNetwork?'ok':'warn'}`}>
         {w.connected && !w.correctNetwork ? <AlertTriangle size={13}/> : <span className="pulse-dot"/>}
@@ -18,7 +18,7 @@ export default function AppHeader(){
       </span>
       {!w.connected ? <button className="button primary small" disabled={w.busy} onClick={()=>void w.connect()}><Wallet size={15}/>{w.busy?'Connecting…':'Connect wallet'}</button>
       : !w.correctNetwork ? <button className="button danger small" disabled={w.busy} onClick={()=>void w.switchNetwork()}>Switch to 61997</button>
-      : <span className="address-pill">{shortAddress(w.address)}</span>}
+      : <><span className="address-pill">{shortAddress(w.address)}</span><button className="button secondary small" onClick={()=>void w.disconnect()}>Disconnect</button></>}
     </div>
     {w.error && <div className="wallet-error">{w.error}</div>}
   </header>

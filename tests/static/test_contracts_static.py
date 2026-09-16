@@ -25,9 +25,10 @@ def test_judge_is_source_restricted():
     assert 'https://api.github.com/repos/' in JUDGE
     assert 'evidence_host": "api.github.com"' in JUDGE
 
-def test_internal_messages_wait_for_finalization():
+def test_judgment_message_uses_finalized_trigger_and_pull_resolution():
     assert 'emit(on="finalized").evaluate' in SETTLE
-    assert 'emit(on="finalized").record_outcome' in JUDGE
+    assert 'def resolve_judgment' in SETTLE
+    assert 'get_judgment' in SETTLE
 
 def test_target_network_marker_is_present():
     assert '61997' in SETTLE

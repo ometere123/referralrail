@@ -20,7 +20,7 @@ When the candidate supplies the completed PR, GenLayer verifies the frozen repos
 
 ## Why GenLayer
 
-No single participant should decide the outcome. The employer has an incentive to avoid payment, the candidate has an incentive to claim completion, and the referrer needs attribution protected before the result is known. The substantive question — whether real merged work satisfies natural-language terms — directly controls pre-funded value and requires judgment over current public evidence.
+No single participant should decide the outcome. The employer has an incentive to avoid payment, the candidate has an incentive to claim completion, and the referrer needs attribution protected before the result is known. The substantive question, whether real merged work satisfies natural-language terms, directly controls pre-funded value and requires judgment over current public evidence.
 
 ReferralRail's validator does not rubber-stamp an AI label. Validators independently refetch the GitHub evidence and independently rerun the meaningful completion evaluation. Only a finalized accepted result can reach the settlement contract.
 
@@ -32,8 +32,8 @@ ReferralRail is not a bounty marketplace or generic work escrow. The protocol's 
 
 Two coherent Intelligent Contracts:
 
-- **ReferralRail** — funding, attribution, acceptance, state machine, settlement and recovery.
-- **OutcomeJudge** — source-restricted GitHub verification, substantive consensus judgment and audit record.
+- **ReferralRail**: funding, attribution, acceptance, state machine, settlement and recovery.
+- **OutcomeJudge**: source-restricted GitHub verification, substantive consensus judgment and audit record.
 
 No backend or database is required.
 
@@ -47,11 +47,14 @@ https://github.com/ometere123/referralrail
 
 ## Live app
 
-To be filled only after deployment.
+The frontend is configured for the deployed 61997 contracts. Hosting/public URL is
+not yet recorded in this repository.
 
 ## Contracts
 
-To be filled from `deployment/61997.json` only after finalized deployment.
+- ReferralRail: `0x2359524E6783a963C441bd0CDb5036f9bfdF2727`
+- OutcomeJudge: `0x4d03B8f6D99556CEC687946d6F80202c31Bc1218`
+- Evidence: `deployment/61997.json`
 
 ## Demo video
 

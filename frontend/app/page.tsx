@@ -2,12 +2,10 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, GitPullRequest, Handshake, LockKeyhole, SplitSquareHorizontal } from "lucide-react";
 import { configured } from "@/lib/contracts/referralRail";
-import { useAccounting, useOpportunities } from "@/lib/hooks/useProtocol";
-import { gen, shortAddress } from "@/lib/format";
 import { Lifecycle } from "@/components/Lifecycle";
 
 export default function Home(){
- const ready=configured(); const {data=[],isLoading,error}=useOpportunities(); const {data:accounting}=useAccounting();
+ const ready=configured();
  return <>
   {!ready&&<div className="config-banner"><strong>Deployment not configured.</strong> The UI contains no simulated contract results. Set both deployed 61997 addresses in <code>frontend/.env</code> after deployment.</div>}
   <div className="container">
@@ -29,12 +27,7 @@ export default function Home(){
     <div className="principle-card"><span className="num">03 / MONEY</span><h3>Consensus has a consequence.</h3><p>COMPLETED releases the exact candidate/referrer split. NOT_COMPLETED refunds. INCONCLUSIVE opens one bounded cure path instead of pretending missing evidence is failure.</p></div></div>
    </section>
 
-   <section className="section" id="live">
-    <div className="section-heading"><div><div className="eyebrow">Durable contract state</div><h2>Opportunities on ReferralRail</h2></div><p>Nothing below is mock data. Reads use the latest finalized state of the configured ReferralRail contract.</p></div>
-    {accounting&&<div className="panel panel-pad" style={{marginBottom:14}}><div className="role-strip"><div className="role-card"><small>Total funded</small><strong>{gen(accounting.total_funded)}</strong></div><div className="role-card"><small>Currently locked</small><strong>{gen(accounting.locked_total)}</strong></div><div className="role-card"><small>Accounting delta</small><strong>{String(accounting.conservation_delta)} wei</strong></div></div></div>}
-    {!ready?<div className="empty">Deploy and bind the two contracts on chain 61997 to activate live protocol reads.</div>:isLoading?<div className="skeleton"/>:error?<div className="notice error">Finalized contract read failed. The UI will not substitute cached or mocked results.</div>:data.length===0?<div className="empty">No finalized opportunities yet. Create and fund the first one.</div>:
-     <div className="opportunity-list">{data.map(o=><Link className="opportunity-row" key={o.id} href={`/opportunities/${o.id}`}><div><h3>{o.title}</h3><div className="meta">#{o.id} · {o.repo_owner}/{o.repo_name} · candidate {shortAddress(o.candidate)}</div></div><div className="metric"><small>Candidate</small><strong>{gen(o.candidate_payment)}</strong></div><div className="metric"><small>Referral</small><strong>{gen(o.referral_reward)}</strong></div><div className="metric"><small>Referrer</small><strong>{shortAddress(o.referrer)}</strong></div><span className={`status ${o.state.toLowerCase()}`}>{o.state}</span></Link>)}</div>}
-   </section>
+   <section className="section" id="live"><div className="panel panel-pad"><div className="section-heading"><div><div className="eyebrow">Durable contract state</div><h2>Explore live opportunities</h2></div><p>Browse finalized ReferralRail state and take the action available to your wallet.</p></div><div className="hero-actions"><Link className="button primary" href="/opportunities">Open opportunity directory <ArrowRight size={17}/></Link><Link className="button secondary" href="/dashboard">View my dashboard</Link></div>{!ready&&<div className="notice warning" style={{marginTop:18}}>The directory needs deployed contract addresses before live reads can load.</div>}</div></section>
 
    <section className="section"><div className="section-heading"><div><div className="eyebrow">The protocol path</div><h2>Attribution first, judgment second.</h2></div><p>The order is the product. A referrer earns only if the candidate accepted that referral before evidence was submitted and the job is later verified.</p></div><div className="panel panel-pad"><Lifecycle state="PAID"/></div></section>
 

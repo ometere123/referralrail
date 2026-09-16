@@ -4,14 +4,14 @@
 
 ReferralRail is a GenLayer Future of Work protocol for one narrow lifecycle: an employer pre-funds a paid opportunity, a third-party referrer binds the nominated candidate, the candidate explicitly accepts that attribution before completing the job, GenLayer independently verifies the finished public work, and a successful result splits the committed funding between candidate and referrer.
 
-ReferralRail is deliberately **not** a freelance marketplace, generic bounty board, generic escrow, dispute court, reputation system, or prediction market. The protocol exists to make a referral relationship — and its later economic consequence — explicit, accepted, immutable and auditable before the outcome is known.
+ReferralRail is deliberately **not** a freelance marketplace, generic bounty board, generic escrow, dispute court, reputation system, or prediction market. The protocol exists to make a referral relationship and its later economic consequence explicit, accepted, immutable and auditable before the outcome is known.
 
 ## Hackathon target
 
 - Track: **Future of Work**
 - Network: **Studio Next / Studionet Dev**
 - Chain ID: **61997**
-- RPC: `https://studio-next.genlayer.com/api`
+- RPC: `https://studio-dev.genlayer.com/api`
 - Explorer: `https://explorer-studio-dev.genlayer.com/`
 - Contracts: exactly two Intelligent Contracts
 - Backend: none
@@ -88,11 +88,16 @@ npm run build
 python scripts/preflight.py
 ```
 
-The current pure-Python protocol/invariant suite contains 27 passing tests. GenVM lint/direct-mode, package installation and the real Next build still require the toolchain and are intentionally **not** claimed as completed here.
+The pure-Python protocol/invariant suite contains 27 passing tests. GenVM lint and
+Direct Mode add 4 passing tests; the live Studio Next deployment/binding smoke test
+also passes. The frontend TypeScript check and production build pass.
 
 ## Deployment
 
-Do not deploy until a representative **finalized** fee profile has been measured for the actual message-producing branches. `deploy/001_deploy_referralrail.ts` refuses the wrong chain/RPC, deploys ReferralRail, deploys OutcomeJudge with the settlement address, binds the judge exactly once, waits for finalization, verifies execution success and writes `deployment/61997.json` from real receipts/readback.
+`deploy/001_deploy_referralrail.ts` refuses the wrong chain/RPC, obtains a fresh live
+fee quote, deploys ReferralRail, deploys OutcomeJudge with the settlement address,
+binds the judge exactly once, waits for finalization, verifies execution success and
+writes `deployment/61997.json` from real receipts/readback.
 
 Follow `docs/DEPLOYMENT.md` and `AGENT_HANDOFF.md`. No deployment address or transaction hash is hard-coded or fabricated in this repository.
 
@@ -106,4 +111,7 @@ See `docs/DEMO_SCRIPT.md`.
 
 ## Submission status
 
-Code, product architecture, frontend source, deterministic model tests, documentation and deployment automation are prepared. The remaining actions require an internet-enabled GenLayer environment and funded signing wallet: install dependencies, run GenVM checks/direct integration, generate the real fee profile, deploy to 61997, execute live evidence cases, configure the two frontend addresses, build/deploy the frontend, and record the mandatory demo. Exact commands and stop conditions are in `AGENT_HANDOFF.md`.
+The contracts are deployed and the frontend is configured locally for the real 61997
+addresses. The remaining release evidence is the full three-wallet lifecycle,
+negative/inconclusive live case, hosted frontend smoke test, and mandatory demo.
+GLSim multi-validator testing remains blocked by the native Windows runner defect.

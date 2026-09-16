@@ -55,6 +55,21 @@ def now_ts() -> int:
     return int(datetime.now(timezone.utc).timestamp())
 
 
+def contract_at(address: gl.Address):
+    """Support both legacy and current GenVM cross-contract names."""
+    getter = getattr(gl, "get_contract_at", None)
+    if getter is not None:
+        return getter(address)
+    module = getattr(gl, "contract", None)
+    getter = getattr(module, "get_contract_at", None)
+    if getter is not None:
+        return getter(address)
+    getter = getattr(module, "get_at", None)
+    if getter is None:
+        raise AttributeError("GenVM internal contract proxy is unavailable")
+    return getter(address)
+
+
 def clean_text(value: typing.Any, max_len: int) -> str:
     return " ".join(str(value).strip().split())[:max_len]
 
@@ -456,18 +471,9 @@ class OutcomeJudge(gl.contract.Contract):
             evidence_digest=judgment.evidence_digest,
         ).emit()
 
-        # The settlement callback is created only after this judgment finalizes.
-        # ReferralRail independently authenticates sender + opportunity + attempt,
-        # which makes stale/replayed callbacks unable to move funds.
-        settlement = gl.get_contract_at(self.settlement_address)
-        settlement.emit(on="finalized").record_outcome(
-            oid,
-            aid,
-            int(judgment.outcome),
-            judgment.evidence_digest,
-            judgment.reason,
-            judgment.audit,
-        )
+        # ReferralRail pulls this finalized judgment through a read-only call.
+        # Keeping resolution out of this child avoids a second-generation
+        # message allocation while preserving the judge's independent result.
 
     @gl.public.view
     def get_judgment(self, opportunity_id: gl.u256, attempt_id: gl.u256) -> dict:

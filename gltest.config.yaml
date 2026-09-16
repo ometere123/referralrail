@@ -3,7 +3,7 @@ networks:
 
   referralrail_studio_next:
     id: 61997
-    chain_type: studionet
+    chain_type: studio_devnet
     url: "https://studio-next.genlayer.com/api"
     accounts:
       - "${STUDIO_NEXT_PRIVATE_KEY}"
@@ -11,6 +11,17 @@ networks:
     leader_only: false
     default_wait_interval: 10000
     default_wait_retries: 90
+
+  referralrail_glsim:
+    id: 61997
+    chain_type: localnet
+    url: "http://127.0.0.1:4001/api"
+    accounts:
+      - "${STUDIO_NEXT_PRIVATE_KEY}"
+    from: "${STUDIO_NEXT_PRIVATE_KEY}"
+    leader_only: false
+    default_wait_interval: 100
+    default_wait_retries: 60
 
 paths:
   contracts: "contracts"

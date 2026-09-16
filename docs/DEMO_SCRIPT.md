@@ -2,7 +2,7 @@
 
 The demo should show the product, not slides about the product.
 
-## 0–12s — thesis
+## 0-12s - thesis
 
 Open ReferralRail. Say:
 
@@ -10,7 +10,7 @@ Open ReferralRail. Say:
 
 Briefly point to the visible lifecycle rail.
 
-## 12–30s — employer funds
+## 12-30s - employer funds
 
 Use the employer wallet and open **Fund opportunity**. Show:
 
@@ -22,15 +22,15 @@ Use the employer wallet and open **Fund opportunity**. Show:
 
 Submit. Keep the transaction panel on screen long enough to show signature → submitted → consensus → finalized → readback. Open the opportunity in `OPEN` state.
 
-## 30–45s — referrer locks attribution
+## 30-45s - referrer locks attribution
 
 Switch to the referrer wallet. Click **Create referral**. Show that the candidate is already fixed and that the referrer is locking themselves as the attribution source. Submit and show `REFERRED`.
 
-## 45–58s — candidate explicitly accepts
+## 45-58s - candidate explicitly accepts
 
 Switch to candidate wallet. Enter the candidate's GitHub login and click **Accept referral**. Call out that a referrer cannot silently claim a person; acceptance happens before work submission. Show `ACCEPTED` and immutable referrer/reward.
 
-## 58–82s — submit real work / GenLayer judges
+## 58-82s - submit real work / GenLayer judges
 
 Enter the merged PR number and submit. Explain while the UI tracks:
 
@@ -38,7 +38,7 @@ Enter the merged PR number and submit. Explain while the UI tracks:
 
 Show `JUDGING`, then the OutcomeJudge evidence digest/reason/audit when available.
 
-## 82–105s — economic consequence
+## 82-105s - economic consequence
 
 Refresh/read back final state `PAID`. Hold on the settlement panel showing:
 
@@ -50,7 +50,7 @@ Refresh/read back final state `PAID`. Hold on the settlement panel showing:
 
 Optionally open the explorer transaction in a second tab.
 
-## 105–120s — close
+## 105-120s - close
 
 Say:
 

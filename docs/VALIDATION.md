@@ -44,11 +44,11 @@ The immutable employer brief and criteria define policy, but even those values c
 
 ## First-class outcomes
 
-`COMPLETED` — objective gates pass and the inspectable merged changes materially satisfy every mandatory criterion.
+`COMPLETED`: objective gates pass and the inspectable merged changes materially satisfy every mandatory criterion.
 
-`NOT_COMPLETED` — evidence is readable and affirmatively demonstrates an objective failure or a mandatory acceptance criterion is materially unmet/contradicted.
+`NOT_COMPLETED`: evidence is readable and affirmatively demonstrates an objective failure or a mandatory acceptance criterion is materially unmet or contradicted.
 
-`INCONCLUSIVE` — evidence is missing, unavailable, malformed, unsupported in breadth, patchless/truncated/ambiguous, or the qualitative result cannot be safely parsed.
+`INCONCLUSIVE`: evidence is missing, unavailable, malformed, unsupported in breadth, patchless, truncated, ambiguous, or the qualitative result cannot be safely parsed.
 
 Uncertainty is never silently converted into rejection or approval.
 

@@ -43,8 +43,11 @@ export async function ensureStudioNext(): Promise<void> {
   try {
     await p.request({ method: "wallet_switchEthereumChain", params: [{ chainId: WALLET_NETWORK.chainId }] });
   } catch (error: any) {
-    if (error?.code !== 4902) throw error;
+    const message = String(error?.message || "").toLowerCase();
+    const unknownChain = error?.code === 4902 || error?.code === -32603 || message.includes("unrecognized chain") || message.includes("unknown chain");
+    if (!unknownChain) throw error;
     await p.request({ method: "wallet_addEthereumChain", params: [WALLET_NETWORK] });
+    await p.request({ method: "wallet_switchEthereumChain", params: [{ chainId: WALLET_NETWORK.chainId }] });
   }
 }
 

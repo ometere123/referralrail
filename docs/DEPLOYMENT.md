@@ -6,7 +6,7 @@ ReferralRail is hard-locked to:
 
 - Studio Next / Studionet Dev
 - chain ID `61997`
-- RPC `https://studio-next.genlayer.com/api`
+- RPC `https://studio-dev.genlayer.com/api`
 - explorer `https://explorer-studio-dev.genlayer.com/`
 
 The deployment script aborts if the configured client does not match the required chain ID and RPC.
@@ -51,7 +51,7 @@ Do not invent fee allocations. Profile finalized executions that cover the expen
 - inconclusive + retry;
 - expiry/recovery refund paths.
 
-Use finalized receipts and generate `fee-profile.json` with the testing suite. Review that message-producing methods have non-zero message budgets when observed.
+The deploy script uses a fresh `estimateTransactionFees()` quote for every deployment and binding transaction. A measured profile may still be recorded for later optimization, but it is not used as a sendable fee value: zero-message-fee measurement fields can produce an EVM-level `FeeValueMustBeNonZero` rejection.
 
 After the root profile is generated, the frontend can continue safely with network defaults or be upgraded to developer suggestions by copying the measured profile into `frontend/` and passing it as Transaction Kit `suggestions`. Never check in guessed values.
 
@@ -60,7 +60,7 @@ After the root profile is generated, the frontend can continue safely with netwo
 Use the configured signing wallet and explicitly target the required RPC:
 
 ```bash
-npm run deploy -- --rpc https://studio-next.genlayer.com/api
+npm run deploy -- --rpc https://studio-dev.genlayer.com/api
 ```
 
 `deploy/001_deploy_referralrail.ts` performs, in order:
