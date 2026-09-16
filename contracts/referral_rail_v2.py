@@ -140,6 +140,14 @@ class Position:
     terminal_reason: str
 
 
+@gl.evm.contract_interface
+class _Recipient:
+    class View:
+        pass
+    class Write:
+        pass
+
+
 class CampaignCreated(gl.chain.Event):
     def __init__(self, campaign_id: gl.u256, employer: gl.Address, /, **blob): ...
 
@@ -179,6 +187,8 @@ class ReferralRailV2(gl.contract.Contract):
     positions: gl.storage.TreeMap[gl.u256, Position]
     position_exists: gl.storage.TreeMap[gl.u256, bool]
     used_github: gl.storage.TreeMap[str, bool]
+    live_candidates: gl.storage.TreeMap[str, bool]
+    pending_by_referrer: gl.storage.TreeMap[str, gl.u256]
     total_funded: gl.u256
     total_paid: gl.u256
     total_refunded: gl.u256
@@ -208,6 +218,12 @@ class ReferralRailV2(gl.contract.Contract):
     def _unit(self, c: Campaign) -> int:
         return int(c.unit_funding)
 
+    def _candidate_key(self, cid: int, candidate: gl.Address) -> str:
+        return str(cid) + ":" + candidate.as_hex.lower()
+
+    def _pending_key(self, cid: int, referrer: gl.Address) -> str:
+        return str(cid) + ":" + referrer.as_hex.lower()
+
     def _transition(self, cid: gl.u256, p: Position, state: int, reason: str = "") -> None:
         old = int(p.state)
         p.state = gl.u256(state)
@@ -220,6 +236,12 @@ class ReferralRailV2(gl.contract.Contract):
             raise gl.vm.UserError("capacity invariant violated")
         c.occupied = gl.u256(int(c.occupied) - 1)
         c.failed = gl.u256(int(c.failed) + 1)
+        self.live_candidates[self._candidate_key(int(p.campaign_id), p.candidate)] = False
+        if int(p.state) == POS_RESERVED:
+            pending_key = self._pending_key(int(p.campaign_id), p.referrer)
+            pending_count = int(self.pending_by_referrer.get(pending_key) or 0)
+            if pending_count > 0:
+                self.pending_by_referrer[pending_key] = gl.u256(pending_count - 1)
         self._transition(p.campaign_id, p, state, reason)
 
     def _send(self, recipient: gl.Address, amount: int) -> None:
@@ -278,12 +300,25 @@ class ReferralRailV2(gl.contract.Contract):
         referrer = gl.message.sender_address
         if candidate == ZERO or candidate == referrer or candidate == c.employer or referrer == c.employer:
             raise gl.vm.UserError("campaign roles must be distinct")
+        candidate_key = self._candidate_key(int(campaign_id), candidate)
+        if bool(self.live_candidates.get(candidate_key) or False):
+            raise gl.vm.UserError("candidate already has a live position")
+        pending_key = self._pending_key(int(campaign_id), referrer)
+        pending_count = int(self.pending_by_referrer.get(pending_key) or 0)
+        if pending_count >= int(c.max_pending_per_referrer):
+            raise gl.vm.UserError("referrer pending reservation limit reached")
         pid = gl.u256(int(c.next_position_id))
         c.next_position_id = gl.u256(int(c.next_position_id) + 1)
         p = Position(campaign_id, pid, candidate, referrer, "", "", gl.u256(POS_RESERVED), gl.u256(now), gl.u256(min(now + int(c.reservation_window), int(c.participation_deadline))), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(OUTCOME_NONE), "", "", False, False, "")
         key = self._key(int(campaign_id), int(pid))
+        acceptance_cutoff = int(c.participation_deadline) - int(c.work_duration)
+        if acceptance_cutoff <= now:
+            raise gl.vm.UserError("campaign has no valid acceptance window")
+        p.reservation_deadline = gl.u256(min(int(p.reservation_deadline), acceptance_cutoff))
         self.positions[key] = p
         self.position_exists[key] = True
+        self.live_candidates[candidate_key] = True
+        self.pending_by_referrer[pending_key] = gl.u256(pending_count + 1)
         c.occupied = gl.u256(int(c.occupied) + 1)
         PositionReserved(campaign_id, pid, candidate=candidate.as_hex, referrer=referrer.as_hex, reservation_deadline=int(p.reservation_deadline)).emit()
         return pid
@@ -296,10 +331,14 @@ class ReferralRailV2(gl.contract.Contract):
         login = text(github_login, 39)
         if not owner_ok(login):
             raise gl.vm.UserError("invalid GitHub login")
-        identity = str(int(campaign_id)) + ":" + str(int(position_id)) + ":" + p.candidate.as_hex.lower() + ":" + login.lower()
+        identity = str(int(campaign_id)) + ":" + login.lower()
         if bool(self.used_github.get(identity) or False):
             raise gl.vm.UserError("GitHub identity is already bound in this campaign")
         self.used_github[identity] = True
+        pending_key = self._pending_key(int(campaign_id), p.referrer)
+        pending_count = int(self.pending_by_referrer.get(pending_key) or 0)
+        if pending_count > 0:
+            self.pending_by_referrer[pending_key] = gl.u256(pending_count - 1)
         challenge = "ReferralRailV2:" + str(int(campaign_id)) + ":" + str(int(position_id)) + ":" + p.candidate.as_hex + ":" + digest(identity)[:32]
         p.github_login = login; p.challenge = challenge; p.accepted_at = gl.u256(now); p.work_deadline = gl.u256(min(now + int(c.work_duration), int(c.participation_deadline)))
         self._transition(campaign_id, p, POS_ACCEPTED, "candidate accepted")
