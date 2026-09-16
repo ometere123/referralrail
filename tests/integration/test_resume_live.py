@@ -10,7 +10,7 @@ from gltest import get_contract_factory, get_gl_client
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.live_lifecycle import GEN, run_case, send, assert_state
+from scripts.live_lifecycle import send, assert_state
 
 
 @pytest.mark.skipif(os.environ.get("RUN_LIVE_LIFECYCLE") != "1", reason="explicit live Studio Next test")
@@ -24,8 +24,8 @@ def test_resume_and_negative_live_lifecycle():
     factory = get_contract_factory(contract_file_path=Path("referral_rail.py"))
     rail = factory.build_contract(contract_address=deployment["referralRail"]["address"], account=employer)
 
-    submitted = send(rail, "submit_work", [1, 1], candidate, client, triggered=True)
-    settled = assert_state(rail, 1, "PAID")
-    negative = run_case(rail, client, employer, referrer, candidate, "ometere123", "thedadsbot", 13, "negative", "ometere123")
-    assert negative["readbacks"]["settled"]["state"] == "REFUNDED"
-    print(json.dumps({"success": {"opportunity_id": 1, "state": settled["state"], "submission": submitted}, "negative": negative}, default=str))
+    resolved = send(rail, "resolve_judgment", [2, 1], employer, client)
+    settlement = send(rail, "settle_opportunity", [2], employer, client, triggered=True)
+    settled = assert_state(rail, 2, "REFUNDED")
+    assert settled["settlement_released"] is True
+    print(json.dumps({"negative": {"opportunity_id": 2, "state": settled["state"], "resolution": resolved, "settlement": settlement}}, default=str))
