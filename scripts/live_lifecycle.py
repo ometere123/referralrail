@@ -172,7 +172,7 @@ def assert_state(rail, oid: int, expected: str):
 
 def retry_read(read_fn):
     """Retry only Studio's transient execution-slot saturation."""
-    for _ in range(18):
+    for _ in range(60):
         try:
             return read_fn()
         except Exception as exc:
