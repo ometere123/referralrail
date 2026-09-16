@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "workspaces": ["frontend"],
+  "workspaces": ["frontend", "integrations/sdk", "integrations/mcp"],
   "scripts": {
     "dev": "npm --workspace frontend run dev",
     "build": "npm --workspace frontend run build",

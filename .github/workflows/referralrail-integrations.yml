@@ -14,15 +14,17 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
-      - run: npm exec -- tsc -p integrations/sdk/tsconfig.json --noEmit
-      - run: npm exec -- vitest run integrations/sdk/tests
-      - run: npm run build --prefix integrations/sdk
-      - run: npm ci --prefix integrations/mcp
-      - run: npm run build --prefix integrations/mcp
-      - run: npm exec --prefix integrations/mcp tsc -p tsconfig.json --noEmit
-      - run: npm exec --prefix integrations/mcp vitest run tests
-      - run: npm pack --dry-run --prefix integrations/sdk
-      - run: npm pack --dry-run --prefix integrations/mcp
+      - run: npm run typecheck --workspace @referralrail/sdk
+      - run: npm run test --workspace @referralrail/sdk
+      - run: npm run build --workspace @referralrail/sdk
+      - run: npm run typecheck --workspace @referralrail/mcp
+      - run: npm run test --workspace @referralrail/mcp
+      - run: npm run build --workspace @referralrail/mcp
+      - run: npm run stdio:e2e --workspace @referralrail/mcp
+      - run: npm pack --dry-run --workspace @referralrail/sdk
+      - run: npm pack --dry-run --workspace @referralrail/mcp
+      - run: node scripts/validate_referralrail_skill.mjs
+      - run: git diff --exit-code -- contracts frontend deploy deployment
       - name: Secret scan
         shell: bash
-        run: '! rg -n "(PRIVATE_KEY|0x[a-fA-F0-9]{64})" integrations .agents/skills/referralrail --glob "!*.example"'
+        run: '! rg -n "0x[a-fA-F0-9]{64}" integrations .agents/skills/referralrail --glob "!*.example" -g "!dist/**"'

@@ -1,0 +1,15 @@
+name: ReferralRail canonical live read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  live-read:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run build --workspace @referralrail/sdk
+      - run: RUN_REFERRALRAIL_LIVE_READS=1 npm exec -- vitest run integrations/sdk/tests/live-read.test.ts --pool=forks

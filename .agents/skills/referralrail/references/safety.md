@@ -1,5 +1,7 @@
 # Safety
 
-The canonical network and addresses are hard-locked. Do not accept per-call address or RPC overrides. Keep writes disabled unless a signer and explicit write flag are both present. Never log keys. Never use arbitrary contract methods or privileged `set_judge` and `record_outcome` calls.
+The SDK hard-locks canonical use to Studio Next chain `61997` and the two deployed addresses. Do not accept per-call network or contract-address overrides in MCP. Keep writes disabled unless a signer and explicit `REFERRALRAIL_WRITE_ENABLED=true` are both present. Keys belong only in process environment, must never be logged, returned, or placed in tool arguments.
 
-`accepted` is provisional and `finalized` is the source of truth. OutcomeJudge, not the agent, decides completion. For `INCONCLUSIVE`, inspect attempts, deadline, role, and retry eligibility. Do not claim payment or refund until settlement release is finalized and read back.
+`Accepted` is provisional. Every write must reach finalization, prove successful execution, and read finalized protocol state. `PAID` or `REFUNDED` is an outcome state, not proof that value moved. Only `settlement_released` after finalized `settle_opportunity` proves release.
+
+OutcomeJudge owns substantive completion judgment. Do not use an LLM, GitHub API, or personal opinion off-chain to settle the opportunity. For `INCONCLUSIVE`, inspect active attempt, maximum attempts, cure deadline, candidate role, and current state. Recover only after judgment timeout or exhausted/expired cure conditions. Never call `set_judge`, `record_outcome`, or arbitrary contract methods.

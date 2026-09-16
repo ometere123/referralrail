@@ -6,9 +6,13 @@ describe("canonical live reads", () => {
     const rail = new ReferralRailClient();
     const protocol = await rail.getProtocolConfig();
     const accounting = await rail.getAccounting();
-    const opportunity = await rail.getOpportunity(Number(process.env.REFERRALRAIL_LIVE_OPPORTUNITY_ID ?? 3));
+    const paid = await rail.getOpportunity(3);
+    const refunded = await rail.getOpportunity(2);
+    const paidJudgment = await rail.getJudgment(3, 1);
+    const refundedJudgment = await rail.getJudgment(2, 1);
     expect(protocol.judge_address.toLowerCase()).toBe(rail.outcomeJudgeAddress.toLowerCase());
     expect(accounting.conservation_delta).toBeGreaterThanOrEqual(0n);
-    expect(["PAID", "REFUNDED", "EXPIRED", "CANCELLED"]).toContain(opportunity.state);
+    expect(paid.state).toBe("PAID"); expect(paid.settlement_released).toBe(true); expect(paidJudgment?.outcome).toBe("COMPLETED");
+    expect(refunded.state).toBe("REFUNDED"); expect(refunded.settlement_released).toBe(true); expect(refundedJudgment?.outcome).toBe("NOT_COMPLETED");
   }, 180000);
 });

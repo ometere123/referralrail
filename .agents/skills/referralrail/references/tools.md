@@ -1,5 +1,22 @@
-# Tools
+# Tool mapping
 
-Use `referralrail_get_opportunity`, `referralrail_get_protocol`, `referralrail_get_accounting`, `referralrail_get_judgment`, and `referralrail_get_available_actions` for reads. Use `referralrail_create_opportunity` as employer, `referralrail_create_referral` as an unrelated referrer, `referralrail_accept_referral` and `referralrail_submit_work` as the candidate, `referralrail_retry_inconclusive` for a valid bounded retry, `referralrail_resolve_judgment` after a finalized judge record, and `referralrail_settle_opportunity` after `PAID` or `REFUNDED`. `referralrail_cancel_unreferred`, `referralrail_expire`, and `referralrail_recover` are used only when the finalized state and contract deadlines permit them.
+| Tool | Normal caller | Required state and arguments | Permissionless | Moves funds | Expected readback |
+|---|---|---|---|---|---|
+| `referralrail_get_protocol` | anyone | none | yes | no | canonical binding |
+| `referralrail_list_opportunities` | anyone | optional offset and limit | yes | no | finalized list |
+| `referralrail_get_opportunity` | anyone | positive opportunity ID | yes | no | typed opportunity |
+| `referralrail_get_judgment` | anyone | positive opportunity and attempt IDs | yes | no | finalized judge record or empty |
+| `referralrail_get_accounting` | anyone | none | yes | no | conservation totals |
+| `referralrail_get_available_actions` | anyone | ID and optional wallet | yes | no | role and deadline-aware actions |
+| `referralrail_create_opportunity` | employer | all frozen terms and exact funding | no | locks funds | `OPEN` |
+| `referralrail_create_referral` | unrelated referrer | `OPEN`, candidate address | no | no | `REFERRED` attribution |
+| `referralrail_accept_referral` | nominated candidate | `REFERRED`, GitHub login | no | no | `ACCEPTED` |
+| `referralrail_submit_work` | candidate | `ACCEPTED`, PR number | no | no | `JUDGING` and child message |
+| `referralrail_retry_inconclusive` | candidate | valid `INCONCLUSIVE` cure window | no | no | `JUDGING` |
+| `referralrail_resolve_judgment` | any actor | `JUDGING`, finalized attempt | yes | no | `PAID`, `REFUNDED`, or `INCONCLUSIVE` |
+| `referralrail_settle_opportunity` | any actor | unreleased `PAID` or `REFUNDED` | yes | yes | `settlement_released` true |
+| `referralrail_cancel_unreferred` | employer | `OPEN` | no | yes | `CANCELLED` |
+| `referralrail_expire` | any actor | eligible referral or completion timeout | yes | yes | `EXPIRED` |
+| `referralrail_recover` | any actor | judgment timeout or exhausted cure | yes | yes | `REFUNDED` |
 
-Every write requires current state, the proper role where restricted, finalization, successful execution, and readback. Settlement is the only listed action that releases funds.
+Every write uses the SDK. It checks finalized state, waits for finalization, verifies execution, and performs finalized readback. A hash alone is never success.

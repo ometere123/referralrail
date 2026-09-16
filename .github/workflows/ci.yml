@@ -14,8 +14,13 @@ jobs:
         with:
           node-version: '22'
       - run: python -m pip install -r requirements.txt
-      - run: npm install
-      - run: python -m pytest -q
+      - run: npm ci
+      - name: Run offline tests without live signing configuration
+        shell: bash
+        run: |
+          mv gltest.config.yaml gltest.config.live.yaml
+          python -m pytest -q
+          mv gltest.config.live.yaml gltest.config.yaml
       - run: genvm-lint check contracts/referral_rail.py
       - run: genvm-lint check contracts/outcome_judge.py
       - run: npm run typecheck

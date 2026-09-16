@@ -1,0 +1,17 @@
+{
+  "activate": [
+    "check referralrail opportunity 3",
+    "refer this candidate for the funded referralrail opportunity",
+    "submit my merged PR to referralrail",
+    "has the referralrail candidate actually been paid?",
+    "the referralrail judgment is inconclusive, what can the candidate do?",
+    "settle this finalized referralrail outcome"
+  ],
+  "doNotActivate": [
+    "transfer GEN to this wallet",
+    "review this random GitHub pull request",
+    "write a job description",
+    "what is an MCP server?",
+    "check my unrelated employment application"
+  ]
+}
