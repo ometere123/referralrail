@@ -155,6 +155,7 @@ def send(contract, method: str, args: list, actor, client, value: int = 0, trigg
         wait_transaction_status=wait_status,
         wait_triggered_transactions=False,
     )
+    print(json.dumps({"method": method, "hash": tx_hash(receipt), "triggered": triggered}), flush=True)
     if triggered:
         submitted_hash = tx_hash(receipt)
         receipt = finalize_and_wait(client, submitted_hash)
