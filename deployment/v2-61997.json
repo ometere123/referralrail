@@ -1,0 +1,16 @@
+{
+  "version": "2",
+  "network": "Studio Next / Studionet Dev",
+  "chainId": 61997,
+  "rpc": "https://studio-dev.genlayer.com/api",
+  "rail": {
+    "txId": "0x14ceb27ccbeeecea81c59d008b4d6bc2e1d8266b6fc9d01672090de61412669c",
+    "address": "0x637663d4b69ef4Cfda7c6393dC2bF2FdfB25a8F3"
+  },
+  "judge": {
+    "txId": "0xb54a049210b7db9d2ad292fa573c0e8632febc9fe6cc9eee26ac7d2cc08b7331",
+    "address": "0xFB82FEB34B5A2E92A7E65b6ad1078B1bfDf59b6c"
+  },
+  "bindingTransaction": "0x6d9672c699dfb5c9b49223f5c31e6badb802a136e6df7e8c3b4c462f7f83268b",
+  "generatedAt": "2026-09-16T20:37:56.157Z"
+}

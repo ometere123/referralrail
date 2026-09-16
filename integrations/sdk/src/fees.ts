@@ -6,7 +6,7 @@ import type { Opportunity } from "./types.js";
 
 export type FeeMethod = "ordinary" | "message" | "external";
 export function fundingFor(candidatePayment: bigint, referralReward: bigint): bigint { if (candidatePayment <= 0n || referralReward <= 0n) throw new ValidationError("Candidate payment and referral reward must both be positive."); return candidatePayment + referralReward; }
-export function feeMethod(method: string): FeeMethod { return method === "submit_work" || method === "retry_inconclusive" ? "message" : method === "settle_opportunity" ? "external" : "ordinary"; }
+export function feeMethod(method: string): FeeMethod { return method === "submit_work" || method === "retry_inconclusive" ? "message" : method === "settle_opportunity" || method === "settle_position" ? "external" : "ordinary"; }
 export function externalAllocations(recipients: Address[], budget = 120_000_000_000_000n): MessageFeeAllocationInput[] {
   return recipients.map(recipient => ({ messageType: MessageType.External, onAcceptance: false, parentIndex: MESSAGE_ALLOCATION_ROOT_PARENT_INDEX, recipient, callKey: deriveExternalMessageCallKey(), budget, feeParams: encodeExternalMessageFeeParams({ gasLimit: 500_000, maxGasPrice: 300_000_000 }) }));
 }
