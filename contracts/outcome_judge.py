@@ -470,7 +470,6 @@ class OutcomeJudge(gl.contract.Contract):
             gl.u256(oid),
             gl.u256(aid),
             judgment.outcome,
-            outcome=outcome_name(int(judgment.outcome)),
             evidence_digest=judgment.evidence_digest,
         ).emit()
 
