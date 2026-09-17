@@ -308,7 +308,7 @@ class ReferralRailV2(gl.contract.Contract):
         cid = gl.u256(int(self.next_campaign_id))
         self.next_campaign_id = gl.u256(int(self.next_campaign_id) + 1)
         now = now_ts()
-        self.campaigns[cid] = Campaign(gl.message.sender_address, text(title, 120), text(brief), text(criteria), str(repo_owner).strip(), str(repo_name).strip(), text(base_branch, 120), gl.u256(n), gl.u256(int(candidate_reward)), gl.u256(int(referral_reward)), gl.u256(unit), gl.u256(funding), gl.u256(now + cd), gl.u256(rw), gl.u256(wd), gl.u256(pending), gl.u256(CAMPAIGN_ACTIVE), gl.u256(1), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(now), text(evidence_profile, 20).upper(), text(allowed_host, 100).lower(), bool(require_work_challenge))
+        self.campaigns[cid] = Campaign(gl.message.sender_address, text(title, 120), text(brief), text(criteria), str(repo_owner).strip(), str(repo_name).strip(), text(base_branch, 120), gl.u256(n), gl.u256(int(candidate_reward)), gl.u256(int(referral_reward)), gl.u256(unit), gl.u256(funding), gl.u256(now + cd), gl.u256(rw), gl.u256(wd), gl.u256(pending), gl.u256(CAMPAIGN_ACTIVE), gl.u256(1), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(now), gl.u256(0), text(evidence_profile, 20).upper(), text(allowed_host, 100).lower(), bool(require_work_challenge))
         self.total_funded = gl.u256(int(self.total_funded) + funding)
         CampaignCreated(cid, gl.message.sender_address, funding=funding, max_positions=n).emit()
         return cid
@@ -583,6 +583,8 @@ class ReferralRailV2(gl.contract.Contract):
     @gl.public.view
     def get_protocol_config(self) -> dict:
         return {"version": "2", "chain_id": 61997, "identity_address": self.identity_address.as_hex, "evidence_profiles": ["GITHUB_PR", "X_POST", "PUBLIC_URL"], "max_positions": MAX_POSITIONS, "max_attempts": MAX_ATTEMPTS, "judgment_timeout_seconds": JUDGMENT_TIMEOUT, "retry_window_seconds": RETRY_WINDOW, "min_seconds": MIN_SECONDS, "max_seconds": MAX_SECONDS, "state_model": "campaign capacity is success based; terminal failure reopens a funded slot while intake is active"}
+
+
 
 
 
