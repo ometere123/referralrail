@@ -40,7 +40,7 @@ function quoteFromEstimate(base:any, estimate:TransactionFeeEstimate, userValue:
   };
 }
 
-export function useTransactionKit(address:string|null, _externalRecipients:string[]=[]):TransactionKit|null{
+export function useTransactionKit(address:string|null, _externalRecipients:string[]=[], onTransactionId?:(id:string)=>void):TransactionKit|null{
   return useMemo(()=>{
     const injected=provider();
     if(!injected||!address)return null;
@@ -78,7 +78,11 @@ export function useTransactionKit(address:string|null, _externalRecipients:strin
 
     const submit:TransactionKit["submit"]=async(quote,tx)=>{
       const allocations=allocationsByQuote.get(quote as object);
-      if(!allocations||tx.kind!=="write")return base.submit(quote,tx);
+      if(!allocations||tx.kind!=="write"){
+        const result=await base.submit(quote,tx);
+        if(result.genlayerTxId)onTransactionId?.(String(result.genlayerTxId));
+        return result;
+      }
       const genlayerTxId=await client.writeContract({
         ...(quote.gasless?{}:{fees:{distribution:quote.distribution,feeValue:quote.feeValue,messageAllocations:allocations}}),
         value:quote.userValue,
@@ -86,6 +90,7 @@ export function useTransactionKit(address:string|null, _externalRecipients:strin
         functionName:tx.method,
         args:tx.args||[],
       });
+      onTransactionId?.(String(genlayerTxId));
       return {genlayerTxId};
     };
 
@@ -95,5 +100,5 @@ export function useTransactionKit(address:string|null, _externalRecipients:strin
       track:base.track,
       verification:base.verification,
     } as TransactionKit;
-  },[address]);
+  },[address,onTransactionId]);
 }
