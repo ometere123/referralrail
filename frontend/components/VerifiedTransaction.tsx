@@ -6,7 +6,7 @@ import { useWallet } from "@/lib/genlayer/wallet";
 import { useTransactionKit } from "@/lib/genlayer/kit";
 import { REFERRALRAIL_NETWORK } from "@/lib/genlayer/network";
 
-export default function VerifiedTransaction({tx,verify,onVerified}:{tx:SubmitInput;verify:()=>Promise<boolean>;onVerified?:()=>void|Promise<void>}){
+export default function VerifiedTransaction({tx,userValue,verify,onVerified}:{tx:SubmitInput;userValue?:bigint;verify:()=>Promise<boolean>;onVerified?:()=>void|Promise<void>}){
  const {address,correctNetwork}=useWallet(); const kit=useTransactionKit(address);
  const [phase,setPhase]=useState<'tracking'|'readback'|'confirmed'|'failed'>('tracking'); const [message,setMessage]=useState('');
  const done=async(status:TrackedStatus)=>{
@@ -21,10 +21,10 @@ export default function VerifiedTransaction({tx,verify,onVerified}:{tx:SubmitInp
  if(!kit) return <div className="notice warning">Transaction Kit is unavailable for this wallet session.</div>;
  return <div className="tx-shell">
    <div className="tx-proofline"><span>Signature</span><span>Submitted</span><span>Consensus</span><span>Finalized</span><span>Readback</span></div>
-   {phase!=='confirmed'&&phase!=='failed'&&<GenLayerTransactionPanel kit={kit} tx={tx} network={REFERRALRAIL_NETWORK.chainName} theme="dark" trackUntil="finalized" onDone={done}/>} 
+   {phase!=='confirmed'&&phase!=='failed'&&<GenLayerTransactionPanel kit={kit} tx={tx} userValue={userValue} network={REFERRALRAIL_NETWORK.chainName} theme="dark" trackUntil="finalized" onDone={done}/>} 
    {phase==='readback'&&<div className="verification-state"><DatabaseZap size={18}/>{message}</div>}
    {phase==='confirmed'&&<div className="verification-state success"><CheckCircle2 size={19}/><div><strong>Protocol state confirmed</strong><p>{message}</p></div></div>}
-   {phase==='failed'&&<div className="verification-state failure"><XCircle size={19}/><div><strong>Not confirmed</strong><p>{message}</p></div></div>}
+   {phase==='failed'&&<div className="verification-state failure"><XCircle2 size={19}/><div><strong>Not confirmed</strong><p>{message}</p></div></div>}
    <div className="finality-note"><ShieldCheck size={14}/> ReferralRail never labels a write successful from wallet submission alone. This panel tracks GenLayer finality, then verifies final contract state.</div>
  </div>
 }
