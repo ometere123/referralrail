@@ -24,7 +24,7 @@ export default function VerifiedTransaction({tx,userValue,verify,onVerified}:{tx
    {phase!=='confirmed'&&phase!=='failed'&&<GenLayerTransactionPanel kit={kit} tx={tx} userValue={userValue} network={REFERRALRAIL_NETWORK.chainName} theme="dark" trackUntil="finalized" onDone={done}/>} 
    {phase==='readback'&&<div className="verification-state"><DatabaseZap size={18}/>{message}</div>}
    {phase==='confirmed'&&<div className="verification-state success"><CheckCircle2 size={19}/><div><strong>Protocol state confirmed</strong><p>{message}</p></div></div>}
-   {phase==='failed'&&<div className="verification-state failure"><XCircle2 size={19}/><div><strong>Not confirmed</strong><p>{message}</p></div></div>}
+   {phase==='failed'&&<div className="verification-state failure"><XCircle size={19}/><div><strong>Not confirmed</strong><p>{message}</p></div></div>}
    <div className="finality-note"><ShieldCheck size={14}/> ReferralRail never labels a write successful from wallet submission alone. This panel tracks GenLayer finality, then verifies final contract state.</div>
  </div>
 }
