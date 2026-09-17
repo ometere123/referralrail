@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { configuredClient, requireWrite } from "./config.js";
+import { configuredClient, configuredV2Client, requireWrite } from "./config.js";
 
 const id = z.number().int().positive(); const address = z.string().regex(/^0x[0-9a-fA-F]{40}$/); const amount = z.string().regex(/^[0-9]+$/).transform(BigInt);
 const state = (value: unknown) => JSON.parse(JSON.stringify(value, (_key, v) => typeof v === "bigint" ? v.toString() : v));
@@ -27,5 +27,21 @@ export function createReferralRailServer(): McpServer {
   write("referralrail_recover", "Apply bounded stalled-judgment or exhausted-inconclusive recovery.", { opportunityId: id }, x => client.recover(x.opportunityId));
   server.registerResource("referralrail-deployment", "referralrail://deployment", { description: "Canonical ReferralRail deployment.", mimeType: "application/json" }, async () => ({ contents: [{ uri: "referralrail://deployment", mimeType: "application/json", text: JSON.stringify({ chainId: 61997, rpc: "https://studio-dev.genlayer.com/api", referralRail: "0x935A6fD995b4db5d64E1139D57a37a3f73BE2Ef8", outcomeJudge: "0x7842393CeEAB5F053B3024673B5986fDdb95A4C9" }) }] }));
   server.registerResource("referralrail-protocol", "referralrail://protocol", { description: "Protocol safety rules.", mimeType: "text/plain" }, async () => ({ contents: [{ uri: "referralrail://protocol", mimeType: "text/plain", text: "Use finalized state as authority. A PAID or REFUNDED state is not proof of released funds until settlement_released is true. OutcomeJudge owns completion judgment." }] }));
+  if (process.env.REFERRALRAIL_V2_ADDRESS && process.env.OUTCOMEJUDGE_V2_ADDRESS) {
+  const v2 = configuredV2Client();
+  server.registerTool("referralrail_v2_get_protocol", { description: "Read the configured v2 campaign protocol.", inputSchema: {} }, async () => text(await v2.client.getProtocolConfig()));
+  server.registerTool("referralrail_v2_list_campaigns", { description: "List finalized v2 campaigns.", inputSchema: { offset: z.number().int().nonnegative().optional(), limit: z.number().int().min(1).max(40).optional() } }, async ({ offset, limit }) => text(await v2.client.listCampaigns({ offset, limit })));
+  server.registerTool("referralrail_v2_get_campaign", { description: "Read a finalized v2 campaign.", inputSchema: { campaignId: id } }, async ({ campaignId }) => text(await v2.client.getCampaign(campaignId)));
+  server.registerTool("referralrail_v2_list_positions", { description: "List finalized positions in a v2 campaign.", inputSchema: { campaignId: id, offset: z.number().int().nonnegative().optional(), limit: z.number().int().min(1).max(100).optional() } }, async ({ campaignId, offset, limit }) => text(await v2.client.listPositions(campaignId, { offset, limit })));
+  server.registerTool("referralrail_v2_get_judgment", { description: "Read a finalized v2 OutcomeJudge record.", inputSchema: { campaignId: id, positionId: id, attemptId: id } }, async ({ campaignId, positionId, attemptId }) => text(await v2.client.getJudgment(campaignId, positionId, attemptId)));
+  const v2write = (name: string, description: string, schema: Record<string, z.ZodTypeAny>, fn: (input: any) => Promise<unknown>) => server.registerTool(name, { description, inputSchema: schema }, async (input) => { requireWrite(v2.writeEnabled, v2.account); return text(await fn(input)); });
+  v2write("referralrail_v2_create_campaign", "Create and fully fund a v2 multi-position campaign.", { title: z.string().min(3), brief: z.string().min(20), criteria: z.string().min(20), repoOwner: z.string().min(1), repoName: z.string().min(1), baseBranch: z.string().min(1), maxPositions: z.number().int().positive(), candidateReward: amount, referralReward: amount, reservationWindowSeconds: z.number().int().min(60), workDurationSeconds: z.number().int().min(60), campaignDurationSeconds: z.number().int().min(60), maxPendingPerReferrer: z.number().int().positive() }, x => v2.client.createCampaign(x));
+  v2write("referralrail_v2_create_referral", "Reserve a funded v2 campaign position for its nominated candidate.", { campaignId: id, candidate: address }, x => v2.client.createReferral(x.campaignId, x.candidate));
+  v2write("referralrail_v2_accept_referral", "Accept a v2 referral and bind the candidate GitHub identity.", { campaignId: id, positionId: id, githubLogin: z.string().min(1) }, x => v2.client.acceptReferral(x.campaignId, x.positionId, x.githubLogin));
+  v2write("referralrail_v2_submit_work", "Submit a pull request number for v2 consensus judgment.", { campaignId: id, positionId: id, prNumber: id }, x => v2.client.submitWork(x.campaignId, x.positionId, x.prNumber));
+  v2write("referralrail_v2_resolve_judgment", "Materialize a finalized v2 judgment into campaign state.", { campaignId: id, positionId: id, attemptId: id }, x => v2.client.resolveJudgment(x.campaignId, x.positionId, x.attemptId));
+  v2write("referralrail_v2_settle_position", "Release both v2 payout legs after a completed judgment.", { campaignId: id, positionId: id }, x => v2.client.settlePosition(x.campaignId, x.positionId));
+  v2write("referralrail_v2_recover_position", "Apply permitted v2 timeout or exhausted-cure recovery.", { campaignId: id, positionId: id }, x => v2.client.recoverPosition(x.campaignId, x.positionId));
+  }
   return server;
 }

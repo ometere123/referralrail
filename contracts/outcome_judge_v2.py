@@ -5,7 +5,6 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import typing
-import urllib.request
 import genlayer as gl
 
 try:
@@ -36,10 +35,11 @@ def timestamp(v: typing.Any) -> int:
 
 
 def fetch(url: str) -> typing.Any:
-    req = urllib.request.Request(url, headers={"Accept": "application/vnd.github+json", "User-Agent": "ReferralRailV2"})
-    with urllib.request.urlopen(req, timeout=8) as response:
-        body = response.read(300000)
-    return json.loads(body.decode("utf-8"))
+    response = gl.nondet.web.get(url)
+    body = response.body.decode("utf-8")
+    if len(body) > 300000:
+        raise ValueError("GitHub response exceeded bounded size")
+    return json.loads(body)
 
 
 def inconclusive(reason: str, audit: str) -> dict:
@@ -104,7 +104,7 @@ class Judgment:
 
 
 class JudgmentDecided(gl.chain.Event):
-    def __init__(self, campaign_id: gl.u256, position_id: gl.u256, attempt_id: gl.u256, outcome: gl.u256, /, **blob): ...
+    def __init__(self, campaign_id: gl.u256, position_id: gl.u256, /, **blob): ...
 
 
 class OutcomeJudgeV2(gl.contract.Contract):
@@ -145,7 +145,7 @@ class OutcomeJudgeV2(gl.contract.Contract):
             raise gl.vm.UserError("invalid consensus judgment")
         item = Judgment(gl.u256(int(campaign_id)), gl.u256(int(position_id)), gl.u256(int(attempt_id)), gl.u256(int(result["outcome"])), clean(result.get("evidence_digest", ""), 180), clean(result.get("reason", "")), clean(result.get("audit", ""), MAX_AUDIT), gl.u256(int(datetime.now(timezone.utc).timestamp())))
         self.judgments[key] = item; self.exists[key] = True
-        JudgmentDecided(item.campaign_id, item.position_id, item.attempt_id, item.outcome, evidence_digest=item.evidence_digest).emit()
+        JudgmentDecided(item.campaign_id, item.position_id, attempt_id=item.attempt_id, outcome=item.outcome, evidence_digest=item.evidence_digest).emit()
 
     @gl.public.view
     def get_judgment(self, campaign_id: gl.u256, position_id: gl.u256, attempt_id: gl.u256) -> dict:

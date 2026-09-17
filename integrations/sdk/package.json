@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": false,
   "type": "module",
-  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }, "./v2": { "types": "./dist/v2.d.ts", "import": "./dist/v2.js" } },
   "files": ["dist", "README.md", "examples"],
   "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json --noEmit", "test": "vitest run", "pack:check": "npm pack --dry-run" },
   "dependencies": { "genlayer-js": "2.0.0-rc.1" },

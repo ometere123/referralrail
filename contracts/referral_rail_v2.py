@@ -332,6 +332,7 @@ class ReferralRailV2(gl.contract.Contract):
         if not owner_ok(login):
             raise gl.vm.UserError("invalid GitHub login")
         identity = str(int(campaign_id)) + ":" + login.lower()
+        proof_identity = str(int(campaign_id)) + ":" + str(int(position_id)) + ":" + p.candidate.as_hex.lower() + ":" + login.lower()
         if bool(self.used_github.get(identity) or False):
             raise gl.vm.UserError("GitHub identity is already bound in this campaign")
         self.used_github[identity] = True
@@ -339,7 +340,7 @@ class ReferralRailV2(gl.contract.Contract):
         pending_count = int(self.pending_by_referrer.get(pending_key) or 0)
         if pending_count > 0:
             self.pending_by_referrer[pending_key] = gl.u256(pending_count - 1)
-        challenge = "ReferralRailV2:" + str(int(campaign_id)) + ":" + str(int(position_id)) + ":" + p.candidate.as_hex + ":" + digest(identity)[:32]
+        challenge = "ReferralRailV2:" + str(int(campaign_id)) + ":" + str(int(position_id)) + ":" + p.candidate.as_hex + ":" + digest(proof_identity)[:32]
         p.github_login = login; p.challenge = challenge; p.accepted_at = gl.u256(now); p.work_deadline = gl.u256(min(now + int(c.work_duration), int(c.participation_deadline)))
         self._transition(campaign_id, p, POS_ACCEPTED, "candidate accepted")
 

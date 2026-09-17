@@ -1,6 +1,7 @@
 import { createAccount } from "genlayer-js";
 import type { Account } from "viem";
 import { ReferralRailClient } from "@referralrail/sdk";
+import { ReferralRailV2Client } from "@referralrail/sdk/v2";
 
 export function configuredClient(): { client: ReferralRailClient; account?: Account; writeEnabled: boolean } {
   const key = process.env.REFERRALRAIL_PRIVATE_KEY;
@@ -8,6 +9,17 @@ export function configuredClient(): { client: ReferralRailClient; account?: Acco
   if (writeEnabled && !key) throw new Error("REFERRALRAIL_WRITE_ENABLED=true requires REFERRALRAIL_PRIVATE_KEY.");
   const account = key ? createAccount(key as `0x${string}`) : undefined;
   return { client: new ReferralRailClient(account ? { account } : {}), account, writeEnabled };
+}
+
+export function configuredV2Client(): { client: ReferralRailV2Client; account?: Account; writeEnabled: boolean } {
+  const key = process.env.REFERRALRAIL_PRIVATE_KEY;
+  const writeEnabled = process.env.REFERRALRAIL_WRITE_ENABLED === "true";
+  if (writeEnabled && !key) throw new Error("REFERRALRAIL_WRITE_ENABLED=true requires REFERRALRAIL_PRIVATE_KEY.");
+  const rail = process.env.REFERRALRAIL_V2_ADDRESS;
+  const judge = process.env.OUTCOMEJUDGE_V2_ADDRESS;
+  if (!rail || !judge) throw new Error("REFERRALRAIL_V2_ADDRESS and OUTCOMEJUDGE_V2_ADDRESS are required for v2 tools.");
+  const account = key ? createAccount(key as `0x${string}`) : undefined;
+  return { client: new ReferralRailV2Client({ referralRailAddress: rail as `0x${string}`, outcomeJudgeAddress: judge as `0x${string}`, ...(account ? { account } : {}) }), account, writeEnabled };
 }
 
 export function requireWrite(writeEnabled: boolean, account?: Account): void {
