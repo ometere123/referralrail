@@ -1,0 +1,28 @@
+{
+  "judgment": {
+    "attempt_id": 1,
+    "audit": "repo=True author=False branch=True fresh=False proof=False pr=13",
+    "campaign_id": 3,
+    "decided_at": 1789619832,
+    "evidence_digest": "d3cd0a693f64f587c9ce3abef07915dd8971c9ed3206425beaa7fadf697e017a",
+    "outcome": "NOT_COMPLETED",
+    "outcome_code": 2,
+    "position_id": 1,
+    "reason": "The submitted evidence failed a frozen repository, identity, branch, freshness or ownership-proof check."
+  },
+  "resolved": { "hash": "0xc426e49ffd92bb190431661efdbebacd70978097fd5af1e8af1241221a2e1da5" },
+  "afterResolve": {
+    "campaign_id": 3,
+    "position_id": 1,
+    "state": "FAILED",
+    "state_code": 7,
+    "outcome": "NOT_COMPLETED",
+    "outcome_code": 2,
+    "pr_number": 13,
+    "candidate_paid": false,
+    "referrer_paid": false,
+    "settlement_released": false,
+    "evidence_digest": "d3cd0a693f64f587c9ce3abef07915dd8971c9ed3206425beaa7fadf697e017a",
+    "reason": "The submitted evidence failed a frozen repository, identity, branch, freshness or ownership-proof check."
+  }
+}

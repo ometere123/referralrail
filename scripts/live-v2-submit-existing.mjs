@@ -4,10 +4,13 @@ const rpc="https://studio-dev.genlayer.com/api";
 const m=JSON.parse(readFileSync("deployment/v2-61997.json","utf8"));
 const base={...chains.studioDevnet,rpcUrls:{...chains.studioDevnet.rpcUrls,default:{http:[rpc]}}};
 const c=createClient({endpoint:rpc,chain:base,account:createAccount(process.env.STUDIO_NEXT_CANDIDATE_PRIVATE_KEY)});
-const positionArgs=[1,1];
+const campaignId=Number(process.env.V2_CAMPAIGN_ID || 1);
+const positionId=Number(process.env.V2_POSITION_ID || 1);
+const prNumber=Number(process.env.V2_PR_NUMBER || 1);
+const positionArgs=[campaignId,positionId];
 const before=await c.readContract({address:m.rail.address,functionName:"get_position",args:positionArgs});
 if(before.state!=="ACCEPTED") throw Error(`position is ${before.state}, expected ACCEPTED`);
-const submitArgs=[1,1,1];
+const submitArgs=[campaignId,positionId,prNumber];
 const q=await c.estimateTransactionFeesForWrite({account:c.account,address:m.rail.address,functionName:"submit_work",args:submitArgs,value:0n});
 const h=await c.writeContract({account:c.account,address:m.rail.address,functionName:"submit_work",args:submitArgs,value:0n,fees:{distribution:q.distribution,feeValue:q.feeValue,messageAllocations:q.messageAllocations}});
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -22,6 +25,6 @@ for(let i=0;i<60;i++){
   await sleep(10000);
 }
 if(!receipt||!isSuccessful(receipt)) throw Error(`${h}: ${receipt?.txExecutionResultName||"timeout"}`);
-const out={hash:h,before,receipt,position:await c.readContract({address:m.rail.address,functionName:"get_position",args:positionArgs})};
-writeFileSync("deployment/v2-live-submit.json",JSON.stringify(out,null,2,(k,v)=>typeof v==="bigint"?v.toString():v)+"\n");
+const out={campaignId,positionId,prNumber,hash:h,before,receipt,position:await c.readContract({address:m.rail.address,functionName:"get_position",args:positionArgs})};
+writeFileSync(process.env.V2_SUBMIT_OUTPUT || "deployment/v2-live-submit.json",JSON.stringify(out,null,2,(k,v)=>typeof v==="bigint"?v.toString():v)+"\n");
 console.log(JSON.stringify({hash:h,children:receipt.triggered_transactions,position:out.position},null,2));
