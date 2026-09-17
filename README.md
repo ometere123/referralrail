@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="frontend/public/favicon.svg" width="96" alt="ReferralRail logo" />
+</p>
+
 # ReferralRail
 
 **Referral attribution becomes enforceable economic state.**
@@ -19,6 +23,66 @@ ReferralRail is deliberately **not** a freelance marketplace, generic bounty boa
 
 The repository intentionally hard-locks the frontend and deployment tooling to this network configuration.
 
+## Current architecture · v1
+
+V1 keeps the trust boundary deliberately small. The browser, SDK and MCP surfaces all resolve to the same two-contract protocol on GenLayer. There is no application backend or private database between the user and the protocol state.
+
+```mermaid
+flowchart LR
+  subgraph ACTORS["Economic actors"]
+    E["Employer"]
+    R["Referrer"]
+    C["Candidate"]
+  end
+
+  subgraph SURFACES["Product and agent surfaces"]
+    UI["Next.js frontend\nWallet + role-aware actions"]
+    SDK["@referralrail/sdk\nTyped reads + writes"]
+    MCP["@referralrail/mcp\nRead-only by default"]
+    SKILL["Agent Skill\nProtocol instructions"]
+    TK["Transaction Kit / genlayer-js\nFees + finality + readback"]
+  end
+
+  subgraph GENLAYER["GenLayer Studio Next · chain 61997"]
+    RR["ReferralRail\nEscrow · attribution · state machine\nrecovery · accounting · settlement"]
+    OJ["OutcomeJudge\nGitHub evidence · deterministic checks\nGenLayer consensus judgment"]
+  end
+
+  subgraph EVIDENCE["Public evidence boundary"]
+    GH["GitHub API\nPR metadata · changed files · patches"]
+  end
+
+  subgraph VALUE["Economic outcomes"]
+    CP["Candidate payout"]
+    RP["Referrer reward"]
+    ER["Employer refund"]
+  end
+
+  E --> UI
+  R --> UI
+  C --> UI
+
+  SKILL --> MCP --> SDK
+  UI --> TK
+  SDK --> TK
+  TK --> RR
+
+  RR -- "finalized judgment request" --> OJ
+  OJ -- "bounded public fetch" --> GH
+  GH -- "objective evidence" --> OJ
+  OJ -- "stored COMPLETED / NOT_COMPLETED / INCONCLUSIVE" --> RR
+
+  RR -- "COMPLETED + settle" --> CP
+  RR -- "COMPLETED + settle" --> RP
+  RR -- "NOT_COMPLETED / expiry / recovery" --> ER
+```
+
+The architecture has three deliberate separations:
+
+- **coordination state** lives in `ReferralRail`, including escrow, accepted attribution, deadlines and settlement truth;
+- **substantive work judgment** lives in `OutcomeJudge`, which independently refetches public GitHub evidence under GenLayer consensus;
+- **interfaces never become authorities**: the frontend, SDK, MCP server and Agent Skill can request actions and display finalized state, but none can invent a judgment or bypass the contracts.
+
 ## Product lifecycle
 
 1. **Employer funds opportunity.** The immutable brief, acceptance criteria, GitHub repository, candidate wallet, candidate payment, referral reward, and deadlines are written on-chain. The call must carry exactly `candidate payment + referral reward`.
@@ -35,6 +99,73 @@ Terminal opportunity states are `PAID`, `REFUNDED`, `EXPIRED`, or `CANCELLED`.
 The deployed product on `main` is ReferralRail v1. A broader multi-position protocol is being built separately on the [`referralrail-v2`](https://github.com/ometere123/referralrail/tree/referralrail-v2) branch. V2 is intentionally isolated from v1: it uses separate contracts, separate deployment records and separate `/v2` product routes, and it is **not** the production protocol served by the current v1 deployment.
 
 V2 changes the unit of coordination from **one funded opportunity for one nominated candidate** to **one fully funded campaign with multiple independently judged referral positions**.
+
+### V2 architecture
+
+V2 preserves the same two-contract trust model, but moves escrow and accounting up to the campaign level while each referral becomes an independently tracked position. Successful positions consume the campaign target; failed or expired positions can release capacity for replacement participation while that capacity is still legally reusable.
+
+```mermaid
+flowchart LR
+  subgraph ACTORS2["Campaign participants"]
+    EMP["Employer"]
+    REF1["Referrer A"]
+    REF2["Referrer B"]
+    CAN1["Candidate A"]
+    CAN2["Candidate B"]
+  end
+
+  subgraph SURFACES2["V2 product and agent surfaces"]
+    V2UI["/v2 campaign UI\nCampaign + position actions"]
+    V2SDK["V2 SDK\nCampaign · position · accounting"]
+    V2MCP["MCP + Agent Skill\nNamed protocol operations"]
+  end
+
+  subgraph CHAIN2["GenLayer Studio Next · isolated v2 deployment"]
+    RRV2["ReferralRailV2\nCampaign escrow · funded capacity\nO(1) positions · deadlines · recovery\nposition payouts · campaign refund"]
+    OJV2["OutcomeJudgeV2\nIdentity proof · freshness · repo/branch checks\nsubstantive GenLayer judgment"]
+  end
+
+  subgraph GITHUB2["Public GitHub evidence"]
+    OWN["Ownership challenge\nwallet ↔ GitHub login proof"]
+    PR2["Fresh PR evidence\nrepo · branch · author · patch"]
+  end
+
+  subgraph CAPACITY["Campaign economics"]
+    FUND["Up-front backing\nmax_positions × unit reward"]
+    LIVE["Live reserved / accepted / judging positions"]
+    REUSE["Reusable capacity\nFAILED · EXPIRED · DECLINED"]
+    PAY["Successful position\nCandidate + referrer payout"]
+    FINAL["Final unused backing\nEmployer refund"]
+  end
+
+  EMP --> V2UI
+  REF1 --> V2UI
+  REF2 --> V2UI
+  CAN1 --> V2UI
+  CAN2 --> V2UI
+  V2MCP --> V2SDK --> RRV2
+  V2UI --> RRV2
+
+  EMP -- "fund campaign" --> FUND --> RRV2
+  RRV2 --> LIVE
+  RRV2 -- "acceptance challenge" --> OWN
+  CAN1 --> OWN
+  CAN2 --> OWN
+
+  RRV2 -- "position evidence request" --> OJV2
+  OJV2 --> OWN
+  OJV2 --> PR2
+  OWN --> OJV2
+  PR2 --> OJV2
+  OJV2 -- "COMPLETED / NOT_COMPLETED / INCONCLUSIVE" --> RRV2
+
+  RRV2 -- "successful position" --> PAY
+  RRV2 -- "failed / expired / declined" --> REUSE
+  REUSE -- "while intake remains legal" --> LIVE
+  RRV2 -- "all obligations resolved + campaign finalized" --> FINAL
+```
+
+The important V2 distinction is that **success capacity and unresolved occupancy are different concepts**. A paid success permanently counts toward the campaign target without remaining an unresolved position, while failed/expired/declined positions may free backing for another participant. Campaign closure therefore depends on resolved economic obligations, not simply on whether a position ever existed.
 
 ### Campaigns and funded capacity
 
