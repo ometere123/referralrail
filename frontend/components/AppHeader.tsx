@@ -10,7 +10,7 @@ export default function AppHeader(){
     <Link className="brand" href="/" aria-label="ReferralRail home">
       <span className="brand-mark"><Link2 size={17}/></span><span>ReferralRail</span>
     </Link>
-    <nav className="nav-links"><Link href="/opportunities">Opportunities</Link><Link href="/v2">V2 campaigns</Link><Link href="/dashboard">Dashboard</Link><Link href="/protocol">Protocol</Link><Link href="/docs">Docs</Link><Link href="/opportunities/new">Create</Link></nav>
+    <nav className="nav-links"><Link href="/opportunities">Opportunities</Link><Link href="/v2">V2 campaigns</Link><Link href="/v2/identity">Identity</Link><Link href="/dashboard">Dashboard</Link><Link href="/protocol">Protocol</Link><Link href="/docs">Docs</Link><Link href="/opportunities/new">Create</Link></nav>
     <div className="wallet-zone">
       <span className={`network-chip ${w.correctNetwork?'ok':'warn'}`}>
         {w.connected && !w.correctNetwork ? <AlertTriangle size={13}/> : <span className="pulse-dot"/>}
@@ -23,3 +23,5 @@ export default function AppHeader(){
     {w.error && <div className="wallet-error">{w.error}</div>}
   </header>
 }
+
+
