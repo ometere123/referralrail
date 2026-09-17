@@ -6,6 +6,6 @@
   "bin": { "referralrail-mcp": "dist/index.js" },
   "files": ["dist", "README.md", ".env.example"],
   "scripts": { "build": "tsc -p tsconfig.json", "typecheck": "tsc -p tsconfig.json --noEmit", "test": "vitest run", "stdio:e2e": "node tests/stdio-e2e.mjs", "pack:check": "npm pack --dry-run" },
-  "dependencies": { "@modelcontextprotocol/sdk": "^1.17.5", "@referralrail/sdk": "^0.1.0", "zod": "^3.25.76" },
+  "dependencies": { "@modelcontextprotocol/sdk": "^1.17.5", "@referralrail/sdk": "^0.2.0", "zod": "^3.25.76" },
   "devDependencies": { "@types/node": "^24.9.1", "typescript": "^5.9.3", "vitest": "^4.1.8" }
 }
