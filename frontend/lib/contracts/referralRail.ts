@@ -8,7 +8,7 @@ export type Opportunity = {
   funded_amount:number|string|bigint; created_at:number; referral_deadline:number; completion_deadline:number;
   state:OpportunityState; state_code:number; referrer:string; candidate_github:string; referred_at:number; accepted_at:number;
   active_attempt:number; attempt_count:number; active_pr_number:number; evidence_submitted_at:number; judgment_timeout_at:number;
-  retry_deadline:number; last_outcome:Outcome; last_outcome_code:number; last_evidence_digest:string; last_reason:string; last_audit:string; closed_at:number;
+  retry_deadline:number; last_outcome:Outcome; last_outcome_code:number; last_evidence_digest:string; last_reason:string; last_audit:string; closed_at:number; settlement_released:boolean;
 };
 export type Accounting={ total_funded:number|string|bigint; total_paid:number|string|bigint; total_refunded:number|string|bigint; locked_total:number|string|bigint; conservation_delta:number|string|bigint };
 export type Judgment={ opportunity_id:number; attempt_id:number; outcome:string; evidence_digest:string; reason:string; audit:string; decided_at:number };
