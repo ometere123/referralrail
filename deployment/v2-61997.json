@@ -4,19 +4,19 @@
   "chainId": 61997,
   "rpc": "https://studio-dev.genlayer.com/api",
   "identity": {
-    "txId": "0x9f1c501e4b17f37f0aa8af6913bb11d6ffe7663f22ce86cfa7915e53b906e286",
-    "address": "0xc9Fcae4a28087A310b5160840EB297a1A9107052"
+    "txId": "0xc05974c5b8809aeb823325198ac48e9ca526ab6a0ad953e8875b5354778bd6d3",
+    "address": "0xB846059f34D6CF57AF6E29D33DFdC4027b66D4D6"
   },
   "rail": {
-    "txId": "0x53f4829c345866e7478f85607ed9cde85a9416bb1140e145e6b092e0c026d72a",
-    "address": "0xF5c0F21B9527Fb0bB4EC7994f45E3Aa9731d7807"
+    "txId": "0x4f7d49e36b6b3cc7d4642357da2085dcd1da63d05ef103f25b4e0f325c69a9d3",
+    "address": "0xAbd266a04FB4A6d997B36A8C8372DC81313F7A32"
   },
   "judge": {
-    "txId": "0xd60bdc86ec3ad79b5a8298aa18db137e465ee1f86284590ec8973d5f28a5b46d",
-    "address": "0x0d83a825A5e6Ba0e261427f7D93C0925f388FEEf"
+    "txId": "0x0c8abfa8140e9a7b50dd5ee91c3b7d8b28edea82d08064540b30bdd9d5577ab8",
+    "address": "0xe24c7B75E1296F02Fa3FB39EFCA4483BAAc57d5d"
   },
-  "identityBindingTransaction": "0xd752983b0e4a0b1854ce321d3022b7913a76e97b6ff2bc465ea50584d4b10a05",
-  "bindingTransaction": "0xb1bedbfd520f9831521098c622c9f2b43973c51baaa141a21b54b80c405a34df",
+  "identityBindingTransaction": "0x9fa487804547338570aa12e2be0f168dc31d259bb5022cf401a933356a2d2c2f",
+  "bindingTransaction": "0x4568f499af71152e2156ae2efb5c6d5a6b1f455687c245fbbf58f2aa20793080",
   "protocol": {
     "chain_id": 61997,
     "evidence_profiles": [
@@ -24,7 +24,7 @@
       "X_POST",
       "PUBLIC_URL"
     ],
-    "identity_address": "0xc9Fcae4a28087A310b5160840EB297a1A9107052",
+    "identity_address": "0xB846059f34D6CF57AF6E29D33DFdC4027b66D4D6",
     "judgment_timeout_seconds": 86400,
     "max_attempts": 2,
     "max_positions": 1000,
@@ -34,5 +34,5 @@
     "state_model": "campaign capacity is success based; terminal failure reopens a funded slot while intake is active",
     "version": "2"
   },
-  "generatedAt": "2026-09-17T22:25:42.798Z"
+  "generatedAt": "2026-09-17T22:39:55.878Z"
 }

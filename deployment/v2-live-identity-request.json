@@ -1,12 +1,12 @@
 {
   "chainId": 61997,
-  "identityAddress": "0xc9Fcae4a28087A310b5160840EB297a1A9107052",
+  "identityAddress": "0xB846059f34D6CF57AF6E29D33DFdC4027b66D4D6",
   "wallet": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
-  "requestTransaction": "0xdc58dbdce43e6c18c5a1ff4ab550f5710a8273ccde8577837781c4f7c53a257f",
+  "requestTransaction": "0xfaaab1ee43778324a83daac2046b0cbd17bfcb4d1bd96356b7c9d9bbe618718d",
   "receipt": {
-    "hash": "0xdc58dbdce43e6c18c5a1ff4ab550f5710a8273ccde8577837781c4f7c53a257f",
+    "hash": "0xfaaab1ee43778324a83daac2046b0cbd17bfcb4d1bd96356b7c9d9bbe618718d",
     "from_address": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
-    "to_address": "0xc9Fcae4a28087A310b5160840EB297a1A9107052",
+    "to_address": "0xB846059f34D6CF57AF6E29D33DFdC4027b66D4D6",
     "data": {
       "calldata": {
         "base64": "FgB0cmVxdWVzdF9naXRodWIEYXJncw1Ub21ldGVyZTEyMw==",
@@ -48,29 +48,29 @@
         ],
         "readable": "{\"\":\"request_github\"\"args\":[\"ometere123\",]}"
       },
-      "fee_value": 378511200010352,
+      "fee_value": 378514800010352,
       "salt_nonce": 0,
       "user_value": 0,
-      "valid_until": 1789687703,
+      "valid_until": 1789688414,
       "fee_accounting": {
         "sender": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
         "source": "submission",
         "status": "settled",
         "refunds": [
           {
-            "amount": 299878700009529,
+            "amount": 299881550009529,
             "reason": "finalized",
             "message": 0,
-            "primary": 299878700009529,
+            "primary": 299881550009529,
             "appealBond": 0
           }
         ],
         "top_ups": [
           {
-            "amount": 378511200010352,
+            "amount": 378514800010352,
             "sender": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
             "messageFees": 0,
-            "primaryAmount": 378511200010352,
+            "primaryAmount": 378514800010352,
             "feesDistribution": {
               "rotations": [
                 3
@@ -81,7 +81,7 @@
               "receiptFeeMaxGasPrice": 300000000,
               "storageFeeMaxGasPrice": 300000000,
               "maxPriceGenPerTimeUnit": 2,
-              "executionBudgetPerRound": 94627800000000,
+              "executionBudgetPerRound": 94628700000000,
               "leaderTimeunitsAllocation": 100,
               "validatorTimeunitsAllocation": 200
             }
@@ -92,10 +92,10 @@
         "appeal_bonds": [],
         "contributions": [
           {
-            "amount": 378511200010352,
+            "amount": 378514800010352,
             "message": 0,
             "overlay": 1552,
-            "primary": 378511200008800,
+            "primary": 378514800008800,
             "depositor": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2"
           }
         ],
@@ -104,8 +104,8 @@
           "receiptGasPrice": 250000000,
           "storageUnitPrice": 250000000
         },
-        "paid_fee_value": 378511200010352,
-        "total_refunded": 299878700009529,
+        "paid_fee_value": 378514800010352,
+        "total_refunded": 299881550009529,
         "policy_snapshot": {
           "intrinsic_gas": 21000,
           "extra_exec_gas": 210000,
@@ -142,11 +142,11 @@
           "receiptFeeMaxGasPrice": 300000000,
           "storageFeeMaxGasPrice": 300000000,
           "maxPriceGenPerTimeUnit": 2,
-          "executionBudgetPerRound": 94627800000000,
+          "executionBudgetPerRound": 94628700000000,
           "leaderTimeunitsAllocation": 100,
           "validatorTimeunitsAllocation": 200
         },
-        "primary_fee_spent": 78632500000823,
+        "primary_fee_spent": 78633250000823,
         "settlement_reason": "finalized",
         "settlement_rounds": [
           {
@@ -160,8 +160,8 @@
         "actual_final_round": 0,
         "appeal_bonds_total": 0,
         "message_fee_budget": 0,
-        "primary_fee_budget": 378511200010352,
-        "required_fee_value": 378511200010352,
+        "primary_fee_budget": 378514800010352,
+        "required_fee_value": 378514800010352,
         "allocation_consumed": {},
         "appeal_profit_spent": 0,
         "funding_overlay_bps": 1500,
@@ -183,7 +183,7 @@
                 "name": "execution",
                 "unit": "fee",
                 "index": 0,
-                "consumed": 78856500000000
+                "consumed": 78857250000000
               },
               {
                 "name": "message",
@@ -211,15 +211,15 @@
               }
             ],
             "message": 0,
-            "execution": 78856500000000,
-            "totalExecution": 78856500000000,
-            "totalWithMessage": 78856500000000,
+            "execution": 78857250000000,
+            "totalExecution": 78857250000000,
+            "totalWithMessage": 78857250000000,
             "submittedMessageBytes": 0,
             "submittedMessageCount": 0,
             "executionBudgetOverrun": 0,
             "executionBudgetExceeded": false,
-            "executionBudgetPerRound": 94627800000000,
-            "executionBudgetRemaining": 15771300000000,
+            "executionBudgetPerRound": 94628700000000,
+            "executionBudgetRemaining": 15771450000000,
             "nondeterministicOutputBytes": 64
           },
           "proposalReceipt": {
@@ -230,8 +230,8 @@
           },
           "receiptGasPrice": 250000000,
           "executionMetering": {
-            "chargeableExecutionFee": 78632500000000,
-            "genvmReportedExecution": 78856500000000,
+            "chargeableExecutionFee": 78633250000000,
+            "genvmReportedExecution": 78857250000000,
             "genvmDeltaFromChargeable": 224000000000
           },
           "totalEstimatedFee": 78628000000000,
@@ -248,17 +248,17 @@
                 "name": "storage",
                 "unit": "fee",
                 "index": 1,
-                "consumed": 4500000000
+                "consumed": 5250000000
               }
             ],
             "receipt": 78628000000000,
-            "storage": 4500000000,
-            "totalExecution": 78632500000000,
-            "totalWithMessage": 78632500000000,
+            "storage": 5250000000,
+            "totalExecution": 78633250000000,
+            "totalWithMessage": 78633250000000,
             "executionBudgetOverrun": 0,
             "executionBudgetExceeded": false,
-            "executionBudgetPerRound": 94627800000000,
-            "executionBudgetRemaining": 15995300000000
+            "executionBudgetPerRound": 94628700000000,
+            "executionBudgetRemaining": 15995450000000
           },
           "historicalReceiptFees": {
             "attempts": [
@@ -271,27 +271,27 @@
                 "deterministicViolation": false
               }
             ],
-            "totalExecution": 78632500000000,
-            "finalStorageFee": 4500000000,
+            "totalExecution": 78633250000000,
+            "finalStorageFee": 5250000000,
             "receiptFeeTotal": 78628000000000
           },
           "totalStudioMeteredFee": 78852000000000
         },
         "message_fee_consumed": 0,
         "message_fee_refunded": 0,
-        "primary_fee_refunded": 299878700009529,
-        "primary_fee_required": 378511200010352,
+        "primary_fee_refunded": 299881550009529,
+        "primary_fee_required": 378514800010352,
         "selection_pool_count": 16,
         "message_phase_emitted": {
           "accepted": true,
           "finalized": true
         },
         "message_value_effects": {},
-        "execution_budget_total": 378511200000000,
-        "execution_fee_consumed": 78632500000000,
+        "execution_budget_total": 378514800000000,
+        "execution_fee_consumed": 78633250000000,
         "fee_refund_settlements": [
           {
-            "amount": 299878700008100,
+            "amount": 299881550008100,
             "source": "primary-fifo",
             "recipient": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2"
           },
@@ -303,14 +303,14 @@
         ],
         "recommended_fee_preset": {
           "source": "simulation",
-          "feeValue": 378511200010352,
+          "feeValue": 378514800010352,
           "observed": {
-            "executionFee": 78632500000000,
+            "executionFee": 78633250000000,
             "messageFeeBudget": 0,
             "totalEstimatedFee": 78628000000000,
             "declaredMessageFees": 0,
             "totalStudioMeteredFee": 78852000000000,
-            "genvmExecutionRequired": 78856500000000,
+            "genvmExecutionRequired": 78857250000000,
             "externalMessageReserved": 0
           },
           "paddingBps": 12000,
@@ -324,7 +324,7 @@
             "receiptFeeMaxGasPrice": 300000000,
             "storageFeeMaxGasPrice": 300000000,
             "maxPriceGenPerTimeUnit": 2,
-            "executionBudgetPerRound": 94627800000000,
+            "executionBudgetPerRound": 94628700000000,
             "leaderTimeunitsAllocation": 100,
             "validatorTimeunitsAllocation": 200
           },
@@ -342,7 +342,7 @@
               "name": "execution",
               "unit": "fee",
               "index": 0,
-              "consumed": 78856500000000
+              "consumed": 78857250000000
             },
             {
               "name": "message",
@@ -370,15 +370,15 @@
             }
           ],
           "message": 0,
-          "execution": 78856500000000,
-          "totalExecution": 78856500000000,
-          "totalWithMessage": 78856500000000,
+          "execution": 78857250000000,
+          "totalExecution": 78857250000000,
+          "totalWithMessage": 78857250000000,
           "submittedMessageBytes": 0,
           "submittedMessageCount": 0,
           "executionBudgetOverrun": 0,
           "executionBudgetExceeded": false,
-          "executionBudgetPerRound": 94627800000000,
-          "executionBudgetRemaining": 15771300000000,
+          "executionBudgetPerRound": 94628700000000,
+          "executionBudgetRemaining": 15771450000000,
           "nondeterministicOutputBytes": 64
         },
         "time_unit_overlay_spent": 123,
@@ -417,7 +417,7 @@
         "genvm_fee_consumed_buckets": {
           "message_fee": 0,
           "nondet_outputs": 64,
-          "execution_data_gas": 78856500000000,
+          "execution_data_gas": 78857250000000,
           "submitted_messages": 0,
           "submitted_messages_count": 0
         },
@@ -451,7 +451,7 @@
         "appeal_charge_surplus_refunded": 0,
         "execution_fee_consumed_buckets": [
           78628000000000,
-          4500000000
+          5250000000
         ],
         "external_message_fee_remainder": 0,
         "message_allocations_restricted": false,
@@ -469,7 +469,7 @@
         "receiptFeeMaxGasPrice": 300000000,
         "storageFeeMaxGasPrice": 300000000,
         "maxPriceGenPerTimeUnit": 2,
-        "executionBudgetPerRound": 94627800000000,
+        "executionBudgetPerRound": 94628700000000,
         "leaderTimeunitsAllocation": 100,
         "validatorTimeunitsAllocation": 200
       },
@@ -479,13 +479,13 @@
     "txExecutionResult": 1,
     "txExecutionResultName": "FINISHED_WITH_RETURN",
     "fees": {
-      "deposit": "378511200010352",
+      "deposit": "378514800010352",
       "userValue": "0",
       "distribution": {
         "leaderTimeunitsAllocation": "100",
         "validatorTimeunitsAllocation": "200",
         "appealRounds": "0",
-        "executionBudgetPerRound": "94627800000000",
+        "executionBudgetPerRound": "94628700000000",
         "totalMessageFees": "0",
         "rotations": [
           "3"
@@ -500,19 +500,19 @@
         "receiptGasPrice": "250000000"
       },
       "consumed": {
-        "executionConsumed": "78632500000000",
-        "storageFeeUsed": "4500000000",
+        "executionConsumed": "78633250000000",
+        "storageFeeUsed": "5250000000",
         "messageFeesConsumed": "0",
         "messageFeesBudgetTotal": "0",
         "leaderTimeunitsUsed": "1",
-        "validatorTimeunitsUsed": "3",
+        "validatorTimeunitsUsed": "4",
         "perRound": [
           {
             "round": 0,
             "consensusRound": "Accepted",
             "leaderTimeunits": "1",
-            "validatorTimeunits": "3",
-            "maxValidatorTimeunits": "1"
+            "validatorTimeunits": "4",
+            "maxValidatorTimeunits": "2"
           }
         ]
       }
@@ -520,11 +520,11 @@
     "result": 1,
     "consensus_data": {
       "votes": {
-        "0x8D32eb5D0207f7E230C45e7BF0D14B2ED5DA3028": "agree",
-        "0xE4E106086F167D75E2270fa5f3680f6ac598d179": "idle",
-        "0xEEcEC5D1E07Ee40f5cb85aF922178Dc01278013C": "agree",
-        "0xcEf1Baa172d0b4D99Dcc505B36332F26D1088025": "idle",
-        "0xf13c3DfE38C8E206C33F750C24a1b043b63Cb810": "agree"
+        "0x1dA3a7de8EA65A318bf88Eb63d3dC55295Dd257E": "agree",
+        "0x6760cDeC573cf38568C59872ee48B6fED41F8A4c": "agree",
+        "0xa0435f618c1F27B254998018AEa8Da5C77187852": "idle",
+        "0xcbC79F96B7A275b23EE64d80a98325107F6E1b77": "agree",
+        "0xf13c3DfE38C8E206C33F750C24a1b043b63Cb810": "idle"
       },
       "validators": [
         {
@@ -534,8 +534,8 @@
           "calldata": "",
           "gas_used": 0,
           "node_config": {
-            "id": 190,
-            "model": "policy:dev-sonnet",
+            "id": 186,
+            "model": "policy:dev-gpt-5-4",
             "stake": 100,
             "config": {
               "policy_ir": [
@@ -562,15 +562,15 @@
                     "or",
                     [
                       "family_eq",
-                      "claude-sonnet-4-6"
-                    ],
-                    [
-                      "family_eq",
                       "gpt-5.4"
                     ],
                     [
                       "family_eq",
                       "gemini-3-flash-preview"
+                    ],
+                    [
+                      "family_eq",
+                      "gpt-oss-120b"
                     ]
                   ]
                 ],
@@ -579,21 +579,6 @@
                   [
                     "scale",
                     100,
-                    [
-                      "gate",
-                      [
-                        "family_eq",
-                        "claude-sonnet-4-6"
-                      ],
-                      [
-                        "lit",
-                        1
-                      ]
-                    ]
-                  ],
-                  [
-                    "scale",
-                    10,
                     [
                       "gate",
                       [
@@ -608,12 +593,27 @@
                   ],
                   [
                     "scale",
-                    1,
+                    10,
                     [
                       "gate",
                       [
                         "family_eq",
                         "gemini-3-flash-preview"
+                      ],
+                      [
+                        "lit",
+                        1
+                      ]
+                    ]
+                  ],
+                  [
+                    "scale",
+                    1,
+                    [
+                      "gate",
+                      [
+                        "family_eq",
+                        "gpt-oss-120b"
                       ],
                       [
                         "lit",
@@ -689,13 +689,13 @@
               "first_token_timeout_ms": 7000
             },
             "plugin": "openai-compatible",
-            "address": "0xcEf1Baa172d0b4D99Dcc505B36332F26D1088025",
+            "address": "0xa0435f618c1F27B254998018AEa8Da5C77187852",
             "provider": "llm-router",
             "plugin_config": {
               "api_url": "https://router.ygr.ai",
               "api_key_env_var": "LLM_ROUTER_API_KEY"
             },
-            "fallback_validator": "0x8142E5D1b04f84c3cD995C25AAe31B31F8e0379E"
+            "fallback_validator": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829"
           },
           "genvm_result": {
             "stderr": "Validator execution cancelled after quorum",
@@ -723,24 +723,168 @@
           "calldata": "",
           "gas_used": 0,
           "node_config": {
-            "id": 199,
-            "model": "google/gemini-3-flash-preview",
+            "id": 188,
+            "model": "policy:dev-gemini",
             "stake": 100,
             "config": {
-              "models": [
-                "google/gemini-3-flash-preview",
-                "openai/gpt-5.4",
-                "anthropic/claude-sonnet-4.6"
-              ]
+              "policy_ir": [
+                "policy",
+                [
+                  "and",
+                  [
+                    "meets_req"
+                  ],
+                  [
+                    "not",
+                    [
+                      "is",
+                      "disabled"
+                    ]
+                  ],
+                  [
+                    "cmp",
+                    "success_rate",
+                    "ge",
+                    0.2
+                  ],
+                  [
+                    "or",
+                    [
+                      "family_eq",
+                      "gemini-3-flash-preview"
+                    ],
+                    [
+                      "family_eq",
+                      "gpt-oss-120b"
+                    ],
+                    [
+                      "family_eq",
+                      "gpt-5.4"
+                    ]
+                  ]
+                ],
+                [
+                  "add",
+                  [
+                    "scale",
+                    100,
+                    [
+                      "gate",
+                      [
+                        "family_eq",
+                        "gemini-3-flash-preview"
+                      ],
+                      [
+                        "lit",
+                        1
+                      ]
+                    ]
+                  ],
+                  [
+                    "scale",
+                    10,
+                    [
+                      "gate",
+                      [
+                        "family_eq",
+                        "gpt-oss-120b"
+                      ],
+                      [
+                        "lit",
+                        1
+                      ]
+                    ]
+                  ],
+                  [
+                    "scale",
+                    1,
+                    [
+                      "gate",
+                      [
+                        "family_eq",
+                        "gpt-5.4"
+                      ],
+                      [
+                        "lit",
+                        1
+                      ]
+                    ]
+                  ],
+                  [
+                    "scale",
+                    0.25,
+                    [
+                      "neg",
+                      [
+                        "normalize",
+                        [
+                          "field",
+                          "price_in"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "scale",
+                    0.45,
+                    [
+                      "neg",
+                      [
+                        "normalize",
+                        [
+                          "field",
+                          "price_out"
+                        ]
+                      ]
+                    ]
+                  ],
+                  [
+                    "scale",
+                    0.2,
+                    [
+                      "field",
+                      "success_rate"
+                    ]
+                  ],
+                  [
+                    "scale",
+                    0.1,
+                    [
+                      "neg",
+                      [
+                        "normalize",
+                        [
+                          "field",
+                          "latency_ms"
+                        ]
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "argmax"
+                ],
+                [
+                  "id"
+                ],
+                [
+                  "always",
+                  {
+                    "action": "next_candidate"
+                  }
+                ]
+              ],
+              "timeout_ms": 22000,
+              "first_token_timeout_ms": 7000
             },
             "plugin": "openai-compatible",
-            "address": "0xE4E106086F167D75E2270fa5f3680f6ac598d179",
-            "provider": "openrouter",
+            "address": "0xf13c3DfE38C8E206C33F750C24a1b043b63Cb810",
+            "provider": "llm-router",
             "plugin_config": {
-              "api_url": "https://openrouter.ai/api",
-              "api_key_env_var": "OPENROUTERAPIKEY"
+              "api_url": "https://router.ygr.ai",
+              "api_key_env_var": "LLM_ROUTER_API_KEY"
             },
-            "fallback_validator": "0xf13c3DfE38C8E206C33F750C24a1b043b63Cb810"
+            "fallback_validator": "0xE4E106086F167D75E2270fa5f3680f6ac598d179"
           },
           "genvm_result": {
             "stderr": "Validator execution cancelled after quorum",
@@ -764,14 +908,14 @@
         {
           "mode": "validator",
           "vote": "agree",
-          "result": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjoy",
+          "result": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjox",
           "calldata": "FgB0cmVxdWVzdF9naXRodWIEYXJncw1Ub21ldGVyZTEyMw==",
           "gas_used": 0,
           "node_config": {
             "stake": 100,
-            "address": "0xEEcEC5D1E07Ee40f5cb85aF922178Dc01278013C",
+            "address": "0x6760cDeC573cf38568C59872ee48B6fED41F8A4c",
             "primary_model": {
-              "model": "policy:dev-gpt-oss",
+              "model": "policy:dev-gpt-5-4",
               "config": {
                 "policy_ir": [
                   "policy",
@@ -797,15 +941,15 @@
                       "or",
                       [
                         "family_eq",
-                        "gpt-oss-120b"
-                      ],
-                      [
-                        "family_eq",
-                        "deepseek-v3.2"
-                      ],
-                      [
-                        "family_eq",
                         "gpt-5.4"
+                      ],
+                      [
+                        "family_eq",
+                        "gemini-3-flash-preview"
+                      ],
+                      [
+                        "family_eq",
+                        "gpt-oss-120b"
                       ]
                     ]
                   ],
@@ -818,7 +962,7 @@
                         "gate",
                         [
                           "family_eq",
-                          "gpt-oss-120b"
+                          "gpt-5.4"
                         ],
                         [
                           "lit",
@@ -833,7 +977,7 @@
                         "gate",
                         [
                           "family_eq",
-                          "deepseek-v3.2"
+                          "gemini-3-flash-preview"
                         ],
                         [
                           "lit",
@@ -848,7 +992,7 @@
                         "gate",
                         [
                           "family_eq",
-                          "gpt-5.4"
+                          "gpt-oss-120b"
                         ],
                         [
                           "lit",
@@ -929,19 +1073,19 @@
                 "api_url": "https://router.ygr.ai",
                 "api_key_env_var": "LLM_ROUTER_API_KEY"
               },
-              "fallback_validator": "0xcF5Fd792Df0Dc9d297af75c82B4A0011e8FA1A4A"
+              "fallback_validator": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829"
             },
             "secondary_model": {
-              "model": "openai/gpt-5.4",
+              "model": "anthropic/claude-sonnet-4.6",
               "config": {
                 "models": [
-                  "openai/gpt-5.4",
                   "anthropic/claude-sonnet-4.6",
+                  "openai/gpt-5.4",
                   "google/gemini-3-flash-preview"
                 ]
               },
               "plugin": "openai-compatible",
-              "address": "0xcF5Fd792Df0Dc9d297af75c82B4A0011e8FA1A4A",
+              "address": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829",
               "provider": "openrouter",
               "plugin_config": {
                 "api_url": "https://openrouter.ai/api",
@@ -958,21 +1102,21 @@
             "data_fees_consumed": {
               "message_fee": 0,
               "nondet_outputs": 64,
-              "execution_data_gas": 78856500000000,
+              "execution_data_gas": 78857250000000,
               "submitted_messages": 0,
               "submitted_messages_count": 0
             },
             "data_fees_remaining": {
               "message_fee": 0,
               "nondet_outputs": "115792089237316195423570985008687907853269984665640564039457584007913129639871",
-              "execution_data_gas": 15771300000000,
+              "execution_data_gas": 15771450000000,
               "submitted_messages": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
               "submitted_messages_count": 20
             },
             "data_fee_bucket_totals": {
               "message_fee": 0,
               "nondet_outputs": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-              "execution_data_gas": 94627800000000,
+              "execution_data_gas": 94628700000000,
               "submitted_messages": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
               "submitted_messages_count": 20
             }
@@ -980,37 +1124,37 @@
           "contract_state": {},
           "execution_stats": {
             "call_counts": {
-              "STORAGE_READ": 26
+              "STORAGE_READ": 25
             },
             "host_first_method": "STORAGE_READ",
-            "host_loop_entered_s": 1997.842914255,
-            "host_loop_enter_wait_ms": 23,
+            "host_loop_entered_s": 5395.238248387,
+            "host_loop_enter_wait_ms": 18,
             "host_time_per_method_ms": {
-              "STORAGE_READ": 16
+              "STORAGE_READ": 7
             },
-            "host_total_handling_time_ms": 16,
+            "host_total_handling_time_ms": 7,
             "manager_run_attempt_success": {
               "attempt": 0,
-              "duration_ms": 5
+              "duration_ms": 4
             },
-            "host_first_method_received_s": 1997.843498012,
-            "host_accept_to_first_method_ms": 1
+            "host_first_method_received_s": 5395.238466249,
+            "host_accept_to_first_method_ms": 0
           },
           "nondet_disagree": null,
-          "processing_time": 423,
+          "processing_time": 422,
           "execution_result": "SUCCESS",
-          "contract_state_hash": "4bcd41034f67c45478d1af97be0838aa60cbf5aafe53586018bb12a7a451fc76",
+          "contract_state_hash": "3f753ee51ded66b52e285c3b38e5453d87c106893e702cc8d5fc4ac2fc5c9f53",
           "pending_transactions": []
         },
         {
           "mode": "validator",
           "vote": "agree",
-          "result": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjoy",
+          "result": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjox",
           "calldata": "FgB0cmVxdWVzdF9naXRodWIEYXJncw1Ub21ldGVyZTEyMw==",
           "gas_used": 0,
           "node_config": {
             "stake": 100,
-            "address": "0xf13c3DfE38C8E206C33F750C24a1b043b63Cb810",
+            "address": "0xcbC79F96B7A275b23EE64d80a98325107F6E1b77",
             "primary_model": {
               "model": "policy:dev-gemini",
               "config": {
@@ -1170,19 +1314,19 @@
                 "api_url": "https://router.ygr.ai",
                 "api_key_env_var": "LLM_ROUTER_API_KEY"
               },
-              "fallback_validator": "0xE4E106086F167D75E2270fa5f3680f6ac598d179"
+              "fallback_validator": "0xcF5Fd792Df0Dc9d297af75c82B4A0011e8FA1A4A"
             },
             "secondary_model": {
-              "model": "google/gemini-3-flash-preview",
+              "model": "openai/gpt-5.4",
               "config": {
                 "models": [
-                  "google/gemini-3-flash-preview",
                   "openai/gpt-5.4",
-                  "anthropic/claude-sonnet-4.6"
+                  "anthropic/claude-sonnet-4.6",
+                  "google/gemini-3-flash-preview"
                 ]
               },
               "plugin": "openai-compatible",
-              "address": "0xE4E106086F167D75E2270fa5f3680f6ac598d179",
+              "address": "0xcF5Fd792Df0Dc9d297af75c82B4A0011e8FA1A4A",
               "provider": "openrouter",
               "plugin_config": {
                 "api_url": "https://openrouter.ai/api",
@@ -1199,21 +1343,21 @@
             "data_fees_consumed": {
               "message_fee": 0,
               "nondet_outputs": 64,
-              "execution_data_gas": 78856500000000,
+              "execution_data_gas": 78857250000000,
               "submitted_messages": 0,
               "submitted_messages_count": 0
             },
             "data_fees_remaining": {
               "message_fee": 0,
               "nondet_outputs": "115792089237316195423570985008687907853269984665640564039457584007913129639871",
-              "execution_data_gas": 15771300000000,
+              "execution_data_gas": 15771450000000,
               "submitted_messages": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
               "submitted_messages_count": 20
             },
             "data_fee_bucket_totals": {
               "message_fee": 0,
               "nondet_outputs": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-              "execution_data_gas": 94627800000000,
+              "execution_data_gas": 94628700000000,
               "submitted_messages": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
               "submitted_messages_count": 20
             }
@@ -1221,26 +1365,26 @@
           "contract_state": {},
           "execution_stats": {
             "call_counts": {
-              "STORAGE_READ": 26
+              "STORAGE_READ": 25
             },
             "host_first_method": "STORAGE_READ",
-            "host_loop_entered_s": 1997.840785129,
-            "host_loop_enter_wait_ms": 21,
+            "host_loop_entered_s": 5396.057188569,
+            "host_loop_enter_wait_ms": 836,
             "host_time_per_method_ms": {
-              "STORAGE_READ": 15
+              "STORAGE_READ": 9
             },
-            "host_total_handling_time_ms": 15,
+            "host_total_handling_time_ms": 9,
             "manager_run_attempt_success": {
               "attempt": 0,
-              "duration_ms": 4
+              "duration_ms": 3
             },
-            "host_first_method_received_s": 1997.840960201,
+            "host_first_method_received_s": 5396.057599893,
             "host_accept_to_first_method_ms": 0
           },
           "nondet_disagree": null,
-          "processing_time": 443,
+          "processing_time": 1190,
           "execution_result": "SUCCESS",
-          "contract_state_hash": "4bcd41034f67c45478d1af97be0838aa60cbf5aafe53586018bb12a7a451fc76",
+          "contract_state_hash": "3f753ee51ded66b52e285c3b38e5453d87c106893e702cc8d5fc4ac2fc5c9f53",
           "pending_transactions": []
         }
       ],
@@ -1249,7 +1393,7 @@
           "mode": "leader",
           "vote": null,
           "result": {
-            "raw": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjoy",
+            "raw": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjox",
             "status": "return",
             "payload": {
               "raw": [
@@ -1317,9 +1461,9 @@
                 67,
                 50,
                 58,
-                50
+                49
               ],
-              "readable": "\"RR-ID:61997:GITHUB:0xb29Ead15B1E8A2420faE84de974088f67a15ccC2:2\""
+              "readable": "\"RR-ID:61997:GITHUB:0xb29Ead15B1E8A2420faE84de974088f67a15ccC2:1\""
             }
           },
           "calldata": {
@@ -1366,9 +1510,9 @@
           "eq_outputs": {},
           "node_config": {
             "stake": 100,
-            "address": "0x8D32eb5D0207f7E230C45e7BF0D14B2ED5DA3028",
+            "address": "0x1dA3a7de8EA65A318bf88Eb63d3dC55295Dd257E",
             "primary_model": {
-              "model": "policy:dev-sonnet",
+              "model": "policy:dev-gpt-5-4",
               "config": {
                 "policy_ir": [
                   "policy",
@@ -1394,15 +1538,15 @@
                       "or",
                       [
                         "family_eq",
-                        "claude-sonnet-4-6"
-                      ],
-                      [
-                        "family_eq",
                         "gpt-5.4"
                       ],
                       [
                         "family_eq",
                         "gemini-3-flash-preview"
+                      ],
+                      [
+                        "family_eq",
+                        "gpt-oss-120b"
                       ]
                     ]
                   ],
@@ -1411,21 +1555,6 @@
                     [
                       "scale",
                       100,
-                      [
-                        "gate",
-                        [
-                          "family_eq",
-                          "claude-sonnet-4-6"
-                        ],
-                        [
-                          "lit",
-                          1
-                        ]
-                      ]
-                    ],
-                    [
-                      "scale",
-                      10,
                       [
                         "gate",
                         [
@@ -1440,12 +1569,27 @@
                     ],
                     [
                       "scale",
-                      1,
+                      10,
                       [
                         "gate",
                         [
                           "family_eq",
                           "gemini-3-flash-preview"
+                        ],
+                        [
+                          "lit",
+                          1
+                        ]
+                      ]
+                    ],
+                    [
+                      "scale",
+                      1,
+                      [
+                        "gate",
+                        [
+                          "family_eq",
+                          "gpt-oss-120b"
                         ],
                         [
                           "lit",
@@ -1526,19 +1670,19 @@
                 "api_url": "https://router.ygr.ai",
                 "api_key_env_var": "LLM_ROUTER_API_KEY"
               },
-              "fallback_validator": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829"
+              "fallback_validator": "0xE4E106086F167D75E2270fa5f3680f6ac598d179"
             },
             "secondary_model": {
-              "model": "anthropic/claude-sonnet-4.6",
+              "model": "google/gemini-3-flash-preview",
               "config": {
                 "models": [
-                  "anthropic/claude-sonnet-4.6",
+                  "google/gemini-3-flash-preview",
                   "openai/gpt-5.4",
-                  "google/gemini-3-flash-preview"
+                  "anthropic/claude-sonnet-4.6"
                 ]
               },
               "plugin": "openai-compatible",
-              "address": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829",
+              "address": "0xE4E106086F167D75E2270fa5f3680f6ac598d179",
               "provider": "openrouter",
               "plugin_config": {
                 "api_url": "https://openrouter.ai/api",
@@ -1555,14 +1699,14 @@
             "data_fees_consumed": {
               "message_fee": 0,
               "nondet_outputs": 64,
-              "execution_data_gas": 78856500000000,
+              "execution_data_gas": 78857250000000,
               "submitted_messages": 0,
               "submitted_messages_count": 0
             },
             "data_fees_remaining": {
               "message_fee": 0,
               "nondet_outputs": "115792089237316195423570985008687907853269984665640564039457584007913129639871",
-              "execution_data_gas": 15771300000000,
+              "execution_data_gas": 15771450000000,
               "submitted_messages": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
               "submitted_messages_count": 20
             },
@@ -1595,18 +1739,18 @@
             "data_fee_bucket_totals": {
               "message_fee": 0,
               "nondet_outputs": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-              "execution_data_gas": 94627800000000,
+              "execution_data_gas": 94628700000000,
               "submitted_messages": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
               "submitted_messages_count": 20
             }
           },
           "execution_stats": {
             "call_counts": {
-              "STORAGE_READ": 26
+              "STORAGE_READ": 25
             },
             "host_first_method": "STORAGE_READ",
-            "host_loop_entered_s": 1997.280617998,
-            "host_loop_enter_wait_ms": 16,
+            "host_loop_entered_s": 5394.603626603,
+            "host_loop_enter_wait_ms": 15,
             "host_time_per_method_ms": {
               "STORAGE_READ": 8
             },
@@ -1615,20 +1759,20 @@
               "attempt": 0,
               "duration_ms": 1
             },
-            "host_first_method_received_s": 1997.28080758,
+            "host_first_method_received_s": 5394.603821835,
             "host_accept_to_first_method_ms": 0
           },
           "nondet_disagree": null,
-          "processing_time": 355,
+          "processing_time": 377,
           "execution_result": "SUCCESS",
-          "contract_state_hash": "4bcd41034f67c45478d1af97be0838aa60cbf5aafe53586018bb12a7a451fc76",
+          "contract_state_hash": "3f753ee51ded66b52e285c3b38e5453d87c106893e702cc8d5fc4ac2fc5c9f53",
           "pending_transactions": []
         },
         {
           "mode": "validator",
           "vote": "agree",
           "result": {
-            "raw": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjoy",
+            "raw": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjox",
             "status": "return",
             "payload": {
               "raw": [
@@ -1696,9 +1840,9 @@
                 67,
                 50,
                 58,
-                50
+                49
               ],
-              "readable": "\"RR-ID:61997:GITHUB:0xb29Ead15B1E8A2420faE84de974088f67a15ccC2:2\""
+              "readable": "\"RR-ID:61997:GITHUB:0xb29Ead15B1E8A2420faE84de974088f67a15ccC2:1\""
             }
           },
           "calldata": {
@@ -1744,9 +1888,9 @@
           "gas_used": 0,
           "node_config": {
             "stake": 100,
-            "address": "0x8D32eb5D0207f7E230C45e7BF0D14B2ED5DA3028",
+            "address": "0x1dA3a7de8EA65A318bf88Eb63d3dC55295Dd257E",
             "primary_model": {
-              "model": "policy:dev-sonnet",
+              "model": "policy:dev-gpt-5-4",
               "config": {
                 "policy_ir": [
                   "policy",
@@ -1772,15 +1916,15 @@
                       "or",
                       [
                         "family_eq",
-                        "claude-sonnet-4-6"
-                      ],
-                      [
-                        "family_eq",
                         "gpt-5.4"
                       ],
                       [
                         "family_eq",
                         "gemini-3-flash-preview"
+                      ],
+                      [
+                        "family_eq",
+                        "gpt-oss-120b"
                       ]
                     ]
                   ],
@@ -1789,21 +1933,6 @@
                     [
                       "scale",
                       100,
-                      [
-                        "gate",
-                        [
-                          "family_eq",
-                          "claude-sonnet-4-6"
-                        ],
-                        [
-                          "lit",
-                          1
-                        ]
-                      ]
-                    ],
-                    [
-                      "scale",
-                      10,
                       [
                         "gate",
                         [
@@ -1818,12 +1947,27 @@
                     ],
                     [
                       "scale",
-                      1,
+                      10,
                       [
                         "gate",
                         [
                           "family_eq",
                           "gemini-3-flash-preview"
+                        ],
+                        [
+                          "lit",
+                          1
+                        ]
+                      ]
+                    ],
+                    [
+                      "scale",
+                      1,
+                      [
+                        "gate",
+                        [
+                          "family_eq",
+                          "gpt-oss-120b"
                         ],
                         [
                           "lit",
@@ -1904,19 +2048,19 @@
                 "api_url": "https://router.ygr.ai",
                 "api_key_env_var": "LLM_ROUTER_API_KEY"
               },
-              "fallback_validator": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829"
+              "fallback_validator": "0xE4E106086F167D75E2270fa5f3680f6ac598d179"
             },
             "secondary_model": {
-              "model": "anthropic/claude-sonnet-4.6",
+              "model": "google/gemini-3-flash-preview",
               "config": {
                 "models": [
-                  "anthropic/claude-sonnet-4.6",
+                  "google/gemini-3-flash-preview",
                   "openai/gpt-5.4",
-                  "google/gemini-3-flash-preview"
+                  "anthropic/claude-sonnet-4.6"
                 ]
               },
               "plugin": "openai-compatible",
-              "address": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829",
+              "address": "0xE4E106086F167D75E2270fa5f3680f6ac598d179",
               "provider": "openrouter",
               "plugin_config": {
                 "api_url": "https://openrouter.ai/api",
@@ -1933,56 +2077,56 @@
             "data_fees_consumed": {
               "message_fee": 0,
               "nondet_outputs": 64,
-              "execution_data_gas": 78856500000000,
+              "execution_data_gas": 78857250000000,
               "submitted_messages": 0,
               "submitted_messages_count": 0
             },
             "data_fees_remaining": {
               "message_fee": 0,
               "nondet_outputs": "115792089237316195423570985008687907853269984665640564039457584007913129639871",
-              "execution_data_gas": 15771300000000,
+              "execution_data_gas": 15771450000000,
               "submitted_messages": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
               "submitted_messages_count": 20
             },
             "data_fee_bucket_totals": {
               "message_fee": 0,
               "nondet_outputs": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
-              "execution_data_gas": 94627800000000,
+              "execution_data_gas": 94628700000000,
               "submitted_messages": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
               "submitted_messages_count": 20
             }
           },
           "execution_stats": {
             "call_counts": {
-              "STORAGE_READ": 26
+              "STORAGE_READ": 25
             },
             "host_first_method": "STORAGE_READ",
-            "host_loop_entered_s": 1997.841619889,
-            "host_loop_enter_wait_ms": 23,
+            "host_loop_entered_s": 5395.629361409,
+            "host_loop_enter_wait_ms": 409,
             "host_time_per_method_ms": {
-              "STORAGE_READ": 17
+              "STORAGE_READ": 10
             },
-            "host_total_handling_time_ms": 17,
+            "host_total_handling_time_ms": 10,
             "manager_run_attempt_success": {
               "attempt": 0,
-              "duration_ms": 6
+              "duration_ms": 5
             },
-            "host_first_method_received_s": 1997.842128845,
+            "host_first_method_received_s": 5395.629879175,
             "host_accept_to_first_method_ms": 0
           },
           "nondet_disagree": null,
-          "processing_time": 534,
+          "processing_time": 948,
           "execution_result": "SUCCESS",
-          "contract_state_hash": "4bcd41034f67c45478d1af97be0838aa60cbf5aafe53586018bb12a7a451fc76",
+          "contract_state_hash": "3f753ee51ded66b52e285c3b38e5453d87c106893e702cc8d5fc4ac2fc5c9f53",
           "pending_transactions": []
         }
       ]
     },
-    "gaslimit": 130,
-    "nonce": 130,
+    "gaslimit": 132,
+    "nonce": 132,
     "r": null,
     "s": null,
-    "created_at": "2026-09-17T22:28:26.854306+00:00",
+    "created_at": "2026-09-17T22:40:17.882962+00:00",
     "leader_only": false,
     "execution_mode": "NORMAL",
     "origin_address": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
@@ -1990,110 +2134,107 @@
     "triggered_on": null,
     "triggered_transactions": [],
     "appealed": false,
-    "timestamp_awaiting_finalization": 1789684109,
+    "timestamp_awaiting_finalization": 1789684820,
     "appeal_failed": 0,
     "appeal_undetermined": false,
     "consensus_history": {
       "latestDecision": {
         "status": "ACCEPTED",
         "decisionId": 1,
-        "appealDeadline": 1789684139,
-        "materializedAt": 1789684109
+        "appealDeadline": 1789684850,
+        "materializedAt": 1789684820
       },
       "consensus_results": [
         {
           "monitoring": {
-            "PENDING": 1789684108.1118286,
-            "ACCEPTED": 1789684109.3446422,
-            "PROPOSING": 1789684108.1280234,
-            "REVEALING": 1789684109.2816439,
-            "COMMITTING": 1789684108.5860872,
-            "PROPOSING.LEADER.RUN_END": 1789684108.5551035,
-            "PROPOSING.LEADER.RUN_START": 1789684108.170039,
-            "PROPOSING.LEADER.EXEC_START": 1789684108.1663172,
-            "PROPOSING.VALIDATORS_SELECTED": 1789684108.1578584,
-            "COMMITTING.VALIDATORS_PREPARED": 1789684108.5948434,
-            "COMMITTING.VALIDATOR_0.RUN_END": 1789684109.1831179,
-            "COMMITTING.VALIDATOR_1.RUN_END": 1789684109.2122762,
-            "COMMITTING.VALIDATOR_3.RUN_END": 1789684109.153159,
-            "COMMITTING.VALIDATOR_4.RUN_END": 1789684109.1961296,
-            "PROPOSING.TRANSACTION_EXECUTED": 1789684108.562802,
-            "COMMITTING.VALIDATOR_0.RUN_START": 1789684108.6228826,
-            "COMMITTING.VALIDATOR_1.RUN_START": 1789684108.6476533,
-            "COMMITTING.VALIDATOR_2.RUN_START": 1789684108.6734662,
-            "COMMITTING.VALIDATOR_3.RUN_START": 1789684108.6998699,
-            "COMMITTING.VALIDATOR_4.RUN_START": 1789684108.727085,
-            "PROPOSING.LEADER.DECODE_COMPLETE": 1789684108.1744225,
-            "PROPOSING.LEADER.RECEIPT_CREATED": 1789684108.5584826,
-            "COMMITTING.VALIDATOR_0.EXEC_START": 1789684108.619569,
-            "COMMITTING.VALIDATOR_1.EXEC_START": 1789684108.644107,
-            "COMMITTING.VALIDATOR_2.EXEC_START": 1789684108.6697178,
-            "COMMITTING.VALIDATOR_3.EXEC_START": 1789684108.6962004,
-            "COMMITTING.VALIDATOR_4.EXEC_START": 1789684108.7235484,
-            "COMMITTING.VALIDATORS_EXECUTION_END": 1789684109.2246196,
-            "PROPOSING.LEADER.EXECUTION_FINISHED": 1789684108.5508642,
-            "COMMITTING.VALIDATOR_0_END.attempt_0": 1789684109.2034001,
-            "COMMITTING.VALIDATOR_3_END.attempt_0": 1789684109.1697292,
-            "COMMITTING.VALIDATOR_4_END.attempt_0": 1789684109.2195814,
-            "COMMITTING.VALIDATORS_EXECUTION_START": 1789684108.598338,
-            "COMMITTING.VALIDATION_RESULTS_GATHERED": 1789684109.2285817,
-            "COMMITTING.VALIDATOR_0.DECODE_COMPLETE": 1789684108.6262946,
-            "COMMITTING.VALIDATOR_0.RECEIPT_CREATED": 1789684109.1866841,
-            "COMMITTING.VALIDATOR_0_START.attempt_0": 1789684108.6018915,
-            "COMMITTING.VALIDATOR_1.DECODE_COMPLETE": 1789684108.6509132,
-            "COMMITTING.VALIDATOR_1.RECEIPT_CREATED": 1789684109.216098,
-            "COMMITTING.VALIDATOR_1_START.attempt_0": 1789684108.605393,
-            "COMMITTING.VALIDATOR_2.DECODE_COMPLETE": 1789684108.6771374,
-            "COMMITTING.VALIDATOR_2_START.attempt_0": 1789684108.6089172,
-            "COMMITTING.VALIDATOR_3.DECODE_COMPLETE": 1789684108.703384,
-            "COMMITTING.VALIDATOR_3.RECEIPT_CREATED": 1789684109.164319,
-            "COMMITTING.VALIDATOR_3_START.attempt_0": 1789684108.612547,
-            "COMMITTING.VALIDATOR_4.DECODE_COMPLETE": 1789684108.730539,
-            "COMMITTING.VALIDATOR_4.RECEIPT_CREATED": 1789684109.199612,
-            "COMMITTING.VALIDATOR_4_START.attempt_0": 1789684108.6161244,
-            "PROPOSING.LEADER.GENVM_EXECUTION_START": 1789684108.1910427,
-            "PROPOSING.LEADER.SNAPSHOT_CREATION_END": 1789684108.1871886,
-            "PROPOSING.LEADER_NODE_CREATED.attempt_0": 1789684108.162311,
-            "PROPOSING.LEADER.GENVM_PREPARATION_START": 1789684108.17864,
-            "PROPOSING.LEADER.SNAPSHOT_CREATION_START": 1789684108.1830635,
-            "COMMITTING.VALIDATOR_0.EXECUTION_FINISHED": 1789684109.1789596,
-            "COMMITTING.VALIDATOR_1.EXECUTION_FINISHED": 1789684109.2085507,
-            "COMMITTING.VALIDATOR_3.EXECUTION_FINISHED": 1789684109.1470118,
-            "COMMITTING.VALIDATOR_4.EXECUTION_FINISHED": 1789684109.1922846,
-            "COMMITTING.VALIDATOR_0.GENVM_EXECUTION_START": 1789684108.639763,
-            "COMMITTING.VALIDATOR_0.SNAPSHOT_CREATION_END": 1789684108.6364129,
-            "COMMITTING.VALIDATOR_1.GENVM_EXECUTION_START": 1789684108.6649725,
-            "COMMITTING.VALIDATOR_1.SNAPSHOT_CREATION_END": 1789684108.661254,
-            "COMMITTING.VALIDATOR_2.GENVM_EXECUTION_START": 1789684108.6911511,
-            "COMMITTING.VALIDATOR_2.SNAPSHOT_CREATION_END": 1789684108.6875606,
-            "COMMITTING.VALIDATOR_3.GENVM_EXECUTION_START": 1789684108.7189832,
-            "COMMITTING.VALIDATOR_3.SNAPSHOT_CREATION_END": 1789684108.715465,
-            "COMMITTING.VALIDATOR_4.GENVM_EXECUTION_START": 1789684108.7445211,
-            "COMMITTING.VALIDATOR_4.SNAPSHOT_CREATION_END": 1789684108.7410727,
-            "COMMITTING.VALIDATOR_0.GENVM_PREPARATION_START": 1789684108.6296225,
-            "COMMITTING.VALIDATOR_0.SNAPSHOT_CREATION_START": 1789684108.6329231,
-            "COMMITTING.VALIDATOR_1.GENVM_PREPARATION_START": 1789684108.65428,
-            "COMMITTING.VALIDATOR_1.SNAPSHOT_CREATION_START": 1789684108.6578815,
-            "COMMITTING.VALIDATOR_2.GENVM_PREPARATION_START": 1789684108.6807284,
-            "COMMITTING.VALIDATOR_2.SNAPSHOT_CREATION_START": 1789684108.6841464,
-            "COMMITTING.VALIDATOR_3.GENVM_PREPARATION_START": 1789684108.7067626,
-            "COMMITTING.VALIDATOR_3.SNAPSHOT_CREATION_START": 1789684108.7107625,
-            "COMMITTING.VALIDATOR_4.GENVM_PREPARATION_START": 1789684108.7341962,
-            "COMMITTING.VALIDATOR_4.SNAPSHOT_CREATION_START": 1789684108.7377827
+            "PENDING": 1789684818.4201448,
+            "ACCEPTED": 1789684820.4709597,
+            "PROPOSING": 1789684818.4368186,
+            "REVEALING": 1789684820.4012578,
+            "COMMITTING": 1789684818.9305382,
+            "PROPOSING.LEADER.RUN_END": 1789684818.8858297,
+            "PROPOSING.LEADER.RUN_START": 1789684818.4740043,
+            "PROPOSING.LEADER.EXEC_START": 1789684818.4695826,
+            "PROPOSING.VALIDATORS_SELECTED": 1789684818.4598224,
+            "COMMITTING.VALIDATORS_PREPARED": 1789684818.9420252,
+            "COMMITTING.VALIDATOR_0.RUN_END": 1789684819.9594722,
+            "COMMITTING.VALIDATOR_3.RUN_END": 1789684819.5309136,
+            "COMMITTING.VALIDATOR_4.RUN_END": 1789684820.328558,
+            "PROPOSING.TRANSACTION_EXECUTED": 1789684818.8952763,
+            "COMMITTING.VALIDATOR_0.RUN_START": 1789684818.9778624,
+            "COMMITTING.VALIDATOR_1.RUN_START": 1789684819.0105987,
+            "COMMITTING.VALIDATOR_2.RUN_START": 1789684819.042973,
+            "COMMITTING.VALIDATOR_3.RUN_START": 1789684819.0748932,
+            "COMMITTING.VALIDATOR_4.RUN_START": 1789684819.1069164,
+            "PROPOSING.LEADER.DECODE_COMPLETE": 1789684818.4781742,
+            "PROPOSING.LEADER.RECEIPT_CREATED": 1789684818.8903058,
+            "COMMITTING.VALIDATOR_0.EXEC_START": 1789684818.9735312,
+            "COMMITTING.VALIDATOR_1.EXEC_START": 1789684819.00555,
+            "COMMITTING.VALIDATOR_2.EXEC_START": 1789684819.0385413,
+            "COMMITTING.VALIDATOR_3.EXEC_START": 1789684819.0705404,
+            "COMMITTING.VALIDATOR_4.EXEC_START": 1789684819.102683,
+            "COMMITTING.VALIDATORS_EXECUTION_END": 1789684820.342425,
+            "PROPOSING.LEADER.EXECUTION_FINISHED": 1789684818.8808064,
+            "COMMITTING.VALIDATOR_0_END.attempt_0": 1789684819.9695442,
+            "COMMITTING.VALIDATOR_3_END.attempt_0": 1789684819.541287,
+            "COMMITTING.VALIDATOR_4_END.attempt_0": 1789684820.3374841,
+            "COMMITTING.VALIDATORS_EXECUTION_START": 1789684818.9466343,
+            "COMMITTING.VALIDATION_RESULTS_GATHERED": 1789684820.3464885,
+            "COMMITTING.VALIDATOR_0.DECODE_COMPLETE": 1789684818.9820833,
+            "COMMITTING.VALIDATOR_0.RECEIPT_CREATED": 1789684819.9643342,
+            "COMMITTING.VALIDATOR_0_START.attempt_0": 1789684818.9512146,
+            "COMMITTING.VALIDATOR_1.DECODE_COMPLETE": 1789684819.0148988,
+            "COMMITTING.VALIDATOR_1_START.attempt_0": 1789684818.9556959,
+            "COMMITTING.VALIDATOR_2.DECODE_COMPLETE": 1789684819.0472794,
+            "COMMITTING.VALIDATOR_2_START.attempt_0": 1789684818.960121,
+            "COMMITTING.VALIDATOR_3.DECODE_COMPLETE": 1789684819.0791693,
+            "COMMITTING.VALIDATOR_3.RECEIPT_CREATED": 1789684819.5360382,
+            "COMMITTING.VALIDATOR_3_START.attempt_0": 1789684818.9646375,
+            "COMMITTING.VALIDATOR_4.DECODE_COMPLETE": 1789684819.1109278,
+            "COMMITTING.VALIDATOR_4.RECEIPT_CREATED": 1789684820.3325398,
+            "COMMITTING.VALIDATOR_4_START.attempt_0": 1789684818.9692116,
+            "PROPOSING.LEADER.GENVM_EXECUTION_START": 1789684818.4980738,
+            "PROPOSING.LEADER.SNAPSHOT_CREATION_END": 1789684818.4931839,
+            "PROPOSING.LEADER_NODE_CREATED.attempt_0": 1789684818.4651103,
+            "PROPOSING.LEADER.GENVM_PREPARATION_START": 1789684818.4829032,
+            "PROPOSING.LEADER.SNAPSHOT_CREATION_START": 1789684818.4881232,
+            "COMMITTING.VALIDATOR_0.EXECUTION_FINISHED": 1789684819.9543307,
+            "COMMITTING.VALIDATOR_3.EXECUTION_FINISHED": 1789684819.5256088,
+            "COMMITTING.VALIDATOR_4.EXECUTION_FINISHED": 1789684820.3234642,
+            "COMMITTING.VALIDATOR_0.GENVM_EXECUTION_START": 1789684818.9994311,
+            "COMMITTING.VALIDATOR_0.SNAPSHOT_CREATION_END": 1789684818.994699,
+            "COMMITTING.VALIDATOR_1.GENVM_EXECUTION_START": 1789684819.0330017,
+            "COMMITTING.VALIDATOR_1.SNAPSHOT_CREATION_END": 1789684819.0283904,
+            "COMMITTING.VALIDATOR_2.GENVM_EXECUTION_START": 1789684819.0647562,
+            "COMMITTING.VALIDATOR_2.SNAPSHOT_CREATION_END": 1789684819.0604346,
+            "COMMITTING.VALIDATOR_3.GENVM_EXECUTION_START": 1789684819.0972295,
+            "COMMITTING.VALIDATOR_3.SNAPSHOT_CREATION_END": 1789684819.0929415,
+            "COMMITTING.VALIDATOR_4.GENVM_EXECUTION_START": 1789684819.1270428,
+            "COMMITTING.VALIDATOR_4.SNAPSHOT_CREATION_END": 1789684819.1230621,
+            "COMMITTING.VALIDATOR_0.GENVM_PREPARATION_START": 1789684818.98632,
+            "COMMITTING.VALIDATOR_0.SNAPSHOT_CREATION_START": 1789684818.9905026,
+            "COMMITTING.VALIDATOR_1.GENVM_PREPARATION_START": 1789684819.0192642,
+            "COMMITTING.VALIDATOR_1.SNAPSHOT_CREATION_START": 1789684819.0236642,
+            "COMMITTING.VALIDATOR_2.GENVM_PREPARATION_START": 1789684819.0514007,
+            "COMMITTING.VALIDATOR_2.SNAPSHOT_CREATION_START": 1789684819.0558538,
+            "COMMITTING.VALIDATOR_3.GENVM_PREPARATION_START": 1789684819.0835626,
+            "COMMITTING.VALIDATOR_3.SNAPSHOT_CREATION_START": 1789684819.0884423,
+            "COMMITTING.VALIDATOR_4.GENVM_PREPARATION_START": 1789684819.1150312,
+            "COMMITTING.VALIDATOR_4.SNAPSHOT_CREATION_START": 1789684819.119082
           },
           "leader_result": [
             {
               "mode": "leader",
               "vote": null,
-              "result": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjoy",
+              "result": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjox",
               "calldata": "FgB0cmVxdWVzdF9naXRodWIEYXJncw1Ub21ldGVyZTEyMw==",
               "gas_used": 0,
               "eq_outputs": {},
               "node_config": {
                 "stake": 100,
-                "address": "0x8D32eb5D0207f7E230C45e7BF0D14B2ED5DA3028",
+                "address": "0x1dA3a7de8EA65A318bf88Eb63d3dC55295Dd257E",
                 "primary_model": {
-                  "model": "policy:dev-sonnet",
+                  "model": "policy:dev-gpt-5-4",
                   "config": {
                     "policy_ir": [
                       "policy",
@@ -2119,15 +2260,15 @@
                           "or",
                           [
                             "family_eq",
-                            "claude-sonnet-4-6"
-                          ],
-                          [
-                            "family_eq",
                             "gpt-5.4"
                           ],
                           [
                             "family_eq",
                             "gemini-3-flash-preview"
+                          ],
+                          [
+                            "family_eq",
+                            "gpt-oss-120b"
                           ]
                         ]
                       ],
@@ -2136,21 +2277,6 @@
                         [
                           "scale",
                           100,
-                          [
-                            "gate",
-                            [
-                              "family_eq",
-                              "claude-sonnet-4-6"
-                            ],
-                            [
-                              "lit",
-                              1
-                            ]
-                          ]
-                        ],
-                        [
-                          "scale",
-                          10,
                           [
                             "gate",
                             [
@@ -2165,12 +2291,27 @@
                         ],
                         [
                           "scale",
-                          1,
+                          10,
                           [
                             "gate",
                             [
                               "family_eq",
                               "gemini-3-flash-preview"
+                            ],
+                            [
+                              "lit",
+                              1
+                            ]
+                          ]
+                        ],
+                        [
+                          "scale",
+                          1,
+                          [
+                            "gate",
+                            [
+                              "family_eq",
+                              "gpt-oss-120b"
                             ],
                             [
                               "lit",
@@ -2251,19 +2392,19 @@
                     "api_url": "https://router.ygr.ai",
                     "api_key_env_var": "LLM_ROUTER_API_KEY"
                   },
-                  "fallback_validator": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829"
+                  "fallback_validator": "0xE4E106086F167D75E2270fa5f3680f6ac598d179"
                 },
                 "secondary_model": {
-                  "model": "anthropic/claude-sonnet-4.6",
+                  "model": "google/gemini-3-flash-preview",
                   "config": {
                     "models": [
-                      "anthropic/claude-sonnet-4.6",
+                      "google/gemini-3-flash-preview",
                       "openai/gpt-5.4",
-                      "google/gemini-3-flash-preview"
+                      "anthropic/claude-sonnet-4.6"
                     ]
                   },
                   "plugin": "openai-compatible",
-                  "address": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829",
+                  "address": "0xE4E106086F167D75E2270fa5f3680f6ac598d179",
                   "provider": "openrouter",
                   "plugin_config": {
                     "api_url": "https://openrouter.ai/api",
@@ -2280,14 +2421,14 @@
                 "data_fees_consumed": {
                   "message_fee": 0,
                   "nondet_outputs": 64,
-                  "execution_data_gas": 78856500000000,
+                  "execution_data_gas": 78857250000000,
                   "submitted_messages": 0,
                   "submitted_messages_count": 0
                 },
                 "data_fees_remaining": {
                   "message_fee": 0,
                   "nondet_outputs": 1.157920892373162e+77,
-                  "execution_data_gas": 15771300000000,
+                  "execution_data_gas": 15771450000000,
                   "submitted_messages": 1.157920892373162e+77,
                   "submitted_messages_count": 20
                 },
@@ -2320,7 +2461,7 @@
                 "data_fee_bucket_totals": {
                   "message_fee": 0,
                   "nondet_outputs": 1.157920892373162e+77,
-                  "execution_data_gas": 94627800000000,
+                  "execution_data_gas": 94628700000000,
                   "submitted_messages": 1.157920892373162e+77,
                   "submitted_messages_count": 20
                 }
@@ -2328,11 +2469,11 @@
               "contract_state": {},
               "execution_stats": {
                 "call_counts": {
-                  "STORAGE_READ": 26
+                  "STORAGE_READ": 25
                 },
                 "host_first_method": "STORAGE_READ",
-                "host_loop_entered_s": 1997.280617998,
-                "host_loop_enter_wait_ms": 16,
+                "host_loop_entered_s": 5394.603626603,
+                "host_loop_enter_wait_ms": 15,
                 "host_time_per_method_ms": {
                   "STORAGE_READ": 8
                 },
@@ -2341,26 +2482,26 @@
                   "attempt": 0,
                   "duration_ms": 1
                 },
-                "host_first_method_received_s": 1997.28080758,
+                "host_first_method_received_s": 5394.603821835,
                 "host_accept_to_first_method_ms": 0
               },
               "nondet_disagree": null,
-              "processing_time": 355,
+              "processing_time": 377,
               "execution_result": "SUCCESS",
-              "contract_state_hash": "4bcd41034f67c45478d1af97be0838aa60cbf5aafe53586018bb12a7a451fc76",
+              "contract_state_hash": "3f753ee51ded66b52e285c3b38e5453d87c106893e702cc8d5fc4ac2fc5c9f53",
               "pending_transactions": []
             },
             {
               "mode": "validator",
               "vote": "agree",
-              "result": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjoy",
+              "result": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjox",
               "calldata": "FgB0cmVxdWVzdF9naXRodWIEYXJncw1Ub21ldGVyZTEyMw==",
               "gas_used": 0,
               "node_config": {
                 "stake": 100,
-                "address": "0x8D32eb5D0207f7E230C45e7BF0D14B2ED5DA3028",
+                "address": "0x1dA3a7de8EA65A318bf88Eb63d3dC55295Dd257E",
                 "primary_model": {
-                  "model": "policy:dev-sonnet",
+                  "model": "policy:dev-gpt-5-4",
                   "config": {
                     "policy_ir": [
                       "policy",
@@ -2386,15 +2527,15 @@
                           "or",
                           [
                             "family_eq",
-                            "claude-sonnet-4-6"
-                          ],
-                          [
-                            "family_eq",
                             "gpt-5.4"
                           ],
                           [
                             "family_eq",
                             "gemini-3-flash-preview"
+                          ],
+                          [
+                            "family_eq",
+                            "gpt-oss-120b"
                           ]
                         ]
                       ],
@@ -2403,21 +2544,6 @@
                         [
                           "scale",
                           100,
-                          [
-                            "gate",
-                            [
-                              "family_eq",
-                              "claude-sonnet-4-6"
-                            ],
-                            [
-                              "lit",
-                              1
-                            ]
-                          ]
-                        ],
-                        [
-                          "scale",
-                          10,
                           [
                             "gate",
                             [
@@ -2432,12 +2558,27 @@
                         ],
                         [
                           "scale",
-                          1,
+                          10,
                           [
                             "gate",
                             [
                               "family_eq",
                               "gemini-3-flash-preview"
+                            ],
+                            [
+                              "lit",
+                              1
+                            ]
+                          ]
+                        ],
+                        [
+                          "scale",
+                          1,
+                          [
+                            "gate",
+                            [
+                              "family_eq",
+                              "gpt-oss-120b"
                             ],
                             [
                               "lit",
@@ -2518,19 +2659,19 @@
                     "api_url": "https://router.ygr.ai",
                     "api_key_env_var": "LLM_ROUTER_API_KEY"
                   },
-                  "fallback_validator": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829"
+                  "fallback_validator": "0xE4E106086F167D75E2270fa5f3680f6ac598d179"
                 },
                 "secondary_model": {
-                  "model": "anthropic/claude-sonnet-4.6",
+                  "model": "google/gemini-3-flash-preview",
                   "config": {
                     "models": [
-                      "anthropic/claude-sonnet-4.6",
+                      "google/gemini-3-flash-preview",
                       "openai/gpt-5.4",
-                      "google/gemini-3-flash-preview"
+                      "anthropic/claude-sonnet-4.6"
                     ]
                   },
                   "plugin": "openai-compatible",
-                  "address": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829",
+                  "address": "0xE4E106086F167D75E2270fa5f3680f6ac598d179",
                   "provider": "openrouter",
                   "plugin_config": {
                     "api_url": "https://openrouter.ai/api",
@@ -2547,21 +2688,21 @@
                 "data_fees_consumed": {
                   "message_fee": 0,
                   "nondet_outputs": 64,
-                  "execution_data_gas": 78856500000000,
+                  "execution_data_gas": 78857250000000,
                   "submitted_messages": 0,
                   "submitted_messages_count": 0
                 },
                 "data_fees_remaining": {
                   "message_fee": 0,
                   "nondet_outputs": 1.157920892373162e+77,
-                  "execution_data_gas": 15771300000000,
+                  "execution_data_gas": 15771450000000,
                   "submitted_messages": 1.157920892373162e+77,
                   "submitted_messages_count": 20
                 },
                 "data_fee_bucket_totals": {
                   "message_fee": 0,
                   "nondet_outputs": 1.157920892373162e+77,
-                  "execution_data_gas": 94627800000000,
+                  "execution_data_gas": 94628700000000,
                   "submitted_messages": 1.157920892373162e+77,
                   "submitted_messages_count": 20
                 }
@@ -2569,26 +2710,26 @@
               "contract_state": {},
               "execution_stats": {
                 "call_counts": {
-                  "STORAGE_READ": 26
+                  "STORAGE_READ": 25
                 },
                 "host_first_method": "STORAGE_READ",
-                "host_loop_entered_s": 1997.841619889,
-                "host_loop_enter_wait_ms": 23,
+                "host_loop_entered_s": 5395.629361409,
+                "host_loop_enter_wait_ms": 409,
                 "host_time_per_method_ms": {
-                  "STORAGE_READ": 17
+                  "STORAGE_READ": 10
                 },
-                "host_total_handling_time_ms": 17,
+                "host_total_handling_time_ms": 10,
                 "manager_run_attempt_success": {
                   "attempt": 0,
-                  "duration_ms": 6
+                  "duration_ms": 5
                 },
-                "host_first_method_received_s": 1997.842128845,
+                "host_first_method_received_s": 5395.629879175,
                 "host_accept_to_first_method_ms": 0
               },
               "nondet_disagree": null,
-              "processing_time": 534,
+              "processing_time": 948,
               "execution_result": "SUCCESS",
-              "contract_state_hash": "4bcd41034f67c45478d1af97be0838aa60cbf5aafe53586018bb12a7a451fc76",
+              "contract_state_hash": "3f753ee51ded66b52e285c3b38e5453d87c106893e702cc8d5fc4ac2fc5c9f53",
               "pending_transactions": []
             }
           ],
@@ -2608,8 +2749,8 @@
               "calldata": "",
               "gas_used": 0,
               "node_config": {
-                "id": 190,
-                "model": "policy:dev-sonnet",
+                "id": 186,
+                "model": "policy:dev-gpt-5-4",
                 "stake": 100,
                 "config": {
                   "policy_ir": [
@@ -2636,15 +2777,15 @@
                         "or",
                         [
                           "family_eq",
-                          "claude-sonnet-4-6"
-                        ],
-                        [
-                          "family_eq",
                           "gpt-5.4"
                         ],
                         [
                           "family_eq",
                           "gemini-3-flash-preview"
+                        ],
+                        [
+                          "family_eq",
+                          "gpt-oss-120b"
                         ]
                       ]
                     ],
@@ -2653,21 +2794,6 @@
                       [
                         "scale",
                         100,
-                        [
-                          "gate",
-                          [
-                            "family_eq",
-                            "claude-sonnet-4-6"
-                          ],
-                          [
-                            "lit",
-                            1
-                          ]
-                        ]
-                      ],
-                      [
-                        "scale",
-                        10,
                         [
                           "gate",
                           [
@@ -2682,12 +2808,27 @@
                       ],
                       [
                         "scale",
-                        1,
+                        10,
                         [
                           "gate",
                           [
                             "family_eq",
                             "gemini-3-flash-preview"
+                          ],
+                          [
+                            "lit",
+                            1
+                          ]
+                        ]
+                      ],
+                      [
+                        "scale",
+                        1,
+                        [
+                          "gate",
+                          [
+                            "family_eq",
+                            "gpt-oss-120b"
                           ],
                           [
                             "lit",
@@ -2763,13 +2904,13 @@
                   "first_token_timeout_ms": 7000
                 },
                 "plugin": "openai-compatible",
-                "address": "0xcEf1Baa172d0b4D99Dcc505B36332F26D1088025",
+                "address": "0xa0435f618c1F27B254998018AEa8Da5C77187852",
                 "provider": "llm-router",
                 "plugin_config": {
                   "api_url": "https://router.ygr.ai",
                   "api_key_env_var": "LLM_ROUTER_API_KEY"
                 },
-                "fallback_validator": "0x8142E5D1b04f84c3cD995C25AAe31B31F8e0379E"
+                "fallback_validator": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829"
               },
               "genvm_result": {
                 "stderr": "Validator execution cancelled after quorum",
@@ -2797,24 +2938,168 @@
               "calldata": "",
               "gas_used": 0,
               "node_config": {
-                "id": 199,
-                "model": "google/gemini-3-flash-preview",
+                "id": 188,
+                "model": "policy:dev-gemini",
                 "stake": 100,
                 "config": {
-                  "models": [
-                    "google/gemini-3-flash-preview",
-                    "openai/gpt-5.4",
-                    "anthropic/claude-sonnet-4.6"
-                  ]
+                  "policy_ir": [
+                    "policy",
+                    [
+                      "and",
+                      [
+                        "meets_req"
+                      ],
+                      [
+                        "not",
+                        [
+                          "is",
+                          "disabled"
+                        ]
+                      ],
+                      [
+                        "cmp",
+                        "success_rate",
+                        "ge",
+                        0.2
+                      ],
+                      [
+                        "or",
+                        [
+                          "family_eq",
+                          "gemini-3-flash-preview"
+                        ],
+                        [
+                          "family_eq",
+                          "gpt-oss-120b"
+                        ],
+                        [
+                          "family_eq",
+                          "gpt-5.4"
+                        ]
+                      ]
+                    ],
+                    [
+                      "add",
+                      [
+                        "scale",
+                        100,
+                        [
+                          "gate",
+                          [
+                            "family_eq",
+                            "gemini-3-flash-preview"
+                          ],
+                          [
+                            "lit",
+                            1
+                          ]
+                        ]
+                      ],
+                      [
+                        "scale",
+                        10,
+                        [
+                          "gate",
+                          [
+                            "family_eq",
+                            "gpt-oss-120b"
+                          ],
+                          [
+                            "lit",
+                            1
+                          ]
+                        ]
+                      ],
+                      [
+                        "scale",
+                        1,
+                        [
+                          "gate",
+                          [
+                            "family_eq",
+                            "gpt-5.4"
+                          ],
+                          [
+                            "lit",
+                            1
+                          ]
+                        ]
+                      ],
+                      [
+                        "scale",
+                        0.25,
+                        [
+                          "neg",
+                          [
+                            "normalize",
+                            [
+                              "field",
+                              "price_in"
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "scale",
+                        0.45,
+                        [
+                          "neg",
+                          [
+                            "normalize",
+                            [
+                              "field",
+                              "price_out"
+                            ]
+                          ]
+                        ]
+                      ],
+                      [
+                        "scale",
+                        0.2,
+                        [
+                          "field",
+                          "success_rate"
+                        ]
+                      ],
+                      [
+                        "scale",
+                        0.1,
+                        [
+                          "neg",
+                          [
+                            "normalize",
+                            [
+                              "field",
+                              "latency_ms"
+                            ]
+                          ]
+                        ]
+                      ]
+                    ],
+                    [
+                      "argmax"
+                    ],
+                    [
+                      "id"
+                    ],
+                    [
+                      "always",
+                      {
+                        "action": "next_candidate"
+                      }
+                    ]
+                  ],
+                  "timeout_ms": 22000,
+                  "first_token_timeout_ms": 7000
                 },
                 "plugin": "openai-compatible",
-                "address": "0xE4E106086F167D75E2270fa5f3680f6ac598d179",
-                "provider": "openrouter",
+                "address": "0xf13c3DfE38C8E206C33F750C24a1b043b63Cb810",
+                "provider": "llm-router",
                 "plugin_config": {
-                  "api_url": "https://openrouter.ai/api",
-                  "api_key_env_var": "OPENROUTERAPIKEY"
+                  "api_url": "https://router.ygr.ai",
+                  "api_key_env_var": "LLM_ROUTER_API_KEY"
                 },
-                "fallback_validator": "0xf13c3DfE38C8E206C33F750C24a1b043b63Cb810"
+                "fallback_validator": "0xE4E106086F167D75E2270fa5f3680f6ac598d179"
               },
               "genvm_result": {
                 "stderr": "Validator execution cancelled after quorum",
@@ -2838,14 +3123,14 @@
             {
               "mode": "validator",
               "vote": "agree",
-              "result": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjoy",
+              "result": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjox",
               "calldata": "FgB0cmVxdWVzdF9naXRodWIEYXJncw1Ub21ldGVyZTEyMw==",
               "gas_used": 0,
               "node_config": {
                 "stake": 100,
-                "address": "0xEEcEC5D1E07Ee40f5cb85aF922178Dc01278013C",
+                "address": "0x6760cDeC573cf38568C59872ee48B6fED41F8A4c",
                 "primary_model": {
-                  "model": "policy:dev-gpt-oss",
+                  "model": "policy:dev-gpt-5-4",
                   "config": {
                     "policy_ir": [
                       "policy",
@@ -2871,15 +3156,15 @@
                           "or",
                           [
                             "family_eq",
-                            "gpt-oss-120b"
-                          ],
-                          [
-                            "family_eq",
-                            "deepseek-v3.2"
-                          ],
-                          [
-                            "family_eq",
                             "gpt-5.4"
+                          ],
+                          [
+                            "family_eq",
+                            "gemini-3-flash-preview"
+                          ],
+                          [
+                            "family_eq",
+                            "gpt-oss-120b"
                           ]
                         ]
                       ],
@@ -2892,7 +3177,7 @@
                             "gate",
                             [
                               "family_eq",
-                              "gpt-oss-120b"
+                              "gpt-5.4"
                             ],
                             [
                               "lit",
@@ -2907,7 +3192,7 @@
                             "gate",
                             [
                               "family_eq",
-                              "deepseek-v3.2"
+                              "gemini-3-flash-preview"
                             ],
                             [
                               "lit",
@@ -2922,7 +3207,7 @@
                             "gate",
                             [
                               "family_eq",
-                              "gpt-5.4"
+                              "gpt-oss-120b"
                             ],
                             [
                               "lit",
@@ -3003,19 +3288,19 @@
                     "api_url": "https://router.ygr.ai",
                     "api_key_env_var": "LLM_ROUTER_API_KEY"
                   },
-                  "fallback_validator": "0xcF5Fd792Df0Dc9d297af75c82B4A0011e8FA1A4A"
+                  "fallback_validator": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829"
                 },
                 "secondary_model": {
-                  "model": "openai/gpt-5.4",
+                  "model": "anthropic/claude-sonnet-4.6",
                   "config": {
                     "models": [
-                      "openai/gpt-5.4",
                       "anthropic/claude-sonnet-4.6",
+                      "openai/gpt-5.4",
                       "google/gemini-3-flash-preview"
                     ]
                   },
                   "plugin": "openai-compatible",
-                  "address": "0xcF5Fd792Df0Dc9d297af75c82B4A0011e8FA1A4A",
+                  "address": "0xE52dDB85587585930b1E5f1Fe88fef21CcA49829",
                   "provider": "openrouter",
                   "plugin_config": {
                     "api_url": "https://openrouter.ai/api",
@@ -3032,21 +3317,21 @@
                 "data_fees_consumed": {
                   "message_fee": 0,
                   "nondet_outputs": 64,
-                  "execution_data_gas": 78856500000000,
+                  "execution_data_gas": 78857250000000,
                   "submitted_messages": 0,
                   "submitted_messages_count": 0
                 },
                 "data_fees_remaining": {
                   "message_fee": 0,
                   "nondet_outputs": 1.157920892373162e+77,
-                  "execution_data_gas": 15771300000000,
+                  "execution_data_gas": 15771450000000,
                   "submitted_messages": 1.157920892373162e+77,
                   "submitted_messages_count": 20
                 },
                 "data_fee_bucket_totals": {
                   "message_fee": 0,
                   "nondet_outputs": 1.157920892373162e+77,
-                  "execution_data_gas": 94627800000000,
+                  "execution_data_gas": 94628700000000,
                   "submitted_messages": 1.157920892373162e+77,
                   "submitted_messages_count": 20
                 }
@@ -3054,37 +3339,37 @@
               "contract_state": {},
               "execution_stats": {
                 "call_counts": {
-                  "STORAGE_READ": 26
+                  "STORAGE_READ": 25
                 },
                 "host_first_method": "STORAGE_READ",
-                "host_loop_entered_s": 1997.842914255,
-                "host_loop_enter_wait_ms": 23,
+                "host_loop_entered_s": 5395.238248387,
+                "host_loop_enter_wait_ms": 18,
                 "host_time_per_method_ms": {
-                  "STORAGE_READ": 16
+                  "STORAGE_READ": 7
                 },
-                "host_total_handling_time_ms": 16,
+                "host_total_handling_time_ms": 7,
                 "manager_run_attempt_success": {
                   "attempt": 0,
-                  "duration_ms": 5
+                  "duration_ms": 4
                 },
-                "host_first_method_received_s": 1997.843498012,
-                "host_accept_to_first_method_ms": 1
+                "host_first_method_received_s": 5395.238466249,
+                "host_accept_to_first_method_ms": 0
               },
               "nondet_disagree": null,
-              "processing_time": 423,
+              "processing_time": 422,
               "execution_result": "SUCCESS",
-              "contract_state_hash": "4bcd41034f67c45478d1af97be0838aa60cbf5aafe53586018bb12a7a451fc76",
+              "contract_state_hash": "3f753ee51ded66b52e285c3b38e5453d87c106893e702cc8d5fc4ac2fc5c9f53",
               "pending_transactions": []
             },
             {
               "mode": "validator",
               "vote": "agree",
-              "result": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjoy",
+              "result": "APwDUlItSUQ6NjE5OTc6R0lUSFVCOjB4YjI5RWFkMTVCMUU4QTI0MjBmYUU4NGRlOTc0MDg4ZjY3YTE1Y2NDMjox",
               "calldata": "FgB0cmVxdWVzdF9naXRodWIEYXJncw1Ub21ldGVyZTEyMw==",
               "gas_used": 0,
               "node_config": {
                 "stake": 100,
-                "address": "0xf13c3DfE38C8E206C33F750C24a1b043b63Cb810",
+                "address": "0xcbC79F96B7A275b23EE64d80a98325107F6E1b77",
                 "primary_model": {
                   "model": "policy:dev-gemini",
                   "config": {
@@ -3244,19 +3529,19 @@
                     "api_url": "https://router.ygr.ai",
                     "api_key_env_var": "LLM_ROUTER_API_KEY"
                   },
-                  "fallback_validator": "0xE4E106086F167D75E2270fa5f3680f6ac598d179"
+                  "fallback_validator": "0xcF5Fd792Df0Dc9d297af75c82B4A0011e8FA1A4A"
                 },
                 "secondary_model": {
-                  "model": "google/gemini-3-flash-preview",
+                  "model": "openai/gpt-5.4",
                   "config": {
                     "models": [
-                      "google/gemini-3-flash-preview",
                       "openai/gpt-5.4",
-                      "anthropic/claude-sonnet-4.6"
+                      "anthropic/claude-sonnet-4.6",
+                      "google/gemini-3-flash-preview"
                     ]
                   },
                   "plugin": "openai-compatible",
-                  "address": "0xE4E106086F167D75E2270fa5f3680f6ac598d179",
+                  "address": "0xcF5Fd792Df0Dc9d297af75c82B4A0011e8FA1A4A",
                   "provider": "openrouter",
                   "plugin_config": {
                     "api_url": "https://openrouter.ai/api",
@@ -3273,21 +3558,21 @@
                 "data_fees_consumed": {
                   "message_fee": 0,
                   "nondet_outputs": 64,
-                  "execution_data_gas": 78856500000000,
+                  "execution_data_gas": 78857250000000,
                   "submitted_messages": 0,
                   "submitted_messages_count": 0
                 },
                 "data_fees_remaining": {
                   "message_fee": 0,
                   "nondet_outputs": 1.157920892373162e+77,
-                  "execution_data_gas": 15771300000000,
+                  "execution_data_gas": 15771450000000,
                   "submitted_messages": 1.157920892373162e+77,
                   "submitted_messages_count": 20
                 },
                 "data_fee_bucket_totals": {
                   "message_fee": 0,
                   "nondet_outputs": 1.157920892373162e+77,
-                  "execution_data_gas": 94627800000000,
+                  "execution_data_gas": 94628700000000,
                   "submitted_messages": 1.157920892373162e+77,
                   "submitted_messages_count": 20
                 }
@@ -3295,36 +3580,39 @@
               "contract_state": {},
               "execution_stats": {
                 "call_counts": {
-                  "STORAGE_READ": 26
+                  "STORAGE_READ": 25
                 },
                 "host_first_method": "STORAGE_READ",
-                "host_loop_entered_s": 1997.840785129,
-                "host_loop_enter_wait_ms": 21,
+                "host_loop_entered_s": 5396.057188569,
+                "host_loop_enter_wait_ms": 836,
                 "host_time_per_method_ms": {
-                  "STORAGE_READ": 15
+                  "STORAGE_READ": 9
                 },
-                "host_total_handling_time_ms": 15,
+                "host_total_handling_time_ms": 9,
                 "manager_run_attempt_success": {
                   "attempt": 0,
-                  "duration_ms": 4
+                  "duration_ms": 3
                 },
-                "host_first_method_received_s": 1997.840960201,
+                "host_first_method_received_s": 5396.057599893,
                 "host_accept_to_first_method_ms": 0
               },
               "nondet_disagree": null,
-              "processing_time": 443,
+              "processing_time": 1190,
               "execution_result": "SUCCESS",
-              "contract_state_hash": "4bcd41034f67c45478d1af97be0838aa60cbf5aafe53586018bb12a7a451fc76",
+              "contract_state_hash": "3f753ee51ded66b52e285c3b38e5453d87c106893e702cc8d5fc4ac2fc5c9f53",
               "pending_transactions": []
             }
           ]
         }
       ],
       "current_monitoring": {
-        "FINALIZED": 1789684139.468081,
-        "COMMITTING.VALIDATOR_2.RUN_END": 1789684109.742619,
-        "COMMITTING.VALIDATOR_2.RECEIPT_CREATED": 1789684109.7467043,
-        "COMMITTING.VALIDATOR_2.EXECUTION_FINISHED": 1789684109.7378361
+        "FINALIZED": 1789684853.457095,
+        "COMMITTING.VALIDATOR_1.RUN_END": 1789684820.9022417,
+        "COMMITTING.VALIDATOR_2.RUN_END": 1789684821.276348,
+        "COMMITTING.VALIDATOR_1.RECEIPT_CREATED": 1789684820.907052,
+        "COMMITTING.VALIDATOR_2.RECEIPT_CREATED": 1789684821.2813535,
+        "COMMITTING.VALIDATOR_1.EXECUTION_FINISHED": 1789684820.8966522,
+        "COMMITTING.VALIDATOR_2.EXECUTION_FINISHED": 1789684821.2711473
       },
       "current_status_changes": [
         "FINALIZED"
@@ -3334,29 +3622,29 @@
     "appeal_processing_time": 0,
     "config_rotation_rounds": 3,
     "num_of_initial_validators": 5,
-    "last_vote_timestamp": "1789684109",
+    "last_vote_timestamp": "1789684820",
     "rotation_count": 0,
     "appeal_leader_timeout": false,
     "leader_timeout_validators": [],
     "appeal_validators_timeout": false,
     "sim_config": {
-      "signed_rollup_transaction": "0xf903d1818280830f424094b7278a61aa25c888815afc32ad3cc52ff24fe57587015841019ec070b9036435a251fb0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000b29ead15b1e8a2420fae84de974088f67a15ccc2000000000000000000000000c9fcae4a28087a310b5160840eb297a1a910705200000000000000000000000000000000000000000000000000000000000000050000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000006aac779700000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000014000000000000000000000000000000000000000000000000000000000000002c00000000000000000000000000000000000000000000000000000000000000320000000000000000000000000000000000000000000000000000000000000006400000000000000000000000000000000000000000000000000000000000000c80000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000056104067a60000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000014000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000011e1a3000000000000000000000000000000000000000000000000000000000011e1a300000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000025e4a2160074726571756573745f67697468756204617267730d546f6d65746572653132330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008301e47ea01345f7189fe32b4ba66115cb391d34cd08a7d32ec9060c8aacfda6b3535b31a3a0728dc95ceeaf24965880f595518bbdc75f8fb5bb3696919bced791767c314cf2"
+      "signed_rollup_transaction": "0xf903d1818480830f424094b7278a61aa25c888815afc32ad3cc52ff24fe57587015841d8326470b9036435a251fb0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000b29ead15b1e8a2420fae84de974088f67a15ccc2000000000000000000000000b846059f34d6cf57af6e29d33dfdc4027b66d4d600000000000000000000000000000000000000000000000000000000000000050000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000006aac7a5e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000014000000000000000000000000000000000000000000000000000000000000002c00000000000000000000000000000000000000000000000000000000000000320000000000000000000000000000000000000000000000000000000000000006400000000000000000000000000000000000000000000000000000000000000c8000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005610760c8f0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000014000000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000011e1a3000000000000000000000000000000000000000000000000000000000011e1a300000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000025e4a2160074726571756573745f67697468756204617267730d546f6d65746572653132330000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008301e47ea021726be311443574c4911e189c1bbcaf33cb287df12144979812c090c5dd74c7a06fa85a29f0fccf83d70d71abd687a609fe23108ab4010f33b7bf202fa13784ae"
     },
     "value_credited": false,
-    "current_timestamp": "1789684140",
+    "current_timestamp": "1789684864",
     "sender": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
-    "recipient": "0xc9Fcae4a28087A310b5160840EB297a1A9107052",
-    "created_timestamp": "1789684106",
+    "recipient": "0xB846059f34D6CF57AF6E29D33DFdC4027b66D4D6",
+    "created_timestamp": "1789684817",
     "random_seed": "0x0000000000000000000000000000000000000000000000000000000000000000",
-    "tx_id": "0xdc58dbdce43e6c18c5a1ff4ab550f5710a8273ccde8577837781c4f7c53a257f",
+    "tx_id": "0xfaaab1ee43778324a83daac2046b0cbd17bfcb4d1bd96356b7c9d9bbe618718d",
     "read_state_block_range": {
       "activation_block": "0",
       "processing_block": "0",
       "proposal_block": "0"
     },
-    "activator": "0x8D32eb5D0207f7E230C45e7BF0D14B2ED5DA3028",
-    "last_leader": "0x8D32eb5D0207f7E230C45e7BF0D14B2ED5DA3028",
-    "tx_slot": "2",
+    "activator": "0x1dA3a7de8EA65A318bf88Eb63d3dC55295Dd257E",
+    "last_leader": "0x1dA3a7de8EA65A318bf88Eb63d3dC55295Dd257E",
+    "tx_slot": "1",
     "result_name": "MAJORITY_AGREE",
     "tx_data": "e4a2160074726571756573745f67697468756204617267730d546f6d657465726531323300",
     "tx_execution_hash": "",
@@ -3374,18 +3662,18 @@
       "rotations_left": "3",
       "result": 1,
       "round_validators": [
-        "0x8D32eb5D0207f7E230C45e7BF0D14B2ED5DA3028",
-        "0xcEf1Baa172d0b4D99Dcc505B36332F26D1088025",
-        "0xE4E106086F167D75E2270fa5f3680f6ac598d179",
-        "0xEEcEC5D1E07Ee40f5cb85aF922178Dc01278013C",
-        "0xf13c3DfE38C8E206C33F750C24a1b043b63Cb810"
+        "0x1dA3a7de8EA65A318bf88Eb63d3dC55295Dd257E",
+        "0xa0435f618c1F27B254998018AEa8Da5C77187852",
+        "0xf13c3DfE38C8E206C33F750C24a1b043b63Cb810",
+        "0x6760cDeC573cf38568C59872ee48B6fED41F8A4c",
+        "0xcbC79F96B7A275b23EE64d80a98325107F6E1b77"
       ],
       "validator_votes_hash": [
-        "0x98facc6121c17edce2da76b23e75f6d2edcb98c2735fe29996ef9a652540a6a6",
-        "0xb6b0ed65f6b5e2e08acb4653da2613200d2bd5018d5aa113aeb448ea8e0cbb8c",
-        "0x50b1ce50e374bc25af2fd80264e681bbefe4e0fd8814ee5d0c3ece8a4254f7a4",
-        "0x25e0657c7d0248a162950344119c74c251a02401498601859a0ff591da097d07",
-        "0x2dfc7f9a2121d2c6cbd123816c2b7c075c028be528f7114cc1e87e86d47bd73b"
+        "0x9be6237061089ee0749904b5481fe5bfb57aed70cc0a5cbd871a36592527ff82",
+        "0x632b6bb5aea6acd2f726f6b56b5087ff3b780ad58f6b4e3bd050449916116f78",
+        "0x0cd0bd591e1b3c26cc5e70fba6910d210798f3209629089f6b4011ea2b22bd70",
+        "0xf3552e61c313e1ebdc5d39fbd543d24f183f9a419151d0bbf05b96888a9a95d5",
+        "0x4044317620b2b40e4b04c2b0e8cf872de2bc1861ade4f687ffff42c603c2e42b"
       ],
       "validator_votes": [
         1,
@@ -3415,13 +3703,13 @@
   },
   "identity": {
     "canonical_id": "",
-    "challenge": "RR-ID:61997:GITHUB:0xb29Ead15B1E8A2420faE84de974088f67a15ccC2:2",
+    "challenge": "RR-ID:61997:GITHUB:0xb29Ead15B1E8A2420faE84de974088f67a15ccC2:1",
     "handle": "ometere123",
     "platform": "GITHUB",
     "proof_url": "",
     "state": "PENDING",
     "state_code": 1,
-    "updated_at": 1789684106,
+    "updated_at": 1789684817,
     "wallet": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2"
   }
 }
