@@ -3,14 +3,36 @@
   "network": "Studio Next / Studionet Dev",
   "chainId": 61997,
   "rpc": "https://studio-dev.genlayer.com/api",
+  "identity": {
+    "txId": "0x9f1c501e4b17f37f0aa8af6913bb11d6ffe7663f22ce86cfa7915e53b906e286",
+    "address": "0xc9Fcae4a28087A310b5160840EB297a1A9107052"
+  },
   "rail": {
-    "txId": "0x70a168930cef8c6f0e05e0fa8ba205a8cb1491aa9c04131f8a43de879dae60bf",
-    "address": "0x608b42c0aa11767C9D2f72908481A6A6AFd0F42A"
+    "txId": "0x53f4829c345866e7478f85607ed9cde85a9416bb1140e145e6b092e0c026d72a",
+    "address": "0xF5c0F21B9527Fb0bB4EC7994f45E3Aa9731d7807"
   },
   "judge": {
-    "txId": "0x78a77da08d68333d1ffe16ff73b3e272a8f6fcf3790a632837ed587cff2e8405",
-    "address": "0xAC366276E1d22A2c356a656A0BBCA38599A2165A"
+    "txId": "0xd60bdc86ec3ad79b5a8298aa18db137e465ee1f86284590ec8973d5f28a5b46d",
+    "address": "0x0d83a825A5e6Ba0e261427f7D93C0925f388FEEf"
   },
-  "bindingTransaction": "0x8d81f89f715830e662d6a13b25c5aa0843e12f34e42a954e0a017afe4b252ad1",
-  "generatedAt": "2026-09-17T06:59:48.612Z"
+  "identityBindingTransaction": "0xd752983b0e4a0b1854ce321d3022b7913a76e97b6ff2bc465ea50584d4b10a05",
+  "bindingTransaction": "0xb1bedbfd520f9831521098c622c9f2b43973c51baaa141a21b54b80c405a34df",
+  "protocol": {
+    "chain_id": 61997,
+    "evidence_profiles": [
+      "GITHUB_PR",
+      "X_POST",
+      "PUBLIC_URL"
+    ],
+    "identity_address": "0xc9Fcae4a28087A310b5160840EB297a1A9107052",
+    "judgment_timeout_seconds": 86400,
+    "max_attempts": 2,
+    "max_positions": 1000,
+    "max_seconds": 3888000,
+    "min_seconds": 60,
+    "retry_window_seconds": 86400,
+    "state_model": "campaign capacity is success based; terminal failure reopens a funded slot while intake is active",
+    "version": "2"
+  },
+  "generatedAt": "2026-09-17T22:25:42.798Z"
 }
