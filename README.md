@@ -30,6 +30,75 @@ The repository intentionally hard-locks the frontend and deployment tooling to t
 
 Terminal opportunity states are `PAID`, `REFUNDED`, `EXPIRED`, or `CANCELLED`.
 
+## ReferralRail v2 — in development
+
+The deployed product on `main` is ReferralRail v1. A broader multi-position protocol is being built separately on the [`referralrail-v2`](https://github.com/ometere123/referralrail/tree/referralrail-v2) branch. V2 is intentionally isolated from v1: it uses separate contracts, separate deployment records and separate `/v2` product routes, and it is **not** the production protocol served by the current v1 deployment.
+
+V2 changes the unit of coordination from **one funded opportunity for one nominated candidate** to **one fully funded campaign with multiple independently judged referral positions**.
+
+### Campaigns and funded capacity
+
+- An employer creates a campaign with a fixed successful-position target.
+- Campaign funding is reserved up front as `max_positions × (candidate_reward + referral_reward)`.
+- Campaign terms, repository, base branch, evidence criteria, timing and rewards are immutable once active.
+- Every advertised successful position is therefore economically backed before participation begins.
+- Campaign accounting separates available backing, live obligations, payable outcomes, paid value, refundable value and already-refunded value so conservation can be checked explicitly.
+
+### Referral reservations and reusable capacity
+
+- Referrers reserve positions for nominated candidates rather than permanently consuming a slot at referral time.
+- The nominated candidate must personally accept before doing the work.
+- Reservations have bounded acceptance deadlines and can expire or be released.
+- `FAILED`, `EXPIRED` and `DECLINED` positions release capacity when replacement participation is still legal.
+- A terminal failed candidate does not automatically return reusable campaign capital to the employer; the backing can fund a replacement candidate while intake is still open.
+- A successful position consumes one successful target permanently, but a settled `PAID` position no longer remains an unresolved active obligation.
+
+V2 position states are currently modelled as `RESERVED`, `ACCEPTED`, `JUDGING`, `INCONCLUSIVE`, `COMPLETED`, `PAID`, `FAILED`, `EXPIRED` and `DECLINED`. Campaign-level states distinguish active intake, resolution and terminal closure.
+
+### Stronger GitHub identity and evidence binding
+
+Candidate identity becomes part of the evidence protocol rather than a free-form username field. Acceptance creates a unique GitHub ownership challenge bound to the campaign, position and candidate wallet. The candidate must publish the exact challenge from the GitHub account they claimed. The judge then verifies the frozen repository, candidate login, base branch, freshness window and ownership proof before substantive evaluation.
+
+A qualifying pull request is expected to be fresh relative to the accepted position, which prevents old public work from being replayed as new campaign work. Evidence is also tied to the exact position/attempt so the same successful work cannot silently settle multiple obligations.
+
+### OutcomeJudgeV2 and three-way judgment
+
+`OutcomeJudgeV2` independently fetches bounded public GitHub evidence and evaluates objective facts before GenLayer validators assess whether the frozen work requirements were materially satisfied. The closed outcomes remain:
+
+- `COMPLETED`
+- `NOT_COMPLETED`
+- `INCONCLUSIVE`
+
+Fetch failures, unsafe parsing and genuinely unreliable evidence remain `INCONCLUSIVE`; neither the frontend, SDK, MCP server nor an external AI agent can substitute its own opinion for the finalized judge record.
+
+### Retries, deadlines and permissionless recovery
+
+V2 separates several clocks instead of treating a campaign as one deadline: reservation acceptance, candidate work, campaign participation, judgment timeout and inconclusive cure/retry. Reservations and accepted work expire at bounded deadlines. Judgment stalls have bounded recovery. Inconclusive outcomes have a bounded retry window and attempt count rather than an infinite retry loop.
+
+`recover_position` is designed to be permissionless once the relevant timeout or cure condition is objectively satisfied, so a missing employer, referrer or candidate cannot permanently lock campaign escrow.
+
+### Settlement and campaign closure
+
+A finalized `COMPLETED` judgment creates a payable position, but judgment and actual fund release remain separate facts. Candidate and referrer payout legs are tracked explicitly and a position becomes `PAID` only after the required value has been released.
+
+Unused campaign backing is not refundable while it is still supporting live or potentially payable positions. Intake can close while existing participants continue resolving. Final campaign refund is permitted only after the remaining economic obligations are resolved and the unused backing can be calculated deterministically.
+
+### V2 product and integration surfaces
+
+The v2 branch is also expanding the human and agent interfaces together:
+
+- dedicated campaign routes at `/v2`, `/v2/campaigns/new` and `/v2/campaigns/[id]`;
+- typed v2 SDK reads/writes for campaigns, positions, accounting and lifecycle actions;
+- MCP tools that expose named ReferralRail operations while remaining read-only by default unless writes are explicitly enabled;
+- an updated Agent Skill that teaches campaign capacity, retries, settlement and recovery without allowing the agent to replace GenLayer judgment;
+- dedicated v2 architecture, state-machine, security, accounting, identity-proof, judgment, recovery, testing, deployment and live-evidence documentation.
+
+### Current v2 status
+
+V2 remains **work in progress** and should not be treated as the live production protocol yet. The branch already contains the campaign architecture, fresh v2 contracts, v2 frontend routes, typed SDK work, model/static tests and a dedicated documentation set, but final live lifecycle evidence, complete integration audit and final readiness verification are still being completed. The source of truth for current progress is [`docs/v2/BUILD_STATUS.md`](https://github.com/ometere123/referralrail/blob/referralrail-v2/docs/v2/BUILD_STATUS.md).
+
+Until that work is complete and deliberately promoted, **v1 on `main` remains the canonical deployed ReferralRail product**.
+
 ## Why GenLayer is essential
 
 The three economic actors have conflicting incentives. An employer should not be able to erase a referrer after useful work is delivered; a referrer should not be able to silently bind a candidate; and a candidate should not be able to self-certify completion. Whether a merged change materially satisfies an immutable natural-language work specification is consequential judgment that moves pre-funded value. ReferralRail puts that judgment inside GenLayer consensus rather than a private employer database or centralized reviewer.
