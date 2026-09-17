@@ -37,11 +37,17 @@ export function createReferralRailServer(): McpServer {
   const v2write = (name: string, description: string, schema: Record<string, z.ZodTypeAny>, fn: (input: any) => Promise<unknown>) => server.registerTool(name, { description, inputSchema: schema }, async (input) => { requireWrite(v2.writeEnabled, v2.account); return text(await fn(input)); });
   v2write("referralrail_v2_create_campaign", "Create and fully fund a v2 multi-position campaign.", { title: z.string().min(3), brief: z.string().min(20), criteria: z.string().min(20), repoOwner: z.string().min(1), repoName: z.string().min(1), baseBranch: z.string().min(1), maxPositions: z.number().int().positive(), candidateReward: amount, referralReward: amount, reservationWindowSeconds: z.number().int().min(60), workDurationSeconds: z.number().int().min(60), campaignDurationSeconds: z.number().int().min(60), maxPendingPerReferrer: z.number().int().positive() }, x => v2.client.createCampaign(x));
   v2write("referralrail_v2_create_referral", "Reserve a funded v2 campaign position for its nominated candidate.", { campaignId: id, candidate: address }, x => v2.client.createReferral(x.campaignId, x.candidate));
+  v2write("referralrail_v2_join_via_referral", "Join a funded v2 campaign as the connected candidate using a referrer wallet from a referral link.", { campaignId: id, referrer: address }, x => v2.client.joinViaReferral(x.campaignId, x.referrer));
   v2write("referralrail_v2_accept_referral", "Accept a v2 referral and bind the candidate GitHub identity.", { campaignId: id, positionId: id, githubLogin: z.string().min(1) }, x => v2.client.acceptReferral(x.campaignId, x.positionId, x.githubLogin));
   v2write("referralrail_v2_submit_work", "Submit a pull request number for v2 consensus judgment.", { campaignId: id, positionId: id, prNumber: id }, x => v2.client.submitWork(x.campaignId, x.positionId, x.prNumber));
+  v2write("referralrail_v2_submit_evidence", "Submit a public X post or HTTPS URL for v2 consensus judgment.", { campaignId: id, positionId: id, evidenceUri: z.string().url().startsWith("https://") }, x => v2.client.submitEvidence(x.campaignId, x.positionId, x.evidenceUri));
   v2write("referralrail_v2_resolve_judgment", "Materialize a finalized v2 judgment into campaign state.", { campaignId: id, positionId: id, attemptId: id }, x => v2.client.resolveJudgment(x.campaignId, x.positionId, x.attemptId));
   v2write("referralrail_v2_settle_position", "Release both v2 payout legs after a completed judgment.", { campaignId: id, positionId: id }, x => v2.client.settlePosition(x.campaignId, x.positionId));
   v2write("referralrail_v2_recover_position", "Apply permitted v2 timeout or exhausted-cure recovery.", { campaignId: id, positionId: id }, x => v2.client.recoverPosition(x.campaignId, x.positionId));
   }
   return server;
 }
+
+
+
+

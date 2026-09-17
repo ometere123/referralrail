@@ -25,6 +25,9 @@ jobs:
       - run: genvm-lint check contracts/outcome_judge.py
       - run: genvm-lint check contracts/referral_rail_v2.py
       - run: genvm-lint check contracts/outcome_judge_v2.py
+      genvm-lint check contracts/referral_identity_v2.py
       - run: npm run typecheck
       - run: npm run build
       - run: python scripts/preflight.py --skip-tests
+
+

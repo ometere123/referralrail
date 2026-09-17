@@ -28,6 +28,7 @@ class Identity:
     handle: str
     canonical_id: str
     challenge: str
+    proof_url: str
     state: gl.u256
     nonce: gl.u256
     updated_at: gl.u256
@@ -57,6 +58,7 @@ def canonical_key(platform: str, identifier: str) -> str:
 class ReferralIdentityV2(gl.contract.Contract):
     identities: gl.storage.TreeMap[str, Identity]
     github_owner: gl.storage.TreeMap[str, str]
+    x_owner: gl.storage.TreeMap[str, str]
     next_nonce: gl.u256
 
     def __init__(self):
@@ -72,9 +74,71 @@ class ReferralIdentityV2(gl.contract.Contract):
         nonce = int(self.next_nonce)
         self.next_nonce = gl.u256(nonce + 1)
         challenge = "RR-ID:61997:GITHUB:" + wallet.as_hex + ":" + str(nonce)
-        self.identities[key] = Identity(wallet, "GITHUB", login, "", challenge, gl.u256(PENDING), gl.u256(nonce), gl.u256(int(datetime.now(timezone.utc).timestamp())))
+        self.identities[key] = Identity(wallet, "GITHUB", login, "", challenge, "", gl.u256(PENDING), gl.u256(nonce), gl.u256(int(datetime.now(timezone.utc).timestamp())))
         IdentityChanged(wallet, "GITHUB", state=PENDING, challenge=challenge).emit()
         return challenge
+
+    @gl.public.write
+    def request_x(self, handle: str) -> str:
+        handle = clean(handle, MAX_HANDLE).lstrip("@").lower()
+        if not handle_ok(handle):
+            raise gl.vm.UserError("invalid X handle")
+        wallet = gl.message.sender_address
+        key = proof_key(wallet, "X")
+        nonce = int(self.next_nonce)
+        self.next_nonce = gl.u256(nonce + 1)
+        challenge = "RR-ID:61997:X:" + wallet.as_hex + ":" + str(nonce)
+        self.identities[key] = Identity(wallet, "X", handle, handle, challenge, "", gl.u256(PENDING), gl.u256(nonce), gl.u256(int(datetime.now(timezone.utc).timestamp())))
+        IdentityChanged(wallet, "X", state=PENDING, challenge=challenge).emit()
+        return challenge
+
+    @gl.public.write
+    def complete_x(self, status_url: str) -> None:
+        wallet = gl.message.sender_address
+        key = proof_key(wallet, "X")
+        if key not in self.identities or int(self.identities[key].state) != PENDING:
+            raise gl.vm.UserError("no pending X verification")
+        pending = self.identities[key]
+        handle = pending.handle
+        url = clean(status_url, 300)
+        parts = url.split("/")
+        if not (url.startswith("https://x.com/") or url.startswith("https://twitter.com/")) or len(parts) < 6 or parts[4] != "status" or not parts[5].isdigit():
+            raise gl.vm.UserError("invalid X status URL")
+        if parts[2] == "x.com":
+            path_handle = parts[3].lower()
+        else:
+            path_handle = parts[3].lower()
+        if path_handle != handle:
+            raise gl.vm.UserError("X handle does not match pending proof")
+        source = "https://publish.twitter.com/oembed?url=" + url
+        def fetch_proof() -> dict:
+            response = gl.nondet.web.get(source)
+            if int(response.status) != 200:
+                raise gl.vm.UserError("X proof is unavailable")
+            body = response.body.decode("utf-8")
+            if len(body) > 100000:
+                raise gl.vm.UserError("X proof is too large")
+            data = json.loads(body)
+            html = str(data.get("html") or "")
+            author_url = str(data.get("author_url") or "").lower()
+            author_name = str(data.get("author_name") or "").lower()
+            return {"html": html, "author_url": author_url, "author_name": author_name}
+        def verify() -> dict:
+            proof = fetch_proof()
+            if pending.challenge not in proof["html"] or ("/" + handle) not in proof["author_url"]:
+                raise gl.vm.UserError("X identity proof is incomplete")
+            return proof
+        gl.eq_principle.strict_eq(verify)
+        owner = self.x_owner.get(canonical_key("X", handle))
+        if owner and owner.lower() != wallet.as_hex.lower():
+            raise gl.vm.UserError("X handle is already owned")
+        self.x_owner[canonical_key("X", handle)] = wallet.as_hex
+        pending.proof_url = url
+        pending.canonical_id = handle
+        pending.state = gl.u256(ACTIVE)
+        pending.updated_at = gl.u256(int(datetime.now(timezone.utc).timestamp()))
+        self.identities[key] = pending
+        IdentityChanged(wallet, "X", state=ACTIVE, canonical_id=handle).emit()
 
     @gl.public.write
     def complete_github(self) -> None:
@@ -126,6 +190,8 @@ class ReferralIdentityV2(gl.contract.Contract):
         self.identities[key] = item
         if platform == "GITHUB":
             self.github_owner[canonical_key(platform, item.canonical_id)] = ""
+        if platform == "X":
+            self.x_owner[canonical_key(platform, item.canonical_id)] = ""
         IdentityChanged(item.wallet, platform, state=REVOKED).emit()
 
     @gl.public.view
@@ -134,9 +200,17 @@ class ReferralIdentityV2(gl.contract.Contract):
         item = self.identities.get(key)
         if not item:
             return {"state": "NONE", "state_code": 0}
-        return {"wallet": item.wallet.as_hex, "platform": item.platform, "handle": item.handle, "canonical_id": item.canonical_id, "challenge": item.challenge, "state": {1: "PENDING", 2: "ACTIVE", 3: "REVOKED"}.get(int(item.state), "NONE"), "state_code": int(item.state), "updated_at": int(item.updated_at)}
+        return {"wallet": item.wallet.as_hex, "platform": item.platform, "handle": item.handle, "canonical_id": item.canonical_id, "challenge": item.challenge, "proof_url": item.proof_url, "state": {1: "PENDING", 2: "ACTIVE", 3: "REVOKED"}.get(int(item.state), "NONE"), "state_code": int(item.state), "updated_at": int(item.updated_at)}
 
     @gl.public.view
     def lookup_github_id(self, canonical_id: str) -> str:
         return self.github_owner.get(canonical_key("GITHUB", canonical_id)) or ZERO.as_hex
+
+    @gl.public.view
+    def lookup_x_handle(self, handle: str) -> str:
+        return self.x_owner.get(canonical_key("X", clean(handle, MAX_HANDLE).lstrip("@"))) or ZERO.as_hex
+
+
+
+
 

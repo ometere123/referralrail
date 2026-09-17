@@ -19,13 +19,13 @@ def test_v06_dependency_is_consistent():
     assert marker in SETTLE and marker in JUDGE and marker in V2_SETTLE and marker in V2_JUDGE and marker in V2_IDENTITY
 
 def test_v2_is_multi_position_and_fully_funded():
-    for token in ['class ReferralRailV2', 'create_campaign', 'max_positions', 'occupied', 'settle_position', 'finalise_campaign', 'recover_position']:
+    for token in ['class ReferralRailV2', 'create_campaign', 'max_positions', 'occupied', 'settle_position', 'finalise_campaign', 'recover_position', 'join_via_referral']:
         assert token in V2_SETTLE
     for token in ['class OutcomeJudgeV2', 'COMPLETED', 'NOT_COMPLETED', 'INCONCLUSIVE', 'ownership-proof']:
         assert token in V2_JUDGE or token.replace('-', '_') in V2_JUDGE
 
 def test_identity_contract_has_canonical_github_ownership():
-    for token in ['class ReferralIdentityV2','request_github','complete_github','lookup_github_id','github_owner','strict_eq']:
+    for token in ['class ReferralIdentityV2','request_github','complete_github','request_x','complete_x','lookup_github_id','lookup_x_handle','github_owner','x_owner','strict_eq']:
         assert token in V2_IDENTITY
 
 def test_substantive_validator_refetches_and_reruns():
@@ -44,8 +44,12 @@ def test_inconclusive_and_timeout_paths_exist():
     for token in ['retry_inconclusive','recover','JUDGMENT_TIMEOUT_SECONDS','MAX_ATTEMPTS']: assert token in SETTLE
 
 def test_v2_paid_capacity_and_reusable_capacity_are_distinct():
-    assert 'pending_successes' in V2_SETTLE and '_used_capacity' in V2_SETTLE
+    assert 'pending_successes' in V2_SETTLE and '_used_capacity' in V2_SETTLE and 'X_POST' in V2_SETTLE and 'PUBLIC_URL' in V2_SETTLE
     assert 'c.occupied = gl.u256(int(c.occupied) - 1)' in V2_SETTLE and '"reusable_capacity"' in V2_SETTLE
 
 def test_v2_multislot_accounting_guards():
     for token in ['initial_funding','paid_total','refunded_total','still_locked','conserved']: assert token in V2_SETTLE
+
+
+
+

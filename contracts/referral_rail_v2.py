@@ -112,6 +112,9 @@ class Campaign:
     refunded_total: gl.u256
     created_at: gl.u256
     closed_at: gl.u256
+    evidence_profile: str
+    allowed_host: str
+    require_work_challenge: bool
 
 
 @allow_storage
@@ -139,6 +142,7 @@ class Position:
     candidate_paid: bool
     referrer_paid: bool
     terminal_reason: str
+    evidence_uri: str
 
 
 @gl.evm.contract_interface
@@ -183,6 +187,7 @@ def contract_at(address: gl.Address):
 class ReferralRailV2(gl.contract.Contract):
     owner: gl.Address
     judge_address: gl.Address
+    identity_address: gl.Address
     next_campaign_id: gl.u256
     campaigns: gl.storage.TreeMap[gl.u256, Campaign]
     positions: gl.storage.TreeMap[gl.u256, Position]
@@ -255,6 +260,15 @@ class ReferralRailV2(gl.contract.Contract):
             _Recipient(recipient).emit_transfer(value=gl.u256(amount))
 
     @gl.public.write
+    def set_identity(self, identity_address: str) -> None:
+        if gl.message.sender_address != self.owner or self.identity_address != ZERO or int(self.next_campaign_id) != 1:
+            raise gl.vm.UserError("identity binding is not available")
+        identity = gl.Address(identity_address)
+        if identity == ZERO or identity == self.owner:
+            raise gl.vm.UserError("invalid identity")
+        self.identity_address = identity
+
+    @gl.public.write
     def set_judge(self, judge_address: str) -> None:
         if gl.message.sender_address != self.owner or self.judge_address != ZERO or int(self.next_campaign_id) != 1:
             raise gl.vm.UserError("judge binding is not available")
@@ -264,13 +278,18 @@ class ReferralRailV2(gl.contract.Contract):
         self.judge_address = judge
 
     @gl.public.write.payable
-    def create_campaign(self, title: str, brief: str, criteria: str, repo_owner: str, repo_name: str, base_branch: str, max_positions: gl.u256, candidate_reward: gl.u256, referral_reward: gl.u256, reservation_window_seconds: gl.u256, work_duration_seconds: gl.u256, campaign_duration_seconds: gl.u256, max_pending_per_referrer: gl.u256) -> gl.u256:
+    def create_campaign(self, title: str, brief: str, criteria: str, repo_owner: str, repo_name: str, base_branch: str, max_positions: gl.u256, candidate_reward: gl.u256, referral_reward: gl.u256, reservation_window_seconds: gl.u256, work_duration_seconds: gl.u256, campaign_duration_seconds: gl.u256, max_pending_per_referrer: gl.u256, evidence_profile: str = "GITHUB_PR", allowed_host: str = "", require_work_challenge: bool = True) -> gl.u256:
         if self.judge_address == ZERO:
             raise gl.vm.UserError("judge is not configured")
         if not 3 <= len(text(title, 120)) or len(text(brief)) < 20 or len(text(criteria)) < 20:
             raise gl.vm.UserError("campaign text is incomplete")
         if not owner_ok(repo_owner) or not repo_ok(repo_name) or len(text(base_branch, 120)) == 0:
             raise gl.vm.UserError("invalid repository configuration")
+        profile = text(evidence_profile, 20).upper()
+        if profile not in ("GITHUB_PR", "X_POST", "PUBLIC_URL"):
+            raise gl.vm.UserError("unsupported evidence profile")
+        if allowed_host and not owner_ok(str(allowed_host).split(":")[0].split("/")[0]):
+            raise gl.vm.UserError("invalid allowed evidence host")
         n = int(max_positions)
         rw = int(reservation_window_seconds)
         wd = int(work_duration_seconds)
@@ -289,7 +308,7 @@ class ReferralRailV2(gl.contract.Contract):
         cid = gl.u256(int(self.next_campaign_id))
         self.next_campaign_id = gl.u256(int(self.next_campaign_id) + 1)
         now = now_ts()
-        self.campaigns[cid] = Campaign(gl.message.sender_address, text(title, 120), text(brief), text(criteria), str(repo_owner).strip(), str(repo_name).strip(), text(base_branch, 120), gl.u256(n), gl.u256(int(candidate_reward)), gl.u256(int(referral_reward)), gl.u256(unit), gl.u256(funding), gl.u256(now + cd), gl.u256(rw), gl.u256(wd), gl.u256(pending), gl.u256(CAMPAIGN_ACTIVE), gl.u256(1), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(now))
+        self.campaigns[cid] = Campaign(gl.message.sender_address, text(title, 120), text(brief), text(criteria), str(repo_owner).strip(), str(repo_name).strip(), text(base_branch, 120), gl.u256(n), gl.u256(int(candidate_reward)), gl.u256(int(referral_reward)), gl.u256(unit), gl.u256(funding), gl.u256(now + cd), gl.u256(rw), gl.u256(wd), gl.u256(pending), gl.u256(CAMPAIGN_ACTIVE), gl.u256(1), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(now), text(evidence_profile, 20).upper(), text(allowed_host, 100).lower(), bool(require_work_challenge))
         self.total_funded = gl.u256(int(self.total_funded) + funding)
         CampaignCreated(cid, gl.message.sender_address, funding=funding, max_positions=n).emit()
         return cid
@@ -315,7 +334,43 @@ class ReferralRailV2(gl.contract.Contract):
             raise gl.vm.UserError("referrer pending reservation limit reached")
         pid = gl.u256(int(c.next_position_id))
         c.next_position_id = gl.u256(int(c.next_position_id) + 1)
-        p = Position(campaign_id, pid, candidate, referrer, "", "", gl.u256(POS_RESERVED), gl.u256(now), gl.u256(min(now + int(c.reservation_window), int(c.participation_deadline))), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(OUTCOME_NONE), "", "", False, False, "")
+        p = Position(campaign_id, pid, candidate, referrer, "", "", gl.u256(POS_RESERVED), gl.u256(now), gl.u256(min(now + int(c.reservation_window), int(c.participation_deadline))), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(OUTCOME_NONE), "", "", False, False, "", "")
+        key = self._key(int(campaign_id), int(pid))
+        acceptance_cutoff = int(c.participation_deadline) - int(c.work_duration)
+        if acceptance_cutoff <= now:
+            raise gl.vm.UserError("campaign has no valid acceptance window")
+        p.reservation_deadline = gl.u256(min(int(p.reservation_deadline), acceptance_cutoff))
+        self.positions[key] = p
+        self.position_exists[key] = True
+        self.live_candidates[candidate_key] = True
+        self.pending_by_referrer[pending_key] = gl.u256(pending_count + 1)
+        c.occupied = gl.u256(int(c.occupied) + 1)
+        PositionReserved(campaign_id, pid, candidate=candidate.as_hex, referrer=referrer.as_hex, reservation_deadline=int(p.reservation_deadline)).emit()
+        return pid
+
+    @gl.public.write
+    def join_via_referral(self, campaign_id: gl.u256, referrer_address: str) -> gl.u256:
+        """Create a reservation for the caller from a client-generated referral link."""
+        c = self._campaign(campaign_id)
+        now = now_ts()
+        if int(c.state) != CAMPAIGN_ACTIVE or now > int(c.participation_deadline):
+            raise gl.vm.UserError("campaign intake is closed")
+        if self._used_capacity(c) >= int(c.max_positions):
+            raise gl.vm.UserError("no funded position is available")
+        candidate = gl.message.sender_address
+        referrer = gl.Address(referrer_address)
+        if candidate == ZERO or referrer == ZERO or candidate == referrer or candidate == c.employer or referrer == c.employer:
+            raise gl.vm.UserError("campaign roles must be distinct")
+        candidate_key = self._candidate_key(int(campaign_id), candidate)
+        if bool(self.live_candidates.get(candidate_key) or False):
+            raise gl.vm.UserError("candidate already has a live position")
+        pending_key = self._pending_key(int(campaign_id), referrer)
+        pending_count = int(self.pending_by_referrer.get(pending_key) or 0)
+        if pending_count >= int(c.max_pending_per_referrer):
+            raise gl.vm.UserError("referrer pending reservation limit reached")
+        pid = gl.u256(int(c.next_position_id))
+        c.next_position_id = gl.u256(int(c.next_position_id) + 1)
+        p = Position(campaign_id, pid, candidate, referrer, "", "", gl.u256(POS_RESERVED), gl.u256(now), gl.u256(min(now + int(c.reservation_window), int(c.participation_deadline))), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(OUTCOME_NONE), "", "", False, False, "", "")
         key = self._key(int(campaign_id), int(pid))
         acceptance_cutoff = int(c.participation_deadline) - int(c.work_duration)
         if acceptance_cutoff <= now:
@@ -335,8 +390,15 @@ class ReferralRailV2(gl.contract.Contract):
         if int(p.state) != POS_RESERVED or gl.message.sender_address != p.candidate or now > int(p.reservation_deadline):
             raise gl.vm.UserError("reservation cannot be accepted")
         login = text(github_login, 39)
-        if not owner_ok(login):
-            raise gl.vm.UserError("invalid GitHub login")
+        if c.evidence_profile == "PUBLIC_URL":
+            login = ""
+        elif not owner_ok(login):
+            raise gl.vm.UserError("invalid profile identity handle")
+        if self.identity_address != ZERO and c.evidence_profile in ("GITHUB_PR", "X_POST"):
+            platform = "GITHUB" if c.evidence_profile == "GITHUB_PR" else "X"
+            identity = contract_at(self.identity_address).view().get_identity(p.candidate.as_hex, platform)
+            if str(identity.get("state", "")) != "ACTIVE" or str(identity.get("handle", "")).lower() != login.lower():
+                raise gl.vm.UserError("candidate identity is not active for this evidence profile")
         identity = str(int(campaign_id)) + ":" + login.lower()
         proof_identity = str(int(campaign_id)) + ":" + str(int(position_id)) + ":" + p.candidate.as_hex.lower() + ":" + login.lower()
         if bool(self.used_github.get(identity) or False):
@@ -370,15 +432,26 @@ class ReferralRailV2(gl.contract.Contract):
         p.attempts = gl.u256(int(p.attempts) + 1); p.active_attempt = p.attempts; p.judgment_timeout = gl.u256(now_ts() + JUDGMENT_TIMEOUT)
         self._transition(p.campaign_id, p, POS_JUDGING, "judgment requested")
         judge = contract_at(self.judge_address)
-        judge.emit(on="finalized").evaluate(int(p.campaign_id), int(p.position_id), int(p.active_attempt), c.repo_owner, c.repo_name, c.base_branch, int(p.pr_number), p.github_login, p.challenge, c.brief, c.criteria, int(p.accepted_at), int(p.work_deadline))
+        judge.emit(on="finalized").evaluate(int(p.campaign_id), int(p.position_id), int(p.active_attempt), c.repo_owner, c.repo_name, c.base_branch, int(p.pr_number), p.github_login, p.challenge, c.brief, c.criteria, int(p.accepted_at), int(p.work_deadline), c.evidence_profile, p.evidence_uri, c.allowed_host, c.require_work_challenge)
         JudgmentRequested(p.campaign_id, p.position_id, p.active_attempt).emit()
 
     @gl.public.write
     def submit_work(self, campaign_id: gl.u256, position_id: gl.u256, pr_number: gl.u256) -> None:
         c = self._campaign(campaign_id); p = self._position(campaign_id, position_id); now = now_ts()
-        if int(p.state) != POS_ACCEPTED or gl.message.sender_address != p.candidate or int(pr_number) <= 0 or now > int(p.work_deadline):
+        if c.evidence_profile != "GITHUB_PR" or int(p.state) != POS_ACCEPTED or gl.message.sender_address != p.candidate or int(pr_number) <= 0 or now > int(p.work_deadline):
             raise gl.vm.UserError("work submission is not allowed")
         p.pr_number = pr_number
+        self._request_judgment(c, p)
+
+    @gl.public.write
+    def submit_evidence(self, campaign_id: gl.u256, position_id: gl.u256, evidence_uri: str) -> None:
+        c = self._campaign(campaign_id); p = self._position(campaign_id, position_id); now = now_ts()
+        if c.evidence_profile not in ("X_POST", "PUBLIC_URL") or int(p.state) != POS_ACCEPTED or gl.message.sender_address != p.candidate or now > int(p.work_deadline):
+            raise gl.vm.UserError("profile evidence submission is not allowed")
+        uri = text(evidence_uri, 300)
+        if not uri.startswith("https://") or len(uri) < 12:
+            raise gl.vm.UserError("evidence must be a public HTTPS URL")
+        p.evidence_uri = uri
         self._request_judgment(c, p)
 
     @gl.public.write
@@ -484,7 +557,7 @@ class ReferralRailV2(gl.contract.Contract):
 
     def _campaign_dict(self, cid: gl.u256, c: Campaign) -> dict:
         used = self._used_capacity(c)
-        return {"id": int(cid), "employer": c.employer.as_hex, "title": c.title, "brief": c.brief, "criteria": c.criteria, "repo_owner": c.repo_owner, "repo_name": c.repo_name, "base_branch": c.base_branch, "max_positions": int(c.max_positions), "successful": int(c.successful), "pending_successes": int(c.pending_successes), "occupied": int(c.occupied), "open_positions": int(c.max_positions) - used, "reusable_capacity": int(c.max_positions) - used, "failed": int(c.failed), "candidate_reward": int(c.candidate_reward), "referral_reward": int(c.referral_reward), "unit_funding": int(c.unit_funding), "initial_funding": int(c.initial_funding), "paid_total": int(c.paid_total), "refunded_total": int(c.refunded_total), "locked_total": int(c.initial_funding) - int(c.paid_total) - int(c.refunded_total), "participation_deadline": int(c.participation_deadline), "state": state_name(int(c.state)), "state_code": int(c.state), "created_at": int(c.created_at), "closed_at": int(c.closed_at)}
+        return {"id": int(cid), "employer": c.employer.as_hex, "title": c.title, "brief": c.brief, "criteria": c.criteria, "repo_owner": c.repo_owner, "repo_name": c.repo_name, "base_branch": c.base_branch, "evidence_profile": c.evidence_profile, "allowed_host": c.allowed_host, "require_work_challenge": bool(c.require_work_challenge), "max_positions": int(c.max_positions), "successful": int(c.successful), "pending_successes": int(c.pending_successes), "occupied": int(c.occupied), "open_positions": int(c.max_positions) - used, "reusable_capacity": int(c.max_positions) - used, "failed": int(c.failed), "candidate_reward": int(c.candidate_reward), "referral_reward": int(c.referral_reward), "unit_funding": int(c.unit_funding), "initial_funding": int(c.initial_funding), "paid_total": int(c.paid_total), "refunded_total": int(c.refunded_total), "locked_total": int(c.initial_funding) - int(c.paid_total) - int(c.refunded_total), "participation_deadline": int(c.participation_deadline), "state": state_name(int(c.state)), "state_code": int(c.state), "created_at": int(c.created_at), "closed_at": int(c.closed_at)}
 
     @gl.public.view
     def get_campaign(self, campaign_id: gl.u256) -> dict:
@@ -493,7 +566,7 @@ class ReferralRailV2(gl.contract.Contract):
     @gl.public.view
     def get_position(self, campaign_id: gl.u256, position_id: gl.u256) -> dict:
         p = self._position(campaign_id, position_id)
-        return {"campaign_id": int(p.campaign_id), "position_id": int(p.position_id), "candidate": p.candidate.as_hex, "referrer": p.referrer.as_hex, "github_login": p.github_login, "challenge": p.challenge, "state": position_name(int(p.state)), "state_code": int(p.state), "reserved_at": int(p.reserved_at), "reservation_deadline": int(p.reservation_deadline), "accepted_at": int(p.accepted_at), "work_deadline": int(p.work_deadline), "pr_number": int(p.pr_number), "attempts": int(p.attempts), "active_attempt": int(p.active_attempt), "judgment_timeout": int(p.judgment_timeout), "retry_deadline": int(p.retry_deadline), "outcome": outcome_name(int(p.outcome)), "outcome_code": int(p.outcome), "evidence_digest": p.evidence_digest, "reason": p.reason, "candidate_paid": bool(p.candidate_paid), "referrer_paid": bool(p.referrer_paid), "settlement_released": bool(p.candidate_paid and p.referrer_paid), "terminal_reason": p.terminal_reason}
+        return {"campaign_id": int(p.campaign_id), "position_id": int(p.position_id), "candidate": p.candidate.as_hex, "referrer": p.referrer.as_hex, "github_login": p.github_login, "challenge": p.challenge, "state": position_name(int(p.state)), "state_code": int(p.state), "reserved_at": int(p.reserved_at), "reservation_deadline": int(p.reservation_deadline), "accepted_at": int(p.accepted_at), "work_deadline": int(p.work_deadline), "pr_number": int(p.pr_number), "evidence_uri": p.evidence_uri, "attempts": int(p.attempts), "active_attempt": int(p.active_attempt), "judgment_timeout": int(p.judgment_timeout), "retry_deadline": int(p.retry_deadline), "outcome": outcome_name(int(p.outcome)), "outcome_code": int(p.outcome), "evidence_digest": p.evidence_digest, "reason": p.reason, "candidate_paid": bool(p.candidate_paid), "referrer_paid": bool(p.referrer_paid), "settlement_released": bool(p.candidate_paid and p.referrer_paid), "terminal_reason": p.terminal_reason}
 
     @gl.public.view
     def list_campaigns(self, offset: gl.u256 = gl.u256(0), limit: gl.u256 = gl.u256(20)) -> list:
@@ -509,4 +582,16 @@ class ReferralRailV2(gl.contract.Contract):
 
     @gl.public.view
     def get_protocol_config(self) -> dict:
-        return {"version": "2", "chain_id": 61997, "max_positions": MAX_POSITIONS, "max_attempts": MAX_ATTEMPTS, "judgment_timeout_seconds": JUDGMENT_TIMEOUT, "retry_window_seconds": RETRY_WINDOW, "min_seconds": MIN_SECONDS, "max_seconds": MAX_SECONDS, "state_model": "campaign capacity is success based; terminal failure reopens a funded slot while intake is active"}
+        return {"version": "2", "chain_id": 61997, "identity_address": self.identity_address.as_hex, "evidence_profiles": ["GITHUB_PR", "X_POST", "PUBLIC_URL"], "max_positions": MAX_POSITIONS, "max_attempts": MAX_ATTEMPTS, "judgment_timeout_seconds": JUDGMENT_TIMEOUT, "retry_window_seconds": RETRY_WINDOW, "min_seconds": MIN_SECONDS, "max_seconds": MAX_SECONDS, "state_model": "campaign capacity is success based; terminal failure reopens a funded slot while intake is active"}
+
+
+
+
+
+
+
+
+
+
+
+
