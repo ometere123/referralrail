@@ -1,19 +1,19 @@
 "use client";
 import { useMemo } from "react";
 import { createTransactionKit, type TransactionKit } from "@genlayer/transaction-kit";
-import {
-  createClient,
-  deriveExternalMessageCallKey,
-  encodeExternalMessageFeeParams,
-  MESSAGE_ALLOCATION_ROOT_PARENT_INDEX,
-  MessageType,
-} from "genlayer-js";
+import { createClient } from "genlayer-js";
 import type { MessageFeeAllocationInput, TransactionFeeEstimate } from "genlayer-js/types";
 import { GENLAYER_CHAIN } from "./network";
 import { provider } from "./client";
 
-const INTERNAL_MESSAGE_METHODS = new Set(["submit_work", "retry_inconclusive"]);
-const EXTERNAL_MESSAGE_BUDGET = 120_000_000_000_000n;
+const MESSAGE_METHODS = new Set([
+  "submit_work",
+  "retry_inconclusive",
+  "settle_opportunity",
+  "cancel_unreferred",
+  "expire",
+  "recover",
+]);
 
 function quoteFromEstimate(base:any, estimate:TransactionFeeEstimate, userValue:bigint){
   const d:any=estimate.distribution;
@@ -40,21 +40,7 @@ function quoteFromEstimate(base:any, estimate:TransactionFeeEstimate, userValue:
   };
 }
 
-function externalAllocations(recipients:string[]):MessageFeeAllocationInput[]{
-  const params=encodeExternalMessageFeeParams({gasLimit:500_000,maxGasPrice:300_000_000});
-  return recipients.map(recipient=>({
-    messageType:MessageType.External,
-    onAcceptance:false,
-    parentIndex:MESSAGE_ALLOCATION_ROOT_PARENT_INDEX,
-    recipient:recipient as `0x${string}`,
-    callKey:deriveExternalMessageCallKey(),
-    budget:EXTERNAL_MESSAGE_BUDGET,
-    feeParams:params,
-  }));
-}
-
-export function useTransactionKit(address:string|null, externalRecipients:string[]=[]):TransactionKit|null{
-  const recipientKey=externalRecipients.map(x=>x.toLowerCase()).join(",");
+export function useTransactionKit(address:string|null, _externalRecipients:string[]=[]):TransactionKit|null{
   return useMemo(()=>{
     const injected=provider();
     if(!injected||!address)return null;
@@ -70,44 +56,24 @@ export function useTransactionKit(address:string|null, externalRecipients:string
       account:address as `0x${string}`,
     } as never) as any;
     const allocationsByQuote=new WeakMap<object,MessageFeeAllocationInput[]>();
-    const recipients=recipientKey?recipientKey.split(","):[];
 
     const estimate:TransactionKit["estimate"]=async(input,tx)=>{
       const baseQuote=await base.estimate(input,tx);
-      if(!tx||tx.kind!=="write")return baseQuote;
+      if(!tx||tx.kind!=="write"||!MESSAGE_METHODS.has(tx.method))return baseQuote;
       const userValue=input.userValue??0n;
-
-      if(recipients.length){
-        const allocations=externalAllocations(recipients);
-        const recommended=await client.estimateTransactionFees({
-          leaderTimeunitsAllocation:100,
-          validatorTimeunitsAllocation:200,
-          rotations:[3],
-          totalMessageFees:EXTERNAL_MESSAGE_BUDGET*BigInt(allocations.length),
-          messageAllocations:allocations,
-        });
-        const quote=quoteFromEstimate(baseQuote,recommended,userValue);
-        allocationsByQuote.set(quote,allocations);
-        return quote;
-      }
-
-      if(INTERNAL_MESSAGE_METHODS.has(tx.method)){
-        const recommended=await client.estimateTransactionFeesForWrite({
-          address:tx.address,
-          functionName:tx.method,
-          args:tx.args||[],
-          value:userValue,
-          executionHeadroomBps:12000,
-          messageHeadroomBps:12000,
-        });
-        const allocations=(recommended.messageAllocations||[]) as MessageFeeAllocationInput[];
-        if(!allocations.length)throw new Error(`Fee estimation for ${tx.method} returned no message allocation. Refusing to submit an underfunded child transaction.`);
-        const quote=quoteFromEstimate(baseQuote,recommended,userValue);
-        allocationsByQuote.set(quote,allocations);
-        return quote;
-      }
-
-      return baseQuote;
+      const recommended=await client.estimateTransactionFeesForWrite({
+        address:tx.address,
+        functionName:tx.method,
+        args:tx.args||[],
+        value:userValue,
+        executionHeadroomBps:12000,
+        messageHeadroomBps:12000,
+      });
+      const allocations=(recommended.messageAllocations||[]) as MessageFeeAllocationInput[];
+      if(!allocations.length)throw new Error(`Fee estimation for ${tx.method} returned no message allocation. Refusing to submit an underfunded message-producing transaction.`);
+      const quote=quoteFromEstimate(baseQuote,recommended,userValue);
+      allocationsByQuote.set(quote,allocations);
+      return quote;
     };
 
     const submit:TransactionKit["submit"]=async(quote,tx)=>{
@@ -129,5 +95,5 @@ export function useTransactionKit(address:string|null, externalRecipients:string
       track:base.track,
       verification:base.verification,
     } as TransactionKit;
-  },[address,recipientKey]);
+  },[address]);
 }
