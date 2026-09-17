@@ -60,8 +60,8 @@ export default function DevelopersPage() {
         <h2>Canonical v1 deployment</h2>
         <div className="kv"><span>Network</span><strong>Studio Next · 61997</strong></div>
         <div className="kv"><span>RPC</span><strong>https://studio-dev.genlayer.com/api</strong></div>
-        <div className="kv"><span>ReferralRail</span><strong style={{fontSize:12,wordBreak:"break-all"}}>{rail}</strong></div>
-        <div className="kv"><span>OutcomeJudge</span><strong style={{fontSize:12,wordBreak:"break-all"}}>{judge}</strong></div>
+        <div className="kv"><span>ReferralRail</span><strong style={{fontSize:12,whiteSpace:"nowrap",overflowX:"auto",maxWidth:"100%",display:"block"}}>{rail}</strong></div>
+        <div className="kv"><span>OutcomeJudge</span><strong style={{fontSize:12,whiteSpace:"nowrap",overflowX:"auto",maxWidth:"100%",display:"block"}}>{judge}</strong></div>
         <Link className="button secondary" href="/protocol">Live protocol status</Link>
       </div>
     </div>
