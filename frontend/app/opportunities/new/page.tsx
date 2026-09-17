@@ -11,10 +11,16 @@ import { configured, listOpportunities } from "@/lib/contracts/referralRail";
 import { fromGen } from "@/lib/format";
 import { useInvalidateProtocol } from "@/lib/hooks/useProtocol";
 
+const DEMO_CANDIDATE="0xb29Ead15B1E8A2420faE84de974088f67a15ccC2";
+const DEMO_CRITERIA="The submitted pull request must be publicly readable and merged into the repository. The candidate identity must match the pull request author. The changed files must contain a substantive implementation and its tests or documentation must explain the change.";
 const init={title:'',brief:'',criteria:'',owner:'',repo:'',candidate:'',candidatePay:'',referralPay:'',referralHours:'24',completionHours:'168'};
+const positiveDemo={title:'ReferralRail demo verification',brief:'Real ReferralRail demonstration for a fresh ometere123/evifix pull request. The candidate must deliver substantive repository work and provide the merged PR as evidence.',criteria:'The submitted pull request must be publicly readable and merged into ometere123/evifix. The candidate GitHub identity must match the pull request author. The changed files must contain a substantive implementation, and tests or documentation must support or explain the change.',owner:'ometere123',repo:'evifix',candidate:DEMO_CANDIDATE,candidatePay:'2',referralPay:'1',referralHours:'24',completionHours:'168'};
+const negativeDemo={title:'Live negative verification',brief:'Real negative case for ometere123/thedadsbot PR #13. This is a real Studio Next evidence run using the public repository and PR listed here.',criteria:DEMO_CRITERIA,owner:'ometere123',repo:'thedadsbot',candidate:DEMO_CANDIDATE,candidatePay:'2',referralPay:'1',referralHours:'24',completionHours:'168'};
+
 export default function NewOpportunity(){
  const router=useRouter(); const wallet=useWallet(); const invalidate=useInvalidateProtocol(); const [form,setForm]=useState(init); const [review,setReview]=useState(false); const [error,setError]=useState('');
  const update=(k:string,v:string)=>setForm(s=>({...s,[k]:v}));
+ const loadDemo=(kind:'positive'|'negative')=>{setForm(kind==='positive'?positiveDemo:negativeDemo);setError('');setReview(false)};
  let cp=0n,rr=0n; try{cp=fromGen(form.candidatePay||'0');rr=fromGen(form.referralPay||'0')}catch{}
  const total=cp+rr;
  const tx=useMemo<SubmitInput>(()=>({kind:'write',address:settlementAddress() as `0x${string}`,method:'create_opportunity',args:[form.title.trim(),form.brief.trim(),form.criteria.trim(),form.owner.trim(),form.repo.trim(),form.candidate.trim(),cp,rr,BigInt(Number(form.referralHours||0)*3600),BigInt(Number(form.completionHours||0)*3600)]}),[form,cp,rr]);
@@ -24,7 +30,9 @@ export default function NewOpportunity(){
  const verify=async()=>!!(await findCreated());
  return <div className="container"><div className="form-shell">
   <div className="form-header"><Link href="/" className="meta">← Back to opportunities</Link><div className="eyebrow" style={{marginTop:18}}>Employer action · fully funded</div><h1>Create an opportunity</h1><p>Freeze the work, evidence source, candidate and payment split before anyone knows the outcome. Once a referral is locked, the employer cannot cancel it.</p></div>
-  {!review?<div className="form-card"><div className="form-grid">
+  {!review?<div className="form-card">
+   <div className="notice info" style={{marginBottom:18,display:'block'}}><strong>Demo presets</strong><p style={{margin:'6px 0 12px'}}>Fill the proven v1 positive or negative test data automatically. Nothing is submitted until you review and fund it.</p><div className="hero-actions" style={{marginTop:0}}><button type="button" className="button secondary small" onClick={()=>loadDemo('positive')}>Load positive demo</button><button type="button" className="button secondary small" onClick={()=>loadDemo('negative')}>Load negative demo</button></div></div>
+   <div className="form-grid">
    <div className="field full"><label>Job / task title</label><input value={form.title} onChange={e=>update('title',e.target.value)} placeholder="Implement CSV export with permission checks" maxLength={120}/></div>
    <div className="field full"><label>Immutable work brief</label><textarea value={form.brief} onChange={e=>update('brief',e.target.value)} placeholder="Describe exactly what the candidate must deliver. Keep the scope inspectable from one GitHub PR." maxLength={2600}/><span className="helper">ReferralRail is intentionally not a freelancer marketplace. One funded task maps to one registered candidate and one public GitHub repository.</span></div>
    <div className="field full"><label>Acceptance criteria</label><textarea value={form.criteria} onChange={e=>update('criteria',e.target.value)} placeholder="List mandatory, observable criteria. Example: export is available on the reports page; unauthorized users cannot call it; tests cover success and permission failure." maxLength={2600}/><span className="helper">These criteria become frozen policy data. GenLayer evaluates the actual merged diff against them.</span></div>
