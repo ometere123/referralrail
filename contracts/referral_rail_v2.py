@@ -411,6 +411,24 @@ class ReferralRailV2(gl.contract.Contract):
             c.state = gl.u256(CAMPAIGN_RESOLVING); c.closed_at = gl.u256(now_ts())
 
     @gl.public.write
+    def record_judgment(self, campaign_id: gl.u256, position_id: gl.u256, attempt_id: gl.u256, outcome: gl.u256, evidence_digest: str, reason: str) -> None:
+        c = self._campaign(campaign_id); p = self._position(campaign_id, position_id)
+        if gl.message.sender_address != self.judge_address or int(p.state) != POS_JUDGING or int(p.active_attempt) != int(attempt_id):
+            raise gl.vm.UserError("unauthorized or stale judgment callback")
+        if int(outcome) not in (OUTCOME_COMPLETED, OUTCOME_NOT_COMPLETED, OUTCOME_INCONCLUSIVE):
+            raise gl.vm.UserError("invalid judgment outcome")
+        p.outcome = gl.u256(int(outcome)); p.evidence_digest = text(evidence_digest, 180); p.reason = text(reason, 700)
+        if int(outcome) == OUTCOME_COMPLETED:
+            c.successful = gl.u256(int(c.successful) + 1); c.pending_successes = gl.u256(int(c.pending_successes) + 1); self._transition(campaign_id, p, POS_COMPLETED, "GenLayer completed the work")
+        elif int(outcome) == OUTCOME_NOT_COMPLETED:
+            self._release_slot(c, p, POS_FAILED, "GenLayer found mandatory requirements incomplete")
+        else:
+            self._transition(campaign_id, p, POS_INCONCLUSIVE, "evidence was inconclusive")
+            p.retry_deadline = gl.u256(now_ts() if int(p.attempts) >= MAX_ATTEMPTS else now_ts() + RETRY_WINDOW)
+        if int(c.successful) >= int(c.max_positions):
+            c.state = gl.u256(CAMPAIGN_RESOLVING); c.closed_at = gl.u256(now_ts())
+
+    @gl.public.write
     def settle_position(self, campaign_id: gl.u256, position_id: gl.u256) -> None:
         c = self._campaign(campaign_id); p = self._position(campaign_id, position_id)
         if int(p.state) != POS_COMPLETED:

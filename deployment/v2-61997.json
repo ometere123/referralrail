@@ -4,13 +4,13 @@
   "chainId": 61997,
   "rpc": "https://studio-dev.genlayer.com/api",
   "rail": {
-    "txId": "0x72a0872b81b42aa5b65deb90b24ca77b2db7914fe43057993924d5b0131815a7",
-    "address": "0x2F5cA10321b7EAdbb507B2FE46c2055DA5D7A8FB"
+    "txId": "0x70a168930cef8c6f0e05e0fa8ba205a8cb1491aa9c04131f8a43de879dae60bf",
+    "address": "0x608b42c0aa11767C9D2f72908481A6A6AFd0F42A"
   },
   "judge": {
-    "txId": "0x62c8b3a1225f575d5d18c37384a53e33380e338dc57dfbf6abc11920480ea878",
-    "address": "0x1cd85c7615B3AB2427625F4bd4CE6e3c246f7735"
+    "txId": "0x78a77da08d68333d1ffe16ff73b3e272a8f6fcf3790a632837ed587cff2e8405",
+    "address": "0xAC366276E1d22A2c356a656A0BBCA38599A2165A"
   },
-  "bindingTransaction": "0x6bb3c06613d8514018e454fd50769544d09fa3bddff9db0821ec3bc4b5687862",
-  "generatedAt": "2026-09-17T05:56:10.264Z"
+  "bindingTransaction": "0x8d81f89f715830e662d6a13b25c5aa0843e12f34e42a954e0a017afe4b252ad1",
+  "generatedAt": "2026-09-17T06:59:48.612Z"
 }

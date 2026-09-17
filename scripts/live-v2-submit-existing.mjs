@@ -1,4 +1,4 @@
-import { createAccount, createClient, chains, isSuccessful } from "genlayer-js";
+import { createAccount, createClient, chains, isSuccessful, MessageType, MESSAGE_ALLOCATION_ROOT_PARENT_INDEX, deriveInternalMessageCallKey, encodeInternalMessageFeeParams } from "genlayer-js";
 import { readFileSync, writeFileSync } from "node:fs";
 const rpc="https://studio-dev.genlayer.com/api";
 const m=JSON.parse(readFileSync("deployment/v2-61997.json","utf8"));
@@ -11,8 +11,13 @@ const positionArgs=[campaignId,positionId];
 const before=await c.readContract({address:m.rail.address,functionName:"get_position",args:positionArgs});
 if(before.state!=="ACCEPTED") throw Error(`position is ${before.state}, expected ACCEPTED`);
 const submitArgs=[campaignId,positionId,prNumber];
-const q=await c.estimateTransactionFeesForWrite({account:c.account,address:m.rail.address,functionName:"submit_work",args:submitArgs,value:0n});
-const h=await c.writeContract({account:c.account,address:m.rail.address,functionName:"submit_work",args:submitArgs,value:0n,fees:{distribution:q.distribution,feeValue:q.feeValue,messageAllocations:q.messageAllocations}});
+const callbackBudget=120_000_000_000_000n;
+const messageAllocations=[
+  {messageType:MessageType.Internal,onAcceptance:false,parentIndex:MESSAGE_ALLOCATION_ROOT_PARENT_INDEX,recipient:m.judge.address,callKey:deriveInternalMessageCallKey("evaluate"),budget:callbackBudget,feeParams:encodeInternalMessageFeeParams({leaderTimeunitsAllocation:100,validatorTimeunitsAllocation:200,rotations:[3],executionBudgetPerRound:30_000_000_000_000_000n})},
+  {messageType:MessageType.Internal,onAcceptance:false,parentIndex:0,recipient:m.rail.address,callKey:deriveInternalMessageCallKey("record_judgment"),budget:callbackBudget,feeParams:encodeInternalMessageFeeParams({leaderTimeunitsAllocation:100,validatorTimeunitsAllocation:200,rotations:[3],executionBudgetPerRound:30_000_000_000_000_000n})}
+];
+const q=await c.estimateTransactionFees({leaderTimeunitsAllocation:100,validatorTimeunitsAllocation:200,rotations:[3],totalMessageFees:callbackBudget*2n,messageAllocations});
+const h=await c.writeContract({account:c.account,address:m.rail.address,functionName:"submit_work",args:submitArgs,value:0n,fees:{distribution:q.distribution,feeValue:q.feeValue,messageAllocations}});
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 let receipt;
 for(let i=0;i<60;i++){

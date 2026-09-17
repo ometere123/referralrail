@@ -23,6 +23,17 @@ MAX_EVIDENCE = 24000
 ZERO = gl.Address("0x0000000000000000000000000000000000000000")
 
 
+def contract_at(address: gl.Address):
+    getter = getattr(gl, "get_contract_at", None)
+    if getter is not None:
+        return getter(address)
+    module = getattr(gl, "contract", None)
+    getter = getattr(module, "get_contract_at", None) or getattr(module, "get_at", None)
+    if getter is None:
+        raise AttributeError("GenVM contract proxy unavailable")
+    return getter(address)
+
+
 def clean(v: typing.Any, n: int = MAX_REASON) -> str:
     return " ".join(str(v).strip().split())[:n]
 
@@ -145,6 +156,8 @@ class OutcomeJudgeV2(gl.contract.Contract):
         item = Judgment(gl.u256(int(campaign_id)), gl.u256(int(position_id)), gl.u256(int(attempt_id)), gl.u256(int(result["outcome"])), clean(result.get("evidence_digest", ""), 180), clean(result.get("reason", "")), clean(result.get("audit", ""), MAX_AUDIT), gl.u256(int(datetime.now(timezone.utc).timestamp())))
         self.judgments[key] = item; self.exists[key] = True
         JudgmentDecided(item.campaign_id, item.position_id, attempt_id=item.attempt_id, outcome=item.outcome, evidence_digest=item.evidence_digest).emit()
+        rail = contract_at(self.settlement_address)
+        rail.emit(on="finalized").record_judgment(int(item.campaign_id), int(item.position_id), int(item.attempt_id), int(item.outcome), item.evidence_digest, item.reason)
 
     @gl.public.view
     def get_judgment(self, campaign_id: gl.u256, position_id: gl.u256, attempt_id: gl.u256) -> dict:

@@ -1,69 +1,58 @@
 {
-  "rail": "0x2F5cA10321b7EAdbb507B2FE46c2055DA5D7A8FB",
-  "judge": "0x1cd85c7615B3AB2427625F4bd4CE6e3c246f7735",
-  "campaignId": 1,
+  "rail": "0x608b42c0aa11767C9D2f72908481A6A6AFd0F42A",
+  "judge": "0xAC366276E1d22A2c356a656A0BBCA38599A2165A",
+  "campaignId": 4,
   "campaign": {
     "base_branch": "main",
-    "brief": "Verify multiple candidates with fresh GitHub evidence and deterministic escrow settlement.",
+    "brief": "Long-window multi-position verification with fresh GitHub evidence.",
     "candidate_reward": 200000000000000,
-    "closed_at": 1789624603,
+    "closed_at": 1789665619,
     "created_at": 0,
     "criteria": "The pull request must be authored by the bound GitHub identity and contain substantive work.",
     "employer": "0xfcef676044658B5402f590daBe9E04A0F640522f",
     "failed": 0,
-    "id": 1,
+    "id": 4,
     "initial_funding": 800000000000000,
     "locked_total": 800000000000000,
     "max_positions": 2,
-    "occupied": 1,
-    "open_positions": 1,
+    "occupied": 0,
+    "open_positions": 2,
     "paid_total": 0,
-    "participation_deadline": 1789631803,
+    "participation_deadline": 1789752019,
     "pending_successes": 0,
     "referral_reward": 200000000000000,
     "refunded_total": 0,
     "repo_name": "evifix",
     "repo_owner": "ometere123",
-    "reusable_capacity": 1,
+    "reusable_capacity": 2,
     "state": "ACTIVE",
     "state_code": 1,
     "successful": 0,
-    "title": "Live v2 multi-position verification",
+    "title": "Live v2 long window 1789665615210",
     "unit_funding": 400000000000000
   },
   "actors": {
     "employer": "0xfcef676044658B5402f590daBe9E04A0F640522f",
     "referrer": "0x81301DD9C3605a7DA743D87b803156d8445620B0",
     "candidate": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
-    "candidate2": "0x1C5A77d9FA7eF466951B2F01F724BCa3A5820b63",
-    "candidate3": "0x03a1Bba60B5Aa37094cf16123AdD674c01589488"
-  },
-  "funding": {
-    "candidate2": {
-      "skipped": true,
-      "balance": "3842732999998354"
-    },
-    "candidate3": {
-      "skipped": true,
-      "balance": "4000000000000000"
-    }
+    "candidate2": "0x1C5A77d9FA7eF466951B2F01F724BCa3A5820b63"
   },
   "transactions": {
-    "create": null,
-    "reserve1": null,
-    "reserve2": "0xbc580d22c2a5aebf379a97a962f3b0ba6e81d39da0e2cdce25731ed4bac557f9",
-    "accept1": "0x96fad6f401d10ac35539bc6488e255155e21736b770864133f1ceab9c8d2db28",
-    "accept2": "0x863096f1938a721d8b59ee605e43aec3bcdc182956b4b23135debe60d59b61e9"
+    "create": "0x257d492518b3944124bcc3adab8c1404132191f851667de5181d06fcd4658926",
+    "reserve1": "0xbd0238fb23ce85d6132796d4f09b15fe05d74f35b6c23115a5848e56e4b8e2c7",
+    "reserve2": "0x39c582b9b672c4c18d3825a4ce17724ede1212dce50bbbd8790e4606158308a5",
+    "accept1": "0xc601d4b447a00fb614a327c9d1f078ebd8b73cf40237bf06c15eb94657d4d2c5",
+    "accept2": "0xf68aea9abbbbe6f175622865c07239a659e850a8a913360af437cacedba4dd6e"
   },
   "positions": [
     {
-      "accepted_at": 1789624818,
+      "accepted_at": 1789665744,
       "active_attempt": 0,
       "attempts": 0,
-      "campaign_id": 1,
+      "campaign_id": 4,
       "candidate": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
       "candidate_paid": false,
-      "challenge": "ReferralRailV2:1:1:0xb29Ead15B1E8A2420faE84de974088f67a15ccC2:9c6120f87f2428335a3afd9792517856",
+      "challenge": "ReferralRailV2:4:1:0xb29Ead15B1E8A2420faE84de974088f67a15ccC2:fd65e04a8596f78940673ff185f78255",
       "evidence_digest": "",
       "github_login": "ometere123",
       "judgment_timeout": 0,
@@ -74,23 +63,23 @@
       "reason": "",
       "referrer": "0x81301DD9C3605a7DA743D87b803156d8445620B0",
       "referrer_paid": false,
-      "reservation_deadline": 1789625553,
-      "reserved_at": 1789624653,
+      "reservation_deadline": 1789669256,
+      "reserved_at": 1789665656,
       "retry_deadline": 0,
       "settlement_released": false,
       "state": "ACCEPTED",
       "state_code": 2,
       "terminal_reason": "candidate accepted",
-      "work_deadline": 1789626618
+      "work_deadline": 1789672944
     },
     {
-      "accepted_at": 1789624866,
+      "accepted_at": 1789665782,
       "active_attempt": 0,
       "attempts": 0,
-      "campaign_id": 1,
+      "campaign_id": 4,
       "candidate": "0x1C5A77d9FA7eF466951B2F01F724BCa3A5820b63",
       "candidate_paid": false,
-      "challenge": "ReferralRailV2:1:2:0x1C5A77d9FA7eF466951B2F01F724BCa3A5820b63:17c9cf0bda252cca5e29bc2afcc4717d",
+      "challenge": "ReferralRailV2:4:2:0x1C5A77d9FA7eF466951B2F01F724BCa3A5820b63:7d3e524f3e54fa94d910ad12327a83f7",
       "evidence_digest": "",
       "github_login": "dependabot",
       "judgment_timeout": 0,
@@ -101,14 +90,14 @@
       "reason": "",
       "referrer": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
       "referrer_paid": false,
-      "reservation_deadline": 1789625664,
-      "reserved_at": 1789624764,
+      "reservation_deadline": 1789669306,
+      "reserved_at": 1789665706,
       "retry_deadline": 0,
       "settlement_released": false,
       "state": "ACCEPTED",
       "state_code": 2,
       "terminal_reason": "candidate accepted",
-      "work_deadline": 1789626666
+      "work_deadline": 1789672982
     }
   ]
 }
