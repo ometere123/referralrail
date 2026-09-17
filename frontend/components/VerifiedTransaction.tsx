@@ -6,8 +6,8 @@ import { useWallet } from "@/lib/genlayer/wallet";
 import { useTransactionKit } from "@/lib/genlayer/kit";
 import { REFERRALRAIL_NETWORK } from "@/lib/genlayer/network";
 
-export default function VerifiedTransaction({tx,userValue,verify,onVerified}:{tx:SubmitInput;userValue?:bigint;verify:()=>Promise<boolean>;onVerified?:()=>void|Promise<void>}){
- const {address,correctNetwork}=useWallet(); const kit=useTransactionKit(address);
+export default function VerifiedTransaction({tx,userValue,externalRecipients=[],verify,onVerified}:{tx:SubmitInput;userValue?:bigint;externalRecipients?:string[];verify:()=>Promise<boolean>;onVerified?:()=>void|Promise<void>}){
+ const {address,correctNetwork}=useWallet(); const kit=useTransactionKit(address,externalRecipients);
  const [phase,setPhase]=useState<'tracking'|'readback'|'confirmed'|'failed'>('tracking'); const [message,setMessage]=useState('');
  const done=async(status:TrackedStatus)=>{
    if(status.successful===false){setPhase('failed');setMessage('The finalized transaction did not execute successfully.');return;}
