@@ -111,7 +111,7 @@ class ReferralIdentityV2(gl.contract.Contract):
         if path_handle != handle:
             raise gl.vm.UserError("X handle does not match pending proof")
         source = "https://publish.twitter.com/oembed?url=" + url
-        def fetch_proof() -> dict:
+        def verify() -> dict:
             response = gl.nondet.web.get(source)
             if int(response.status) != 200:
                 raise gl.vm.UserError("X proof is unavailable")
@@ -119,12 +119,7 @@ class ReferralIdentityV2(gl.contract.Contract):
             if len(body) > 100000:
                 raise gl.vm.UserError("X proof is too large")
             data = json.loads(body)
-            html = str(data.get("html") or "")
-            author_url = str(data.get("author_url") or "").lower()
-            author_name = str(data.get("author_name") or "").lower()
-            return {"html": html, "author_url": author_url, "author_name": author_name}
-        def verify() -> dict:
-            proof = fetch_proof()
+            proof = {"html": str(data.get("html") or ""), "author_url": str(data.get("author_url") or "").lower()}
             if pending.challenge not in proof["html"] or ("/" + handle) not in proof["author_url"]:
                 raise gl.vm.UserError("X identity proof is incomplete")
             return proof
@@ -151,7 +146,7 @@ class ReferralIdentityV2(gl.contract.Contract):
         challenge = pending.challenge
         url = "https://api.github.com/users/" + login
 
-        def fetch_profile() -> dict:
+        def verify() -> dict:
             response = gl.nondet.web.get(url)
             if int(response.status) != 200:
                 raise gl.vm.UserError("GitHub profile is unavailable")
@@ -159,14 +154,10 @@ class ReferralIdentityV2(gl.contract.Contract):
             if len(body) > 100000:
                 raise gl.vm.UserError("GitHub profile is too large")
             data = json.loads(body)
-            return {"login": str(data.get("login") or "").lower(), "id": str(data.get("id") or ""), "bio": str(data.get("bio") or "")}
-
-        def verify() -> dict:
-            profile = fetch_profile()
+            profile = {"login": str(data.get("login") or "").lower(), "id": str(data.get("id") or ""), "bio": str(data.get("bio") or "")}
             if profile["login"] != login or not profile["id"] or challenge not in profile["bio"]:
                 raise gl.vm.UserError("GitHub identity proof is incomplete")
             return profile
-
         profile = gl.eq_principle.strict_eq(verify)
         canonical = canonical_key("GITHUB", profile["id"])
         current = self.github_owner.get(canonical)
@@ -209,6 +200,8 @@ class ReferralIdentityV2(gl.contract.Contract):
     @gl.public.view
     def lookup_x_handle(self, handle: str) -> str:
         return self.x_owner.get(canonical_key("X", clean(handle, MAX_HANDLE).lstrip("@"))) or ZERO.as_hex
+
+
 
 
 
