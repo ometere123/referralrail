@@ -20,23 +20,31 @@ export default function DevelopersPage() {
   return <div className="container"><section className="section">
     <div className="eyebrow">Build with ReferralRail</div>
     <h1 style={{margin:"10px 0 12px"}}>Developer tools</h1>
-    <p className="prose">ReferralRail ships a typed SDK for application integrations, a STDIO MCP server for agents, and a portable Agent Skill that teaches the protocol lifecycle and safety rules. All three target the canonical v1 deployment on GenLayer Studio Next.</p>
+    <p className="prose">ReferralRail ships a typed SDK for application integrations, a STDIO MCP server for agents, and a portable Agent Skill that teaches the protocol lifecycle and safety rules. The v1 SDK and MCP are publicly available on npm and target the canonical v1 deployment on GenLayer Studio Next.</p>
 
     <div className="detail-grid" style={{marginTop:24}}>
       <div className="panel brief-card">
         <h2>SDK</h2>
-        <p className="prose">Use <code>@referralrail/sdk</code> to read finalized protocol state and perform guarded writes. Writes wait for decision, finalization and post-write contract readback.</p>
-        <pre style={codeStyle}><code>{`import { ReferralRailClient } from "@referralrail/sdk";\n\nconst rail = new ReferralRailClient();\nconst opportunity = await rail.getOpportunity(3);\nconst actions = await rail.getAvailableActions(3, { address: "0x..." });`}</code></pre>
-        <p className="meta" style={{marginTop:12}}>Repository workspace: <code>integrations/sdk</code></p>
-        <a className="button secondary" href={`${repo}/tree/main/integrations/sdk`} target="_blank" rel="noreferrer">SDK source &amp; README</a>
+        <p className="prose">Install <code>@referralrail/sdk@0.1.0</code> from npm to read finalized protocol state and perform guarded writes. Writes wait for decision, finalization and post-write contract readback.</p>
+        <pre style={codeStyle}><code>{`npm install @referralrail/sdk`}</code></pre>
+        <pre style={{...codeStyle, marginTop:12}}><code>{`import { ReferralRailClient } from "@referralrail/sdk";\n\nconst rail = new ReferralRailClient();\nconst protocol = await rail.getProtocolConfig();\nconst opportunities = await rail.listOpportunities();\nconst actions = await rail.getAvailableActions(3, { address: "0x..." });`}</code></pre>
+        <p className="meta" style={{marginTop:12}}>Public npm package: <code>@referralrail/sdk@0.1.0</code></p>
+        <div className="hero-actions">
+          <a className="button secondary" href="https://www.npmjs.com/package/@referralrail/sdk" target="_blank" rel="noreferrer">View on npm</a>
+          <a className="button secondary" href={`${repo}/tree/main/integrations/sdk`} target="_blank" rel="noreferrer">Source &amp; README</a>
+        </div>
       </div>
 
       <div className="panel brief-card">
         <h2>MCP server</h2>
-        <p className="prose">Give MCP-compatible agents structured access to ReferralRail. The server is read-only by default; writes require both an explicit write flag and a configured signer.</p>
-        <pre style={codeStyle}><code>{`npm ci\nnpm run build --workspace @referralrail/mcp\nREFERRALRAIL_WRITE_ENABLED=false node integrations/mcp/dist/index.js`}</code></pre>
+        <p className="prose">Run <code>@referralrail/mcp@0.1.0</code> directly from npm. The MCP server is read-only by default; writes require both an explicit write flag and a configured signer.</p>
+        <pre style={codeStyle}><code>{`npx @referralrail/mcp`}</code></pre>
+        <pre style={{...codeStyle, marginTop:12}}><code>{`{\n  "command": "npx",\n  "args": ["-y", "@referralrail/mcp"],\n  "env": { "REFERRALRAIL_WRITE_ENABLED": "false" }\n}`}</code></pre>
         <p className="meta" style={{marginTop:12}}>Never pass private keys as tool arguments. The MCP server does not expose arbitrary contract calls or off-chain judgment.</p>
-        <a className="button secondary" href={`${repo}/tree/main/integrations/mcp`} target="_blank" rel="noreferrer">MCP source &amp; setup</a>
+        <div className="hero-actions">
+          <a className="button secondary" href="https://www.npmjs.com/package/@referralrail/mcp" target="_blank" rel="noreferrer">View on npm</a>
+          <a className="button secondary" href={`${repo}/tree/main/integrations/mcp`} target="_blank" rel="noreferrer">Source &amp; setup</a>
+        </div>
       </div>
     </div>
 
