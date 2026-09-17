@@ -105,6 +105,7 @@ class Campaign:
     state: gl.u256
     next_position_id: gl.u256
     occupied: gl.u256
+    pending_successes: gl.u256
     successful: gl.u256
     failed: gl.u256
     paid_total: gl.u256
@@ -218,6 +219,11 @@ class ReferralRailV2(gl.contract.Contract):
     def _unit(self, c: Campaign) -> int:
         return int(c.unit_funding)
 
+    def _used_capacity(self, c: Campaign) -> int:
+        # COMPLETED positions count in occupied until settlement and in
+        # successful immediately, so subtract them once for capacity checks.
+        return int(c.successful) + int(c.occupied) - int(c.pending_successes)
+
     def _candidate_key(self, cid: int, candidate: gl.Address) -> str:
         return str(cid) + ":" + candidate.as_hex.lower()
 
@@ -283,7 +289,7 @@ class ReferralRailV2(gl.contract.Contract):
         cid = gl.u256(int(self.next_campaign_id))
         self.next_campaign_id = gl.u256(int(self.next_campaign_id) + 1)
         now = now_ts()
-        self.campaigns[cid] = Campaign(gl.message.sender_address, text(title, 120), text(brief), text(criteria), str(repo_owner).strip(), str(repo_name).strip(), text(base_branch, 120), gl.u256(n), gl.u256(int(candidate_reward)), gl.u256(int(referral_reward)), gl.u256(unit), gl.u256(funding), gl.u256(now + cd), gl.u256(rw), gl.u256(wd), gl.u256(pending), gl.u256(CAMPAIGN_ACTIVE), gl.u256(1), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(now), gl.u256(0))
+        self.campaigns[cid] = Campaign(gl.message.sender_address, text(title, 120), text(brief), text(criteria), str(repo_owner).strip(), str(repo_name).strip(), text(base_branch, 120), gl.u256(n), gl.u256(int(candidate_reward)), gl.u256(int(referral_reward)), gl.u256(unit), gl.u256(funding), gl.u256(now + cd), gl.u256(rw), gl.u256(wd), gl.u256(pending), gl.u256(CAMPAIGN_ACTIVE), gl.u256(1), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(0), gl.u256(now))
         self.total_funded = gl.u256(int(self.total_funded) + funding)
         CampaignCreated(cid, gl.message.sender_address, funding=funding, max_positions=n).emit()
         return cid
@@ -294,7 +300,7 @@ class ReferralRailV2(gl.contract.Contract):
         now = now_ts()
         if int(c.state) != CAMPAIGN_ACTIVE or now > int(c.participation_deadline):
             raise gl.vm.UserError("campaign intake is closed")
-        if int(c.occupied) >= int(c.max_positions):
+        if self._used_capacity(c) >= int(c.max_positions):
             raise gl.vm.UserError("no funded position is available")
         candidate = gl.Address(candidate_address)
         referrer = gl.message.sender_address
@@ -395,7 +401,7 @@ class ReferralRailV2(gl.contract.Contract):
             raise gl.vm.UserError("no finalized judgment exists")
         p.outcome = gl.u256(outcome); p.evidence_digest = text(record.get("evidence_digest", ""), 180); p.reason = text(record.get("reason", ""), 700)
         if outcome == OUTCOME_COMPLETED:
-            c.successful = gl.u256(int(c.successful) + 1); self._transition(campaign_id, p, POS_COMPLETED, "GenLayer completed the work")
+            c.successful = gl.u256(int(c.successful) + 1); c.pending_successes = gl.u256(int(c.pending_successes) + 1); self._transition(campaign_id, p, POS_COMPLETED, "GenLayer completed the work")
         elif outcome == OUTCOME_NOT_COMPLETED:
             self._release_slot(c, p, POS_FAILED, "GenLayer found mandatory requirements incomplete")
         else:
@@ -409,10 +415,13 @@ class ReferralRailV2(gl.contract.Contract):
         c = self._campaign(campaign_id); p = self._position(campaign_id, position_id)
         if int(p.state) != POS_COMPLETED:
             raise gl.vm.UserError("position is not completed")
+        if int(c.occupied) <= 0 or int(c.pending_successes) <= 0:
+            raise gl.vm.UserError("capacity invariant violated")
         if not p.candidate_paid:
             p.candidate_paid = True; self._send(p.candidate, int(c.candidate_reward)); c.paid_total = gl.u256(int(c.paid_total) + int(c.candidate_reward)); self.total_paid = gl.u256(int(self.total_paid) + int(c.candidate_reward))
         if not p.referrer_paid:
             p.referrer_paid = True; self._send(p.referrer, int(c.referral_reward)); c.paid_total = gl.u256(int(c.paid_total) + int(c.referral_reward)); self.total_paid = gl.u256(int(self.total_paid) + int(c.referral_reward))
+        c.occupied = gl.u256(int(c.occupied) - 1); c.pending_successes = gl.u256(int(c.pending_successes) - 1)
         self._transition(campaign_id, p, POS_PAID, "both payout legs released")
 
     def _recover(self, c: Campaign, p: Position, reason: str) -> None:
@@ -456,7 +465,8 @@ class ReferralRailV2(gl.contract.Contract):
         amount = int(c.initial_funding); c.refunded_total = gl.u256(amount); self.total_refunded = gl.u256(int(self.total_refunded) + amount); c.state = gl.u256(CAMPAIGN_CANCELLED); self._send(c.employer, amount); CampaignSettled(campaign_id, gl.u256(amount), terminal="CANCELLED").emit()
 
     def _campaign_dict(self, cid: gl.u256, c: Campaign) -> dict:
-        return {"id": int(cid), "employer": c.employer.as_hex, "title": c.title, "brief": c.brief, "criteria": c.criteria, "repo_owner": c.repo_owner, "repo_name": c.repo_name, "base_branch": c.base_branch, "max_positions": int(c.max_positions), "successful": int(c.successful), "occupied": int(c.occupied), "open_positions": int(c.max_positions) - int(c.occupied), "failed": int(c.failed), "candidate_reward": int(c.candidate_reward), "referral_reward": int(c.referral_reward), "unit_funding": int(c.unit_funding), "initial_funding": int(c.initial_funding), "paid_total": int(c.paid_total), "refunded_total": int(c.refunded_total), "locked_total": int(c.initial_funding) - int(c.paid_total) - int(c.refunded_total), "participation_deadline": int(c.participation_deadline), "state": state_name(int(c.state)), "state_code": int(c.state), "created_at": int(c.created_at), "closed_at": int(c.closed_at)}
+        used = self._used_capacity(c)
+        return {"id": int(cid), "employer": c.employer.as_hex, "title": c.title, "brief": c.brief, "criteria": c.criteria, "repo_owner": c.repo_owner, "repo_name": c.repo_name, "base_branch": c.base_branch, "max_positions": int(c.max_positions), "successful": int(c.successful), "pending_successes": int(c.pending_successes), "occupied": int(c.occupied), "open_positions": int(c.max_positions) - used, "reusable_capacity": int(c.max_positions) - used, "failed": int(c.failed), "candidate_reward": int(c.candidate_reward), "referral_reward": int(c.referral_reward), "unit_funding": int(c.unit_funding), "initial_funding": int(c.initial_funding), "paid_total": int(c.paid_total), "refunded_total": int(c.refunded_total), "locked_total": int(c.initial_funding) - int(c.paid_total) - int(c.refunded_total), "participation_deadline": int(c.participation_deadline), "state": state_name(int(c.state)), "state_code": int(c.state), "created_at": int(c.created_at), "closed_at": int(c.closed_at)}
 
     @gl.public.view
     def get_campaign(self, campaign_id: gl.u256) -> dict:
@@ -477,7 +487,7 @@ class ReferralRailV2(gl.contract.Contract):
 
     @gl.public.view
     def get_campaign_accounting(self, campaign_id: gl.u256) -> dict:
-        c = self._campaign(campaign_id); locked = int(c.initial_funding) - int(c.paid_total) - int(c.refunded_total); return {"initial_funding": int(c.initial_funding), "paid": int(c.paid_total), "refunded": int(c.refunded_total), "still_locked": locked, "available_capacity": int(c.max_positions) - int(c.occupied), "occupied_capacity": int(c.occupied), "successful": int(c.successful), "conserved": int(c.initial_funding) == int(c.paid_total) + int(c.refunded_total) + locked}
+        c = self._campaign(campaign_id); locked = int(c.initial_funding) - int(c.paid_total) - int(c.refunded_total); used = self._used_capacity(c); return {"initial_funding": int(c.initial_funding), "paid": int(c.paid_total), "refunded": int(c.refunded_total), "still_locked": locked, "available_capacity": int(c.max_positions) - used, "reusable_capacity": int(c.max_positions) - used, "occupied_capacity": int(c.occupied), "pending_successes": int(c.pending_successes), "successful": int(c.successful), "conserved": int(c.initial_funding) == int(c.paid_total) + int(c.refunded_total) + locked}
 
     @gl.public.view
     def get_protocol_config(self) -> dict:

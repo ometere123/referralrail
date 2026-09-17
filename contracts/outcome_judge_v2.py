@@ -50,11 +50,10 @@ def evaluate_once(owner: str, repo: str, branch: str, pr_number: int, login: str
     base = "https://api.github.com/repos/" + str(owner) + "/" + str(repo) + "/pulls/" + str(int(pr_number))
     try:
         pr = fetch(base)
-        comments = fetch(base.replace("/pulls/", "/issues/") + "/comments?per_page=100")
         files = fetch(base + "/files?per_page=100")
     except Exception:
         return inconclusive("GitHub evidence was unavailable", "FETCH_UNAVAILABLE")
-    if not isinstance(pr, dict) or not isinstance(comments, list) or not isinstance(files, list):
+    if not isinstance(pr, dict) or not isinstance(files, list):
         return inconclusive("GitHub returned an unexpected evidence shape", "MALFORMED_SOURCE")
     base_repo = str(((pr.get("base") or {}).get("repo") or {}).get("full_name") or "").lower()
     expected_repo = (str(owner) + "/" + str(repo)).lower()
@@ -62,7 +61,7 @@ def evaluate_once(owner: str, repo: str, branch: str, pr_number: int, login: str
     created = timestamp(pr.get("created_at"))
     fresh = created > int(accepted_at) and created <= int(deadline)
     branch_ok = str((pr.get("base") or {}).get("ref") or "") == str(branch)
-    proof = any(isinstance(c, dict) and challenge in str(c.get("body") or "") and str((c.get("user") or {}).get("login") or "").lower() == str(login).lower() for c in comments)
+    proof = challenge in str(pr.get("body") or "")
     key = "repo=" + str(base_repo == expected_repo) + " author=" + str(author.lower() == str(login).lower()) + " branch=" + str(branch_ok) + " fresh=" + str(fresh) + " proof=" + str(proof) + " pr=" + str(int(pr_number))
     metadata = {"repo": base_repo, "pr": int(pr.get("number") or pr_number), "title": clean(pr.get("title", ""), 300), "body": clean(pr.get("body", ""), 1800), "author": author, "created_at": str(pr.get("created_at") or ""), "head_sha": str(((pr.get("head") or {}).get("sha")) or ""), "base_branch": str((pr.get("base") or {}).get("ref") or ""), "proof": proof}
     if base_repo != expected_repo or author.lower() != str(login).lower() or not branch_ok or not fresh or not proof:

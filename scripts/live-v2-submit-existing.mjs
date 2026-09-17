@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 const rpc="https://studio-dev.genlayer.com/api";
 const m=JSON.parse(readFileSync("deployment/v2-61997.json","utf8"));
 const base={...chains.studioDevnet,rpcUrls:{...chains.studioDevnet.rpcUrls,default:{http:[rpc]}}};
-const c=createClient({endpoint:rpc,chain:base,account:createAccount(process.env.STUDIO_NEXT_CANDIDATE_PRIVATE_KEY)});
+const c=createClient({endpoint:rpc,chain:base,account:createAccount(process.env.V2_PRIVATE_KEY || process.env.STUDIO_NEXT_CANDIDATE_PRIVATE_KEY)});
 const campaignId=Number(process.env.V2_CAMPAIGN_ID || 1);
 const positionId=Number(process.env.V2_POSITION_ID || 1);
 const prNumber=Number(process.env.V2_PR_NUMBER || 1);

@@ -16,14 +16,16 @@ class CampaignModel:
         self.employer = employer; self.capacity = capacity; self.unit = candidate_reward + referral_reward
         self.initial = capacity * self.unit; self.candidate_reward = candidate_reward; self.referral_reward = referral_reward
         self.deadline = deadline; self.now = 0; self.state = ACTIVE; self.positions = []
-        self.paid = 0; self.refunded = 0
+        self.paid = 0; self.refunded = 0; self.pending_successes = 0
     @property
     def occupied(self): return sum(p.state in (RESERVED, ACCEPTED, JUDGING, INCONCLUSIVE, COMPLETED) for p in self.positions)
     @property
-    def successful(self): return sum(p.state == PAID for p in self.positions)
+    def successful(self): return sum(p.state in (COMPLETED, PAID) for p in self.positions)
+    @property
+    def reusable_capacity(self): return self.capacity - self.successful - self.occupied + self.pending_successes
     def refer(self, sender, candidate):
         assert self.state == ACTIVE and self.now <= self.deadline and sender not in (self.employer, candidate)
-        assert self.occupied < self.capacity
+        assert self.reusable_capacity > 0
         p = Position(candidate, sender); self.positions.append(p); return len(self.positions) - 1
     def accept(self, i, sender):
         p = self.positions[i]; assert p.state == RESERVED and p.candidate == sender; p.state = ACCEPTED
@@ -31,13 +33,13 @@ class CampaignModel:
         p = self.positions[i]; assert p.candidate == sender and p.state in (ACCEPTED, INCONCLUSIVE); p.attempts += 1; assert p.attempts <= 2; p.state = JUDGING
     def resolve(self, i, outcome):
         p = self.positions[i]; assert p.state == JUDGING
-        if outcome == "COMPLETED": p.state = COMPLETED
+        if outcome == "COMPLETED": p.state = COMPLETED; self.pending_successes += 1
         elif outcome == "NOT_COMPLETED": p.state = FAILED
         else: p.state = INCONCLUSIVE
     def settle(self, i):
-        p = self.positions[i]; assert p.state == COMPLETED; p.state = PAID; self.paid += self.unit
+        p = self.positions[i]; assert p.state == COMPLETED; p.state = PAID; self.pending_successes -= 1; self.paid += self.unit
     def close(self): self.state = RESOLVING
     def finalise(self):
-        assert self.state == RESOLVING and self.occupied == 0
+        assert self.state == RESOLVING and self.occupied == 0 and self.pending_successes == 0
         self.refunded += (self.capacity - self.successful) * self.unit; self.state = REFUNDED
     def conservation(self): return self.initial == self.paid + self.refunded + (self.initial - self.paid - self.refunded)
