@@ -1,0 +1,4 @@
+.pytest_cache
+artifacts
+deployment/v2/history
+.env.local
