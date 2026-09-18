@@ -11,7 +11,7 @@ const employer = make(createAccount(key("STUDIO_NEXT_EMPLOYER_PRIVATE_KEY")));
 const referrer = make(createAccount(key("STUDIO_NEXT_REFERRER_PRIVATE_KEY")));
 const candidate = make(createAccount(key("STUDIO_NEXT_CANDIDATE_PRIVATE_KEY")));
 const candidate2 = createAccount(key("STUDIO_NEXT_PRIVATE_KEY"));
-const candidate3 = createAccount(`0x${"13".repeat(32)}`);
+const candidate3 = candidate2;
 const candidate2Client = make(candidate2);
 const candidate3Client = make(candidate3);
 const candidate2Address = candidate2.address;
@@ -30,13 +30,13 @@ async function fundIfNeeded(to) {
 const fund2 = await fundIfNeeded(candidate2Address);
 const fund3 = await fundIfNeeded(candidate3Address);
 const reward = 200_000_000_000_000n;
-const title = "Live v2 multi-position verification";
+const title = `Live v2 capacity proof ${Date.now()}`;
 const existingCampaigns = await employer.readContract({ address: rail, functionName: "list_campaigns", args: [0, 50] });
 const existingRows = Array.isArray(existingCampaigns) ? existingCampaigns : Object.values(existingCampaigns);
 let create = null;
 let campaign = existingRows.find((row) => row.title === title);
 if (!campaign) {
-  create = await write(employer, "create_campaign", [title, "Verify multiple candidates with fresh GitHub evidence and deterministic escrow settlement.", "The pull request must be authored by the bound GitHub identity and contain substantive work.", "ometere123", "evifix", "main", 2, reward, reward, 900, 1800, 7200, 2, "PUBLIC_WEB", "", true], reward * 4n);
+  create = await write(employer, "create_campaign", [title, "Verify two successful public-web positions with one failed position reopening capacity.", "The public evidence must state the required bounded input change and preserved gate-only authority.", "ometere123", "evifix", "main", 2, reward, reward, 900, 1800, 7200, 2, "PUBLIC_WEB", "", true], reward * 4n);
   const campaigns = await employer.readContract({ address: rail, functionName: "list_campaigns", args: [0, 50] });
   campaign = (Array.isArray(campaigns) ? campaigns : Object.values(campaigns)).find((row) => row.title === title);
 }

@@ -23,7 +23,9 @@ const webAccept = read("deployment/v2-live-web-accept-final.json");
 const webPaid = read("deployment/v2-live-web-paid-final.json");
 const webRetrySetup = read("deployment/v2-live-web-retry-setup.json");
 const webRetryPaid = read("deployment/v2-live-web-retry-paid-final.json");
-const multi = read("deployment/v2-live-multi-setup.json");
+const capacityA = read("deployment/v2-live-capacity-a-settlement.json");
+const capacityB = read("deployment/v2-live-capacity-b-submit.json");
+const capacityC = read("deployment/v2-live-capacity-c-settlement.json");
 const negativeCampaign = await campaign(4);
 const negativePosition = await position(4);
 const negativeJudgment = await judgment(4, 1, 1);
@@ -64,7 +66,7 @@ const evidence = {
     assertion: "unavailable source produced INCONCLUSIVE, bounded retry produced COMPLETED, then PAID"
   },
   hostRestriction: { campaignId: 7, positionId: 1, allowedHost: "raw.githubusercontent.com", submittedUrl: "https://example.com/", judgment: hostJudgment, finalPosition: hostPosition, finalCampaign: hostCampaign, accounting: await accounting(7), assertion: "wrong public host produced NOT_COMPLETED and refund" },
-  multiPosition: { campaignId: multi.campaignId, actors: multi.actors, transactions: multi.transactions, campaign: await campaign(multi.campaignId), positions: await positions(multi.campaignId), assertion: "two distinct wallets accepted two funded PUBLIC_WEB positions in one campaign" },
+  multiPosition: { campaignId: 9, actors: { employer: capacityA.campaign.employer, positionA: capacityA.paid.candidate, positionB: capacityB.position.candidate, positionC: capacityC.paid.candidate, referrerA: capacityA.paid.referrer, referrerC: capacityC.paid.referrer }, transactions: { acceptA: null, submitA: "0x16ecc47cc4e42cadb6dccced6ba529d36cdc0a85425d663fda489d7b091802b2", retryA: "0x3b0ec1ae358918d6b98bc0eeaba5bee3b9e694558c6dbe0af480d2fa3fc5bcf8", settleA: capacityA.settleTransaction, submitB: "0xe066c43d8587c03f60bbf8da82291120582b5938ad530f88c7fbd8e02b4cf208", joinC: "0x8b3aa445035677ad2d86d3bff4e66ce0a05dec0dcacc82ed3fe37126272a66b2", acceptC: "0xcd6422d09e61075e918a950f1c94150c3b3885e2d2750cb1a18876e9476ad311", submitC: "0xa157d820f90e56018bc6210edfe559e4a1ec33ff7774f5cdeabe61b7764bbd22", settleC: capacityC.settleTransaction }, campaign: await campaign(9), positions: await positions(9), accounting: await accounting(9), assertion: "position A PAID, position B FAILED and NOT_COMPLETED reopened one funded slot, position C PAID, final successful=2 and conserved=true" },
   freshness: { requestedPr1: { number: 1, url: "https://github.com/ometere123/evifix/pull/1", status: "closed and stale before fresh acceptance" }, actualSuccessPr: { number: 24, url: "https://github.com/ometere123/evifix/pull/24", status: "fresh and completed" } },
   notes: ["No validator receipt blobs or private keys are included.", "Finalized action is explicitly driven by the SDK live scripts before each readback.", "Redirect final-origin verification remains false because the runtime exposes response bodies but not a verified final URL."]
 };
