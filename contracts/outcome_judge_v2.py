@@ -53,6 +53,14 @@ def fetch(url: str) -> typing.Any:
     return json.loads(body)
 
 
+def fetch_raw(url: str) -> tuple[int, str]:
+    response = gl.nondet.web.get(url)
+    body = response.body.decode("utf-8")
+    if len(body) > MAX_EVIDENCE:
+        raise ValueError("GitHub patch exceeded bounded size")
+    return int(response.status), body
+
+
 def inconclusive(reason: str, audit: str) -> dict:
     return {"outcome": OUTCOME_INCONCLUSIVE, "reason": clean(reason), "evidence_digest": hashlib.sha256(audit.encode()).hexdigest(), "audit": clean(audit, MAX_AUDIT), "objective_key": clean(audit, MAX_AUDIT)}
 
@@ -96,8 +104,17 @@ def evaluate_once(owner: str, repo: str, branch: str, pr_number: int, login: str
         files = fetch(base + "/files?per_page=100")
     except Exception:
         return inconclusive("GitHub evidence was unavailable", "FETCH_UNAVAILABLE")
-    if not isinstance(pr, dict) or not isinstance(files, list):
-        return inconclusive("GitHub returned an unexpected evidence shape", "MALFORMED_SOURCE")
+    if not isinstance(pr, dict):
+        return inconclusive("GitHub returned an unexpected pull request shape", "MALFORMED_SOURCE")
+    if not isinstance(files, list):
+        patch_url = "https://github.com/" + str(owner) + "/" + str(repo) + "/pull/" + str(int(pr_number)) + ".patch"
+        try:
+            patch_status, patch_body = fetch_raw(patch_url)
+        except Exception:
+            return inconclusive("GitHub returned an unusable files response and patch fallback was unavailable", "MALFORMED_SOURCE")
+        if patch_status != 200 or not patch_body.strip():
+            return inconclusive("GitHub returned an unusable files response and patch fallback was unavailable", "MALFORMED_SOURCE")
+        files = [{"filename": "public-pull.patch", "patch": patch_body}]
     base_repo = str(((pr.get("base") or {}).get("repo") or {}).get("full_name") or "").lower()
     expected_repo = (str(owner) + "/" + str(repo)).lower()
     author = str((pr.get("user") or {}).get("login") or "")
@@ -202,6 +219,8 @@ class OutcomeJudgeV2(gl.contract.Contract):
     @gl.public.view
     def get_config(self) -> dict:
         return {"version": "2", "settlement_address": self.settlement_address.as_hex, "evidence_profiles": ["GITHUB_PR", "X_POST", "PUBLIC_URL"], "evidence_host": "public HTTPS sources plus api.github.com for GitHub PRs", "ownership_proof": "profile-specific public proof and exact position challenge", "freshness": "evidence is submitted after acceptance and before work deadline"}
+
+
 
 
 
