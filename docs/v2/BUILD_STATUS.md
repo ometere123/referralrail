@@ -1,7 +1,7 @@
 # ReferralRail v2 build status
 
 Branch: `referralrail-v2`
-Latest pushed commit: see the current `referralrail-v2` branch head
+Latest pushed commit: see the current branch head
 Network: Studio Next / Studionet Dev
 Chain: `61997`
 RPC: `https://studio-dev.genlayer.com/api`
@@ -13,23 +13,12 @@ Current deployment and evidence:
 
 - Manifest: `deployment/v2-61997.json`
 - Canonical evidence: `deployment/v2/live-evidence.json`
-- Historical previous generation: `deployment/v2/history/live-evidence-previous-generation.json`
+- Fee profile: `deployment/v2/fee-profile.json`
+- Historical previous generation: `deployment/v2/history/live-evidence-pre-final-readback.json`
 - General-path pointer: `deployment/live-evidence.json`
 
-Verified completed gates:
+The fresh v2 generation has a real PUBLIC_WEB success that reached `PAID` with `candidate_paid=true`, `referrer_paid=true`, and `settlement_released=true`. Its real negative case reached `FAILED` and then campaign `REFUNDED`. Historical GitHub evidence remains preserved, including PR #24 success and PR #13 negative refund.
 
-- Fresh v2 contracts deployed and bound on chain 61997.
-- GitHub success lifecycle completed and paid with fresh PR #24.
-- Negative GitHub lifecycle for `ometere123/thedadsbot` PR #13 refunded.
-- PUBLIC_WEB success, host restriction, and inconclusive retry lifecycles completed.
-- Multi-position campaign 9 proved A `PAID`, B `FAILED`, C `PAID`, with `successful=2` and conserved accounting.
-- Full Python tests, Direct Mode, preflight, GenVM lint and validation, frontend typecheck, and production build passed.
-- SDK and MCP build, tests, packaging checks, and MCP STDIO E2E passed.
-- Vercel production deployment is READY and responds with HTTP 200.
+V2 is an isolated branch build. It is not deployed to Vercel production. `https://referralrail.vercel.app` remains the v1 production alias and is not a v2 URL.
 
-Known incomplete or environment-blocked gates:
-
-- Native browser automation remains blocked by the Windows ACL helper before a browser session can start.
-- npm publication and clean-install verification are pending npm authentication. `npm whoami` returned `E401 Unauthorized`.
-- No standalone live validator-dissent or `NO_MAJORITY` scenario was intentionally induced; consensus-independent validator rerun is covered by static and model checks.
-These blockers are recorded here explicitly. They do not change the verified on-chain or build results.
+npm publication is intentionally out of scope. SDK and MCP `0.2.0` are prepared for future publication. No standalone live validator-dissent or `NO_MAJORITY` scenario was intentionally induced; consensus-independent validator rerun is covered by deterministic tests. Redirect final-origin verification remains a known runtime limitation.

@@ -53,3 +53,18 @@ def test_v2_multislot_accounting_guards():
 
 
 
+
+
+def test_v2_public_web_host_checks_are_bounded():
+    for token in ["def ipv4_private_or_local", "a == 10", "a == 127", "16 <= b <= 31", "a == 192 and b == 168", "a == 169 and b == 254", "authority == \"localhost\"", "authority == \"::1\""]:
+        assert token in V2_SETTLE
+    for token in ["def private_or_local_host", "a == 10", "a == 127", "16 <= b <= 31", "a == 192 and b == 168", "a == 169 and b == 254"]:
+        assert token in V2_JUDGE
+
+
+def test_v2_participation_guard_is_before_new_position_allocation():
+    for method in ["def create_referral", "def join_via_referral"]:
+        start = V2_SETTLE.index(method)
+        body = V2_SETTLE[start:V2_SETTLE.find("\n    @gl.public", start + len(method))]
+        assert "participated" in body
+        assert "candidate already participated" in body

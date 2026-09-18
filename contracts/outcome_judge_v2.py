@@ -38,6 +38,23 @@ def clean(v: typing.Any, n: int = MAX_REASON) -> str:
     return " ".join(str(v).strip().split())[:n]
 
 
+def host_ok(value: str) -> bool:
+    s = str(value).strip().lower()
+    if not s or len(s) > 100 or "://" in s or "/" in s or "@" in s or ":" in s:
+        return False
+    labels = s.split(".")
+    return len(labels) >= 2 and all(0 < len(label) <= 63 and label[0] != "-" and label[-1] != "-" and all(("a" <= c <= "z") or ("0" <= c <= "9") or c == "-" for c in label) for label in labels)
+
+
+def private_or_local_host(authority: str) -> bool:
+    if authority in ("localhost", "::1"):
+        return True
+    parts = str(authority).split(".")
+    if len(parts) != 4 or not all(part.isdigit() and 0 <= int(part) <= 255 for part in parts):
+        return False
+    a, b, _, _ = [int(part) for part in parts]
+    return a == 0 or a == 10 or a == 127 or (a == 172 and 16 <= b <= 31) or (a == 192 and b == 168) or (a == 169 and b == 254)
+
 def timestamp(v: typing.Any) -> int:
     try:
         return int(datetime.fromisoformat(str(v).replace("Z", "+00:00")).timestamp())
@@ -72,9 +89,9 @@ def evaluate_once(owner: str, repo: str, branch: str, pr_number: int, login: str
             return inconclusive("Evidence URL is not a bounded HTTPS source", "INVALID_PUBLIC_WEB_URL")
         rest = url[8:]
         authority = rest.split("/", 1)[0].split("?", 1)[0].split("#", 1)[0].lower()
-        if not authority or ":" in authority or allowed_host and authority != str(allowed_host).strip().lower():
+        if not authority or not host_ok(authority) or allowed_host and authority != str(allowed_host).strip().lower():
             return {"outcome": OUTCOME_NOT_COMPLETED, "reason": "Evidence URL is outside the campaign host restriction.", "evidence_digest": hashlib.sha256(url.encode()).hexdigest(), "audit": "public web host restriction failed", "objective_key": "host=" + authority}
-        if authority in ("localhost", "127.0.0.1", "0.0.0.0", "::1") or authority.startswith(("10.", "192.168.", "172.16.", "172.17.", "172.18.", "172.19.", "172.2", "169.254.")):
+        if private_or_local_host(authority):
             return inconclusive("Evidence URL targets a local or private host", "PRIVATE_HOST")
         try:
             response = gl.nondet.web.get(url)

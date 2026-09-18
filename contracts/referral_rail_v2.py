@@ -72,8 +72,15 @@ def host_ok(value: str) -> bool:
     if not s or len(s) > 100 or "://" in s or "/" in s or "@" in s or ":" in s:
         return False
     labels = s.split(".")
-    return len(labels) >= 2 and all(0 < len(label) <= 63 and label[0] != "-" and label[-1] != "-" and all(c.isalnum() or c == "-" for c in label) for label in labels)
+    return len(labels) >= 2 and all(0 < len(label) <= 63 and label[0] != "-" and label[-1] != "-" and all(("a" <= c <= "z") or ("0" <= c <= "9") or c == "-" for c in label) for label in labels)
 
+
+def ipv4_private_or_local(authority: str) -> bool:
+    parts = str(authority).split(".")
+    if len(parts) != 4 or not all(part.isdigit() and 0 <= int(part) <= 255 for part in parts):
+        return False
+    a, b, _, _ = [int(part) for part in parts]
+    return a == 0 or a == 10 or a == 127 or (a == 172 and 16 <= b <= 31) or (a == 192 and b == 168) or (a == 169 and b == 254)
 
 
 def public_url_ok(value: str) -> bool:
@@ -81,12 +88,10 @@ def public_url_ok(value: str) -> bool:
     if not s.startswith("https://") or len(s) > 300 or "@" in s:
         return False
     rest = s[8:]
-    authority = rest.split("/", 1)[0].split("?", 1)[0].split("#", 1)[0]
-    if not host_ok(authority):
+    authority = rest.split("/", 1)[0].split("?", 1)[0].split("#", 1)[0].lower()
+    if not authority or authority == "localhost" or authority == "::1" or ipv4_private_or_local(authority):
         return False
-    if authority in ("localhost", "127.0.0.1", "0.0.0.0", "::1") or authority.startswith(("10.", "192.168.", "172.16.", "172.17.", "172.18.", "172.19.", "172.2", "169.254.")):
-        return False
-    return True
+    return host_ok(authority)
 
 def state_name(code: int) -> str:
     return {1: "ACTIVE", 2: "RESOLVING", 3: "REFUNDED", 4: "CANCELLED"}.get(code, "UNKNOWN")
@@ -354,6 +359,8 @@ class ReferralRailV2(gl.contract.Contract):
         if candidate == ZERO or candidate == referrer or candidate == c.employer or referrer == c.employer:
             raise gl.vm.UserError("campaign roles must be distinct")
         candidate_key = self._candidate_key(int(campaign_id), candidate)
+        if bool(self.participated.get(candidate_key) or False):
+            raise gl.vm.UserError("candidate already participated in this campaign")
         if bool(self.live_candidates.get(candidate_key) or False):
             raise gl.vm.UserError("candidate already has a live position")
         pending_key = self._pending_key(int(campaign_id), referrer)
@@ -390,6 +397,8 @@ class ReferralRailV2(gl.contract.Contract):
         if candidate == ZERO or referrer == ZERO or candidate == referrer or candidate == c.employer or referrer == c.employer:
             raise gl.vm.UserError("campaign roles must be distinct")
         candidate_key = self._candidate_key(int(campaign_id), candidate)
+        if bool(self.participated.get(candidate_key) or False):
+            raise gl.vm.UserError("candidate already participated in this campaign")
         if bool(self.live_candidates.get(candidate_key) or False):
             raise gl.vm.UserError("candidate already has a live position")
         pending_key = self._pending_key(int(campaign_id), referrer)
@@ -601,7 +610,7 @@ class ReferralRailV2(gl.contract.Contract):
 
     def _campaign_dict(self, cid: gl.u256, c: Campaign) -> dict:
         used = self._used_capacity(c)
-        return {"id": int(cid), "employer": c.employer.as_hex, "title": c.title, "brief": c.brief, "criteria": c.criteria, "repo_owner": c.repo_owner, "repo_name": c.repo_name, "base_branch": c.base_branch, "evidence_profile": c.evidence_profile, "allowed_host": c.allowed_host, "require_work_challenge": bool(c.require_work_challenge), "max_positions": int(c.max_positions), "successful": int(c.successful), "pending_successes": int(c.pending_successes), "occupied": int(c.occupied), "open_positions": int(c.max_positions) - used, "reusable_capacity": int(c.max_positions) - used, "failed": int(c.failed), "candidate_reward": int(c.candidate_reward), "referral_reward": int(c.referral_reward), "unit_funding": int(c.unit_funding), "initial_funding": int(c.initial_funding), "paid_total": int(c.paid_total), "refunded_total": int(c.refunded_total), "locked_total": int(c.initial_funding) - int(c.paid_total) - int(c.refunded_total), "participation_deadline": int(c.participation_deadline), "state": state_name(int(c.state)), "state_code": int(c.state), "created_at": int(c.created_at), "closed_at": int(c.closed_at)}
+        return {"id": int(cid), "employer": c.employer.as_hex, "title": c.title, "brief": c.brief, "criteria": c.criteria, "repo_owner": c.repo_owner, "repo_name": c.repo_name, "base_branch": c.base_branch, "evidence_profile": c.evidence_profile, "allowed_host": c.allowed_host, "require_work_challenge": bool(c.require_work_challenge), "max_positions": int(c.max_positions), "successful": int(c.successful), "pending_successes": int(c.pending_successes), "occupied": int(c.occupied), "open_positions": int(c.max_positions) - used, "reusable_capacity": int(c.max_positions) - used, "failed": int(c.failed), "candidate_reward": int(c.candidate_reward), "referral_reward": int(c.referral_reward), "unit_funding": int(c.unit_funding), "initial_funding": int(c.initial_funding), "paid_total": int(c.paid_total), "refunded_total": int(c.refunded_total), "locked_total": int(c.initial_funding) - int(c.paid_total) - int(c.refunded_total), "participation_deadline": int(c.participation_deadline), "reservation_window": int(c.reservation_window), "work_duration": int(c.work_duration), "campaign_duration": int(c.participation_deadline) - int(c.created_at), "max_pending_per_referrer": int(c.max_pending_per_referrer), "state": state_name(int(c.state)), "state_code": int(c.state), "created_at": int(c.created_at), "closed_at": int(c.closed_at)}
 
     @gl.public.view
     def get_campaign(self, campaign_id: gl.u256) -> dict:

@@ -6,43 +6,42 @@
 - Commit: current `referralrail-v2` branch head
 - Chain: 61997
 - RPC: `https://studio-dev.genlayer.com/api`
+- Current v2 manifest: `deployment/v2-61997.json`
 
 ## Automated gates
 
 - `python -m pytest -q`: 46 passed, 3 skipped.
-- `python -m pytest tests/direct -vv`: 6 passed, including 2 v2-specific Direct Mode checks. The Direct Mode wrapper does not propagate an exact payable value for the v2 method with default arguments, so exact v2 funding is verified by the finalized live campaign and the existing v1 payable Direct Mode test.
-- `python scripts/preflight.py`: PASS.
-- Frontend `npm run typecheck`: PASS.
-- Frontend `npm run build`: PASS.
-- SDK build: PASS.
-- SDK tests: 11 passed, 1 skipped.
-- SDK pack check: PASS.
-- MCP build: PASS.
-- MCP tests: 5 passed.
-- MCP STDIO E2E: PASS.
-- MCP pack check: PASS.
-- `git diff --check`: run on the pushed v2 changes before handoff.
+- `python -m pytest tests/direct -q`: 6 passed.
+- `python scripts/preflight.py --skip-tests`: PASS.
+- Frontend typecheck: PASS.
+- Frontend production build: PASS.
+- Frontend validation tests: 6 passed.
+- SDK typecheck, build, tests, and pack dry-run: PASS. SDK tests: 12 passed, 1 skipped.
+- MCP typecheck, build, tests, STDIO E2E, and pack dry-run: PASS. MCP tests: 6 passed.
+- GenVM lint and validation passed for `referral_rail_v2.py`, `outcome_judge_v2.py`, and `referral_identity_v2.py`.
+- Agent Skill validation: PASS.
+- `git diff --check`: PASS.
 
-GenVM lint and validation passed for `referral_rail_v2.py`, `outcome_judge_v2.py`, and `referral_identity_v2.py` using genvm-linter 0.11.1rc2.
+The Direct Mode harness does not propagate an exact payable value for the v2 method with default arguments. Exact v2 campaign funding is covered by the finalized fresh live campaign and the existing v1 payable Direct Mode test. Static and model tests cover the v2 participation and bounded host guards.
 
-## Live matrix
+## Fresh live matrix
 
-- GitHub success: campaign 3, position 1, `ometere123/evifix` PR #24, final `PAID`.
-- GitHub negative: campaign 4, position 1, `ometere123/thedadsbot` PR #13, final `REFUNDED`.
-- PUBLIC_WEB success: campaign 6, position 1, final `PAID`.
-- Inconclusive retry: campaign 8, attempt 1 `INCONCLUSIVE`, attempt 2 `COMPLETED`, final `PAID`.
-- Host restriction: campaign 7, wrong host `example.com`, final refund path.
-- Capacity proof: campaign 9, A `PAID`, B `FAILED` with `NOT_COMPLETED`, C `PAID`, final `successful=2`.
+The current v2 generation was freshly deployed and bound on chain 61997.
 
-All live claims are sourced from `deployment/v2/live-evidence.json`. Transaction hashes and finalized readbacks are retained in the generated deployment artifacts and canonical evidence. Private keys are not committed.
+- PUBLIC_WEB success: fresh campaign, final position `PAID`, `candidate_paid=true`, `referrer_paid=true`, and `settlement_released=true`.
+- PUBLIC_WEB negative: fresh campaign, final position `FAILED`, then campaign `REFUNDED`.
+- Historical real evidence preserved: `ometere123/evifix` PR #24 success, `ometere123/thedadsbot` PR #13 negative refund, PUBLIC_WEB host restriction, bounded inconclusive retry, multi-position capacity, and finalized child transaction IDs.
+
+All live claims are sourced from `deployment/v2/live-evidence.json`. The prior generation is retained at `deployment/v2/history/live-evidence-pre-final-readback.json`. Private keys are not committed.
 
 ## Frontend and release
 
-- Vercel production URL: `https://referralrail.vercel.app`
-- Deployment status: READY.
-- Production alias probe: HTTP 200, title `ReferralRail - referrals that settle on verified work`.
-- Browser live automation: not verified because the native ACL helper failed before browser startup.
-- npm packages are prepared as SDK `0.2.0` and MCP `0.2.0`, but publication is not complete because npm authentication returned `E401 Unauthorized`.
+- V2 is an isolated branch build only.
+- `https://referralrail.vercel.app` remains v1 production and was not changed by this goal.
+- V2 was not promoted to Vercel production.
+- npm publication was not performed. SDK and MCP `0.2.0` are prepared for future publication.
+- Browser live automation is not a release gate here because the native ACL helper failed before browser startup.
+
 ## Consensus dissent
 
-No standalone live `NO_MAJORITY` or validator-dissent scenario was intentionally induced. The available contract/static checks verify independent validator reruns and separate execution-error handling, while the live matrix records finalized outcomes and readbacks. A live dissent-specific proof remains unverified.
+No standalone live `NO_MAJORITY` or validator-dissent scenario was intentionally induced. Deterministic/static checks cover independent validator rerun and execution-error handling. A live dissent-specific proof remains unverified.

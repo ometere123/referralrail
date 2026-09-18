@@ -16,3 +16,4 @@ coverage/
 integrations/**/dist/
 integrations/**/node_modules/
 .npm-cache/
+.vercel
