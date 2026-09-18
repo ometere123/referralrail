@@ -43,3 +43,6 @@ All live claims are sourced from `deployment/v2/live-evidence.json`. Transaction
 - Production alias probe: HTTP 200, title `ReferralRail - referrals that settle on verified work`.
 - Browser live automation: not verified because the native ACL helper failed before browser startup.
 - npm packages are prepared as SDK `0.2.0` and MCP `0.2.0`, but publication is not complete because npm authentication returned `E401 Unauthorized`.
+## Consensus dissent
+
+No standalone live `NO_MAJORITY` or validator-dissent scenario was intentionally induced. The available contract/static checks verify independent validator reruns and separate execution-error handling, while the live matrix records finalized outcomes and readbacks. A live dissent-specific proof remains unverified.

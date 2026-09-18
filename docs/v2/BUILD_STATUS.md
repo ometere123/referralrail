@@ -29,8 +29,7 @@ Verified completed gates:
 
 Known incomplete or environment-blocked gates:
 
-
 - Native browser automation remains blocked by the Windows ACL helper before a browser session can start.
 - npm publication and clean-install verification are pending npm authentication. `npm whoami` returned `E401 Unauthorized`.
-
+- No standalone live validator-dissent or `NO_MAJORITY` scenario was intentionally induced; consensus-independent validator rerun is covered by static and model checks.
 These blockers are recorded here explicitly. They do not change the verified on-chain or build results.
