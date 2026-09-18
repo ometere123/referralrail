@@ -1,0 +1,123 @@
+{
+  "version": "v2",
+  "generatedAt": "2026-09-18T08:51:03.2915320Z",
+  "network": "Studio Next / Studionet Dev",
+  "chainId": 61997,
+  "rpc": "https://studio-dev.genlayer.com/api",
+  "deployment": {
+    "version": "2",
+    "network": "Studio Next / Studionet Dev",
+    "chainId": 61997,
+    "rpc": "https://studio-dev.genlayer.com/api",
+    "identity": {
+      "txId": "0x6a0a7e86fa0a19ce0184defcb194d2fb8cfb5fadf7b70bf3601cf796d91c38d2",
+      "address": "0xCfC3aefAAcbb142bAfb010979bb7974Ad8422933"
+    },
+    "rail": {
+      "txId": "0x1d81878361e22fe79dbf0d6f3bcd7c75eba052b707b65c09aeb66ee310ec6fd6",
+      "address": "0xc998C5A9363B510120601437dA31680eaBF358e0"
+    },
+    "judge": {
+      "txId": "0x11807ac4c5a55e1b19f45f74f6c9a5701bd7f2e923edf4b813ca2ad3ca8862fc",
+      "address": "0x755c276d95D613232697265B9C6DDf859f6fBc11"
+    },
+    "identityBindingTransaction": "0x3bc44d25f400f9bbb4fb6dd8826fb61deca3b71f48a28f3b458d4af79d370f85",
+    "bindingTransaction": "0x02f1fb02c55b8abc9c12656a5eee92fa8df793f38bd7fc7c197f653734f65b13",
+    "protocol": {
+      "chain_id": 61997,
+      "evidence_profiles": [
+        "GITHUB_PR",
+        "X_POST",
+        "PUBLIC_URL"
+      ],
+      "identity_address": "0xCfC3aefAAcbb142bAfb010979bb7974Ad8422933",
+      "judgment_timeout_seconds": 86400,
+      "max_attempts": 2,
+      "max_positions": 1000,
+      "max_seconds": 3888000,
+      "min_seconds": 60,
+      "retry_window_seconds": 86400,
+      "state_model": "campaign capacity is success based; terminal failure reopens a funded slot while intake is active",
+      "version": "2"
+    },
+    "generatedAt": "2026-09-18T08:19:42.135Z"
+  },
+  "identity": {
+    "requestTransaction": "0x4793305071735f014e8b9c37ecdf066bce7c2955c3aa506cc6e333f08338b372",
+    "completionTransaction": "0x5e28d2170e0482eb895c53c61ae21c1d9fcd78aa11065446e4e31dda148889da",
+    "state": "ACTIVE",
+    "handle": "ometere123",
+    "canonicalId": "45469370"
+  },
+  "success": {
+    "campaignId": 3,
+    "positionId": 1,
+    "repository": "ometere123/evifix",
+    "requestedPr1": {
+      "created_at": "2026-09-14T14:09:07Z",
+      "head_sha": "1504131d1b025876aeb1fb54345b5748693a5ac0",
+      "html_url": "https://github.com/ometere123/evifix/pull/1",
+      "number": 1,
+      "state": "closed"
+    },
+    "freshVerifiedPr21": {
+      "number": 21,
+      "url": "https://github.com/ometere123/evifix/pull/21",
+      "headSha": "c1a1c7c8a040e9c734e4acf3ba3cc3391f76082f",
+      "submitTransaction": "0x218f45b8a64c29844b3bf61d6acb60c706ef793760cb64e2f8febf83b3747562",
+      "settlementTransaction": "0x856f7f7f3ccdc88dd3ed9bf2192ac44619cea16c891b30641e5f1424fb1eedcd",
+      "state": "PAID",
+      "outcome": "COMPLETED",
+      "candidatePaid": true,
+      "referrerPaid": true,
+      "settlementReleased": true,
+      "evidenceDigest": "c9fbd5c05767946b9761bb4dd576503668e4c4d8583326a01541bffb72e7a2c9",
+      "accounting": {
+        "available_capacity": 0,
+        "conserved": true,
+        "initial_funding": 200000000000000,
+        "occupied_capacity": 0,
+        "paid": 200000000000000,
+        "pending_successes": 0,
+        "refunded": 0,
+        "reusable_capacity": 0,
+        "still_locked": 0,
+        "successful": 1
+      }
+    }
+  },
+  "negative": {
+    "campaignId": 4,
+    "positionId": 1,
+    "repository": "ometere123/thedadsbot",
+    "pr": {
+      "created_at": "2026-09-13T19:36:18Z",
+      "head_sha": "81ee86ba0de90316ee2979b11ac5dfdb50687095",
+      "html_url": "https://github.com/ometere123/thedadsbot/pull/13",
+      "number": 13,
+      "state": "open"
+    },
+    "submitTransaction": "0x42556e013d955ad72491cbc0e66f1ebbf8f78d9f846f52d75f382c7a22f135ce",
+    "positionState": "REFUNDED",
+    "outcome": "NOT_COMPLETED",
+    "finalizeTransaction": "0x00a896244ae8f98ef6ceb37f3a56d99a94f9c20fdb3f257e6f22c727775c59da",
+    "refundedTotal": 200000000000000,
+    "accounting": {
+      "available_capacity": 1,
+      "conserved": true,
+      "initial_funding": 200000000000000,
+      "occupied_capacity": 0,
+      "paid": 0,
+      "pending_successes": 0,
+      "refunded": 200000000000000,
+      "reusable_capacity": 1,
+      "still_locked": 0,
+      "successful": 0
+    }
+  },
+  "notes": [
+    "PR #1 was verified as closed and stale for the fresh acceptance window, so it was not misreported as a success.",
+    "PR #21 is the fresh substantive success proof used for PAID.",
+    "No validator receipt blobs or private keys are included."
+  ]
+}

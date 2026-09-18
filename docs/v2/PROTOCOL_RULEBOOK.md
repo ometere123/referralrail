@@ -13,4 +13,6 @@ PUBLIC_WEB does not require GitHub or X identity. Host matching is exact. The cu
 
 A wallet may accept at most one position in a campaign. Inconclusive retry stays on the same position and is bounded by MAX_ATTEMPTS.
 
+Position challenges are acceptance-bound identifiers, not cryptographic randomness. The current contract derives the token from the campaign, position, candidate, and bound identity digest. For identity-free PUBLIC_WEB positions the identity component is empty, so a reviewer must treat the challenge as exact position binding only. It does not prove that the page was created after acceptance and the protocol does not claim that it is unknowable before acceptance.
+
 Funding is exact: initial_funding equals max_positions times candidate_reward plus referral_reward. Accounting must conserve initial_funding as paid plus refunded plus locked.
