@@ -13,6 +13,7 @@
 | `referralrail_accept_referral` | nominated candidate | `REFERRED`, GitHub login | no | no | `ACCEPTED` |
 | `referralrail_submit_work` | candidate | `ACCEPTED`, PR number | no | no | `JUDGING` and child message |
 | `referralrail_retry_inconclusive` | candidate | valid `INCONCLUSIVE` cure window | no | no | `JUDGING` |
+| `referralrail_v2_retry_evidence` | candidate | valid profile-specific `INCONCLUSIVE` cure window | no | no | `JUDGING` |
 | `referralrail_resolve_judgment` | any actor | `JUDGING`, finalized attempt | yes | no | `PAID`, `REFUNDED`, or `INCONCLUSIVE` |
 | `referralrail_settle_opportunity` | any actor | unreleased `PAID` or `REFUNDED` | yes | yes | `settlement_released` true |
 | `referralrail_cancel_unreferred` | employer | `OPEN` | no | yes | `CANCELLED` |
