@@ -1,6 +1,6 @@
 {
   "schema": "referralrail-v2-live-evidence-2",
-  "generatedAt": "2026-09-18T12:33:46.248Z",
+  "generatedAt": "2026-09-18T13:27:02.356Z",
   "network": "Studio Next / Studionet Dev",
   "chainId": 61997,
   "rpc": "https://studio-dev.genlayer.com/api",
@@ -70,6 +70,7 @@
       "join": "0xecf6ffbf72c9e1e4ee9ecc2edb1319ae1f96a07abd83330a76a1272559ce0eb3",
       "accept": "0x65ef18ae4b27c6dd94ef35b1b88d86ed44aaa40cced413337ccf55154cf7d4c9",
       "submit": "0xd64dc0428f0ba612e95fac248ff672e8868c59b70174aaac901590664987208f",
+      "judgeChild": "0xc6e0c2c6f65f4cb85034d8d9704764c43fc73727f1f138c8a7c72f4ce932df96",
       "settle": "0x92090dc38c8fc8697f35eedbbbcbb87e72de0cd994cf84ce03f268be4343dc16"
     },
     "judgment": {
@@ -174,7 +175,8 @@
       "create": "0x1c2cb1d26da544e2dd2c6e99732608eb1e14e517dcf7fd7ba6f585b45b5b2d29",
       "join": "0xe5dc253902bdb2d127bd355b5f4db7f5215cc5029701e42f6ae31ef4f5f20da4",
       "accept": "0x9bd756a28f16d968a2526e56ada7ce691a7adf5cec3eeb00832a6ad11a2b5eaa",
-      "submit": "0xc27fa8e87d7e1773bf3e1c2695eefd819cc22ba861def586081318acd6562ba6"
+      "submit": "0xc27fa8e87d7e1773bf3e1c2695eefd819cc22ba861def586081318acd6562ba6",
+      "judgeChild": "0x03c836ecf20c89c62727eca99a8b75a14c420a0c67fc1106e2ed2fc8dad22771"
     },
     "judgment": {
       "attempt_id": 1,
@@ -278,6 +280,7 @@
       "join": "0x2acb50dba7159fabeb5296221c66c2530be305a4f4a18e9bfdfc5eaa00d83da1",
       "accept": "0xa72c97ba9f93718a5a2fa6e8746b8847d9e8c9351f11fc8ceac6186470ed84ec",
       "submit": "0xe98b386afb8ff591476b51e331ffc890b72e6216ab5a6a51f772501e50ce47e5",
+      "judgeChild": "0xbaeead1a1e4cee70ae0659321be7b95bfd7f4494a253233530e85223509819dd",
       "settle": "0x8476655a956dd0f5112025264ffc03cac69935f1197fc58546af13a626def6a6"
     },
     "judgment": {
@@ -377,6 +380,13 @@
       "employer": "0xfcef676044658B5402f590daBe9E04A0F640522f",
       "referrer": "0x81301DD9C3605a7DA743D87b803156d8445620B0",
       "candidate": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2"
+    },
+    "transactions": {
+      "firstSubmit": "0x69ed7ff3fb2587530ab7d294e3e6766325dfa17d0cb2f840395b0fbeda055c6d",
+      "firstJudgeChild": "0x6198702558c14faecfb433f86bbf5436cb74eb9d11ccb9b72a036fcd08fa06e8",
+      "retry": "0xe24e23b5a7a91a6238f8e489b6845c4911d1b6f4048bfc9df33033ba483d8c26",
+      "retryJudgeChild": "0x7bfc682e2ca7bfebf1a38a86f0c2d3d8b0827d1aa1f7482773e0f59632ae283e",
+      "settle": "0x609be973745401276cc2d1b6b8572a0d4f9b596a41126b447706637a2255db07"
     },
     "judgments": {
       "first": {
@@ -583,12 +593,15 @@
     "transactions": {
       "acceptA": null,
       "submitA": "0x16ecc47cc4e42cadb6dccced6ba529d36cdc0a85425d663fda489d7b091802b2",
+      "judgeChildA": "0xc86ce714616c2c7f72d642e424a76dd1daf2f5d0c18f8a17de1b02d3f33b5657",
       "retryA": "0x3b0ec1ae358918d6b98bc0eeaba5bee3b9e694558c6dbe0af480d2fa3fc5bcf8",
       "settleA": "0xb60c2c03d0f416e8252e81735dfc06a8d9bea52c0dda3b236f644b573f8970bc",
       "submitB": "0xe066c43d8587c03f60bbf8da82291120582b5938ad530f88c7fbd8e02b4cf208",
+      "judgeChildB": "0x6be33d56a1a4210184a98f1b2739de610cc9f51f984d7dc6048d4a60d8a7d284",
       "joinC": "0x8b3aa445035677ad2d86d3bff4e66ce0a05dec0dcacc82ed3fe37126272a66b2",
       "acceptC": "0xcd6422d09e61075e918a950f1c94150c3b3885e2d2750cb1a18876e9476ad311",
       "submitC": "0xa157d820f90e56018bc6210edfe559e4a1ec33ff7774f5cdeabe61b7764bbd22",
+      "judgeChildC": "0x300ccb9b70a8363620777e69e84653d3088e97b684dfd09c7bc67cf820783bed",
       "settleC": "0xd662cdbd2200b1e4de9b0366d9b3511349925058042e52650f1e21f234964b4c"
     },
     "campaign": {
