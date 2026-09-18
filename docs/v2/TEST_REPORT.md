@@ -9,8 +9,8 @@
 
 ## Automated gates
 
-- `python -m pytest -q`: 44 passed, 3 skipped.
-- `python -m pytest tests/direct -vv`: 4 passed.
+- `python -m pytest -q`: 46 passed, 3 skipped.
+- `python -m pytest tests/direct -vv`: 6 passed, including 2 v2-specific Direct Mode checks. The Direct Mode wrapper does not propagate an exact payable value for the v2 method with default arguments, so exact v2 funding is verified by the finalized live campaign and the existing v1 payable Direct Mode test.
 - `python scripts/preflight.py`: PASS.
 - Frontend `npm run typecheck`: PASS.
 - Frontend `npm run build`: PASS.
