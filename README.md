@@ -230,6 +230,162 @@ V2 remains **work in progress** and should not be treated as the live production
 
 Until that work is complete and deliberately promoted, **v1 on `main` remains the canonical deployed ReferralRail product**.
 
+
+## ReferralRail v3 — cross-chain settlement design
+
+V3 extends ReferralRail from a GenLayer-native escrow protocol into a **chain-agnostic judgment and settlement protocol**. The economic principle is simple: **funds stay on the chain where they were deposited; only the finalized ReferralRail verdict crosses chains**.
+
+An employer could lock USDC or a native asset on Base, Solana or another supported settlement chain. GenLayer still performs the evidence evaluation and reaches the canonical `COMPLETED`, `NOT_COMPLETED` or `INCONCLUSIVE` judgment. After GenLayer finality, a compact authenticated verdict is delivered to the settlement chain, where the local vault either pays candidate + referrer or refunds the employer.
+
+V3 is a design direction, not part of the current v1 deployment or the isolated v2 branch.
+
+### V3 architecture
+
+```mermaid
+flowchart TB
+  subgraph USERS3["Participants"]
+    E3["Employer"]
+    R3["Referrer"]
+    C3["Candidate"]
+  end
+
+  subgraph SETTLEMENT["Settlement chains · funds never leave their origin chain"]
+    subgraph BASE["Base"]
+      BV["ReferralRail Base Vault\nSolidity · USDC / native asset"]
+      BP["Candidate + referrer payout"]
+      BR["Employer refund"]
+    end
+
+    subgraph SOL["Solana"]
+      SV["ReferralRail Solana Program\nPDA-controlled SPL / SOL escrow"]
+      SP["Candidate + referrer payout"]
+      SR["Employer refund"]
+    end
+  end
+
+  subgraph GL3["GenLayer · judgment plane"]
+    CORE3["ReferralRail Core\ncase / campaign / position state"]
+    JUDGE3["OutcomeJudge\npublic evidence + GenLayer consensus"]
+    VERDICT3["Finalized verdict\nsettlement commitment + outcome + evidence digest"]
+  end
+
+  subgraph TRANSPORT3["Verdict transport"]
+    LZ["LayerZero V2\npreferred first transport"]
+    ADAPTER["Transport adapter\nprovider-independent interface"]
+  end
+
+  E3 -- "lock funds" --> BV
+  E3 -- "lock funds" --> SV
+  R3 --> CORE3
+  C3 --> CORE3
+  CORE3 --> JUDGE3
+  JUDGE3 -- "COMPLETED / NOT_COMPLETED / INCONCLUSIVE" --> VERDICT3
+  VERDICT3 -- "finalized verdict only" --> ADAPTER --> LZ
+
+  LZ -- "authenticated message" --> BV
+  LZ -- "authenticated message" --> SV
+
+  BV -- "COMPLETED" --> BP
+  BV -- "NOT_COMPLETED" --> BR
+  SV -- "COMPLETED" --> SP
+  SV -- "NOT_COMPLETED" --> SR
+```
+
+The money does **not** bridge through GenLayer. Base escrow stays on Base; Solana escrow stays on Solana. Cross-chain transport carries resolution data, not principal.
+
+### Transport choice: LayerZero V2 first
+
+The preferred first V3 transport is **LayerZero V2**, not Hyperlane.
+
+That choice is pragmatic:
+
+- the GenLayer Foundation already maintains a cross-chain bridge boilerplate built around LayerZero and describes the same hub-and-spoke pattern: a source-chain application sends work to GenLayer, GenLayer reaches consensus, and the result is returned to the source chain;
+- GenLayer Foundation's Internet Court architecture also uses LayerZero V2 between Base escrow and GenLayer judgment;
+- LayerZero V2 has deployed infrastructure on Base and a dedicated Solana OApp stack, so both initial settlement targets fit the same transport family;
+- ReferralRail only needs general message passing for a compact verdict payload. It does **not** need a token bridge because the escrowed assets remain local.
+
+Hyperlane remains a credible future transport because it supports arbitrary message passing, permissionless chain expansion and Solana/SVM connectivity. V3 should therefore keep transport behind a small adapter rather than make economic state depend permanently on one bridge provider.
+
+### Settlement commitment
+
+Before work starts, the destination vault computes and freezes a settlement commitment covering the facts that must never change after judgment begins:
+
+```text
+protocol_version
+settlement_chain / domain
+vault or program address
+escrow / position id
+asset
+employer
+candidate
+referrer
+candidate reward
+referral reward
+```
+
+The same commitment is registered in the GenLayer case. The judge does not instruct a remote chain to arbitrary-send money to addresses supplied after the fact; it resolves the already-bound obligation.
+
+A final message should be closer to:
+
+```text
+verdict_id
+case / campaign / position id
+attempt id
+settlement domain
+settlement commitment
+COMPLETED | NOT_COMPLETED | INCONCLUSIVE
+evidence digest
+```
+
+than to a generic "pay this address" command.
+
+### Destination-chain safety
+
+Every Base vault or Solana program must independently enforce the settlement boundary:
+
+- accept messages only from the configured ReferralRail origin and authenticated transport path;
+- require the exact frozen settlement commitment;
+- bind the verdict to one case/position and one attempt;
+- reject a verdict addressed to another chain, vault or escrow;
+- consume each `verdict_id` exactly once;
+- make settlement idempotent so duplicate delivery cannot duplicate payout;
+- keep judgment and fund release as separate observable facts;
+- allow safe re-delivery of the same finalized verdict if transport delivery stalls, without allowing a relayer or frontend to invent a replacement outcome.
+
+`INCONCLUSIVE` must never release either side's money as if a final economic outcome had been reached. Its retry/recovery rules remain part of GenLayer protocol state.
+
+### Base settlement
+
+On Base, a Solidity `ReferralRailVault` holds the chosen asset under an escrow id. The vault knows the immutable settlement commitment before the ReferralRail case is judged. Once its LayerZero receiver verifies a finalized verdict:
+
+- `COMPLETED` releases the configured candidate reward and referral reward;
+- `NOT_COMPLETED` refunds the configured employer;
+- an already-consumed verdict cannot settle again.
+
+The vault does not inspect GitHub, call an LLM or decide whether the work was good. It only authenticates a GenLayer resolution and executes the pre-funded obligation.
+
+### Solana settlement
+
+On Solana, the equivalent component is a ReferralRail program using PDAs for escrow and settlement state. SPL assets such as USDC can remain in program-controlled token accounts, while native SOL can use the corresponding program-owned escrow path.
+
+LayerZero's Solana OApp model uses a PDA as the application identity and explicit `lz_receive` account discovery. ReferralRail's Solana receiver would verify the trusted GenLayer pathway, resolve the settlement PDA and consumed-verdict state, then perform the already-bound token transfers.
+
+Again, the Solana program does no substantive judging.
+
+### GenLayer finality boundary
+
+The verdict is not eligible for cross-chain delivery merely because the user submitted a transaction or an initial committee accepted it. V3 must export only a **finalized** ReferralRail outcome.
+
+GenLayer's production architecture supports external messages from an Intelligent Contract back to the GenLayer Chain EVM layer only on finalization. In Studio, EVM contract calls beyond EOA value transfers are not currently implemented, so an early V3 prototype should use the GenLayer Foundation bridge-service pattern to observe finalized state and relay the authenticated payload. That development relay is transport infrastructure, not a judgment authority.
+
+### V3 invariant
+
+The intended separation is:
+
+**GenLayer resolves the obligation. The settlement chain executes it.**
+
+This keeps GenLayer as the judgment plane, Base/Solana as the asset plane, and the interoperability layer as a replaceable transport plane. The design scales naturally to additional chains without moving ReferralRail's escrow principal through GenLayer or forcing all users into one settlement asset.
+
 ## Why GenLayer is essential
 
 The three economic actors have conflicting incentives. An employer should not be able to erase a referrer after useful work is delivered; a referrer should not be able to silently bind a candidate; and a candidate should not be able to self-certify completion. Whether a merged change materially satisfies an immutable natural-language work specification is consequential judgment that moves pre-funded value. ReferralRail puts that judgment inside GenLayer consensus rather than a private employer database or centralized reviewer.
