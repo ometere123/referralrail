@@ -44,7 +44,7 @@ def test_inconclusive_and_timeout_paths_exist():
     for token in ['retry_inconclusive','recover','JUDGMENT_TIMEOUT_SECONDS','MAX_ATTEMPTS']: assert token in SETTLE
 
 def test_v2_paid_capacity_and_reusable_capacity_are_distinct():
-    assert 'pending_successes' in V2_SETTLE and '_used_capacity' in V2_SETTLE and 'X_POST' in V2_SETTLE and 'PUBLIC_URL' in V2_SETTLE
+    assert 'pending_successes' in V2_SETTLE and '_used_capacity' in V2_SETTLE and 'PUBLIC_WEB' in V2_SETTLE and 'participated' in V2_SETTLE
     assert 'c.occupied = gl.u256(int(c.occupied) - 1)' in V2_SETTLE and '"reusable_capacity"' in V2_SETTLE
 
 def test_v2_multislot_accounting_guards():

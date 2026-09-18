@@ -1,5 +1,5 @@
-# Security model
+# ReferralRail v2 security model
 
-The employer cannot self-refer, rewrite terms, or choose the judgment. A candidate cannot accept another wallet's referral. A referrer cannot exceed its pending reservation bound. GitHub identity reuse is blocked within a campaign.
+The protocol enforces exact funding, role separation, immutable referral attribution, one accepted wallet participation per campaign, identity replay protection, bounded attempts, stale callback checks, double-settlement guards, capacity bounds, strict URL parsing, exact host policy, bounded source size, source outage safety, prompt-injection resistance, and finalized payout readback.
 
-Payouts are gated by finalized contract state. Every write must be finalized and read back. The SDK and MCP reject missing signers, wrong chain, and unsupported methods. Evidence fields are treated as untrusted data by the judge.
+PUBLIC_WEB host restrictions are exact against the submitted URL host. Redirect final-origin verification is not claimed because the current GenLayer web API does not expose the final redirect chain. Unrestricted PUBLIC_WEB is the universal path for public platforms and future sites.

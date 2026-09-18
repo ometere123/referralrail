@@ -42,9 +42,15 @@ def clean(value: typing.Any, size: int = 240) -> str:
     return " ".join(str(value).strip().split())[:size]
 
 
-def handle_ok(value: str) -> bool:
+def github_handle_ok(value: str) -> bool:
     value = str(value).strip()
-    return 1 <= len(value) <= MAX_HANDLE and all(c.isalnum() or c in "-_" for c in value)
+    return 1 <= len(value) <= 39 and value[0] != "-" and value[-1] != "-" and all(("a" <= c <= "z") or ("A" <= c <= "Z") or ("0" <= c <= "9") or c == "-" for c in value)
+
+
+def x_handle_ok(value: str) -> bool:
+    value = str(value).strip()
+    return 1 <= len(value) <= 15 and all(("a" <= c <= "z") or ("A" <= c <= "Z") or ("0" <= c <= "9") or c == "_" for c in value)
+
 
 
 def proof_key(wallet: gl.Address, platform: str) -> str:
@@ -67,7 +73,7 @@ class ReferralIdentityV2(gl.contract.Contract):
     @gl.public.write
     def request_github(self, login: str) -> str:
         login = clean(login, MAX_HANDLE).lower()
-        if not handle_ok(login):
+        if not github_handle_ok(login):
             raise gl.vm.UserError("invalid GitHub login")
         wallet = gl.message.sender_address
         key = proof_key(wallet, "GITHUB")
@@ -80,8 +86,8 @@ class ReferralIdentityV2(gl.contract.Contract):
 
     @gl.public.write
     def request_x(self, handle: str) -> str:
-        handle = clean(handle, MAX_HANDLE).lstrip("@").lower()
-        if not handle_ok(handle):
+        handle = clean(handle, 15).lstrip("@").lower()
+        if not x_handle_ok(handle):
             raise gl.vm.UserError("invalid X handle")
         wallet = gl.message.sender_address
         key = proof_key(wallet, "X")

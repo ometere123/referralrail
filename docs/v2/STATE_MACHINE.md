@@ -1,9 +1,7 @@
 # ReferralRail v2 state machine
 
-Campaign states are `ACTIVE`, `RESOLVING`, `REFUNDED`, and `CANCELLED`.
+Campaign: ACTIVE -> RESOLVING -> REFUNDED, or CANCELLED.
 
-Position states are `RESERVED`, `ACCEPTED`, `JUDGING`, `INCONCLUSIVE`, `COMPLETED`, `PAID`, `FAILED`, `EXPIRED`, and `DECLINED`.
+Position: RESERVED -> ACCEPTED -> JUDGING -> COMPLETED -> PAID.
 
-`RESERVED`, `ACCEPTED`, `JUDGING`, `INCONCLUSIVE`, and `COMPLETED` occupy active capacity. `PAID` is successful terminal state and no longer occupies active capacity. `FAILED`, `EXPIRED`, and `DECLINED` release capacity and do not create another successful target.
-
-`resolve_judgment` moves a finalized `COMPLETED` result to `COMPLETED`, a failed result to `FAILED`, and an inconclusive result to `INCONCLUSIVE`. `settle_position` moves `COMPLETED` to `PAID` only after both payout legs are released.
+A judgment can instead produce NOT_COMPLETED and terminal FAILED, or INCONCLUSIVE. INCONCLUSIVE can retry on the same position within the retry window and attempt bound, or become FAILED through recovery. Reserved and accepted timeouts can expire. Only finalized readback supports settlement claims.

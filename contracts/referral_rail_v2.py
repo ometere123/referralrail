@@ -59,12 +59,12 @@ def text(value: typing.Any, size: int = MAX_TEXT) -> str:
 
 def owner_ok(value: str) -> bool:
     s = str(value).strip()
-    return 0 < len(s) <= 39 and s[0] != "-" and s[-1] != "-" and all(c.isalnum() or c == "-" for c in s)
+    return 0 < len(s) <= 39 and s[0] != "-" and s[-1] != "-" and all(("a" <= c <= "z") or ("A" <= c <= "Z") or ("0" <= c <= "9") or c == "-" for c in s)
 
 
 def repo_ok(value: str) -> bool:
     s = str(value).strip()
-    return 0 < len(s) <= 100 and s not in (".", "..") and all(c.isalnum() or c in "-_." for c in s)
+    return 0 < len(s) <= 100 and s not in (".", "..") and all(("a" <= c <= "z") or ("A" <= c <= "Z") or ("0" <= c <= "9") or c in "-_." for c in s)
 
 
 def host_ok(value: str) -> bool:
@@ -74,6 +74,19 @@ def host_ok(value: str) -> bool:
     labels = s.split(".")
     return len(labels) >= 2 and all(0 < len(label) <= 63 and label[0] != "-" and label[-1] != "-" and all(c.isalnum() or c == "-" for c in label) for label in labels)
 
+
+
+def public_url_ok(value: str) -> bool:
+    s = str(value).strip()
+    if not s.startswith("https://") or len(s) > 300 or "@" in s:
+        return False
+    rest = s[8:]
+    authority = rest.split("/", 1)[0].split("?", 1)[0].split("#", 1)[0]
+    if not host_ok(authority):
+        return False
+    if authority in ("localhost", "127.0.0.1", "0.0.0.0", "::1") or authority.startswith(("10.", "192.168.", "172.16.", "172.17.", "172.18.", "172.19.", "172.2", "169.254.")):
+        return False
+    return True
 
 def state_name(code: int) -> str:
     return {1: "ACTIVE", 2: "RESOLVING", 3: "REFUNDED", 4: "CANCELLED"}.get(code, "UNKNOWN")
@@ -200,7 +213,8 @@ class ReferralRailV2(gl.contract.Contract):
     campaigns: gl.storage.TreeMap[gl.u256, Campaign]
     positions: gl.storage.TreeMap[gl.u256, Position]
     position_exists: gl.storage.TreeMap[gl.u256, bool]
-    used_github: gl.storage.TreeMap[str, bool]
+    used_identity: gl.storage.TreeMap[str, bool]
+    participated: gl.storage.TreeMap[str, bool]
     live_candidates: gl.storage.TreeMap[str, bool]
     pending_by_referrer: gl.storage.TreeMap[str, gl.u256]
     total_funded: gl.u256
@@ -292,7 +306,7 @@ class ReferralRailV2(gl.contract.Contract):
         if not 3 <= len(text(title, 120)) or len(text(brief)) < 20 or len(text(criteria)) < 20:
             raise gl.vm.UserError("campaign text is incomplete")
         profile = text(evidence_profile, 20).upper()
-        if profile not in ("GITHUB_PR", "X_POST", "PUBLIC_URL"):
+        if profile not in ("GITHUB_PR", "PUBLIC_WEB"):
             raise gl.vm.UserError("unsupported evidence profile")
         repo_owner = text(repo_owner, 39)
         repo_name = text(repo_name, 100)
@@ -300,10 +314,8 @@ class ReferralRailV2(gl.contract.Contract):
         allowed_host = text(allowed_host, 100).lower()
         if profile == "GITHUB_PR" and (not owner_ok(repo_owner) or not repo_ok(repo_name) or not base_branch):
             raise gl.vm.UserError("invalid repository configuration")
-        if profile == "X_POST" and allowed_host and not host_ok(allowed_host):
-            raise gl.vm.UserError("invalid X evidence host")
-        if profile == "PUBLIC_URL" and not host_ok(allowed_host):
-            raise gl.vm.UserError("public URL campaigns require an allowed host")
+        if profile == "PUBLIC_WEB" and allowed_host and not host_ok(allowed_host):
+            raise gl.vm.UserError("invalid allowed evidence host")
         if profile != "GITHUB_PR":
             repo_owner = ""; repo_name = ""; base_branch = ""
         n = int(max_positions)
@@ -406,20 +418,24 @@ class ReferralRailV2(gl.contract.Contract):
         if int(p.state) != POS_RESERVED or gl.message.sender_address != p.candidate or now > int(p.reservation_deadline):
             raise gl.vm.UserError("reservation cannot be accepted")
         login = text(identity_handle, 39)
-        if c.evidence_profile == "PUBLIC_URL":
+        if c.evidence_profile == "PUBLIC_WEB":
             login = ""
         elif not owner_ok(login):
             raise gl.vm.UserError("invalid profile identity handle")
-        if self.identity_address != ZERO and c.evidence_profile in ("GITHUB_PR", "X_POST"):
-            platform = "GITHUB" if c.evidence_profile == "GITHUB_PR" else "X"
+        if self.identity_address != ZERO and c.evidence_profile == "GITHUB_PR":
+            platform = "GITHUB"
             identity = contract_at(self.identity_address).view().get_identity(p.candidate.as_hex, platform)
             if str(identity.get("state", "")) != "ACTIVE" or str(identity.get("handle", "")).lower() != login.lower():
                 raise gl.vm.UserError("candidate identity is not active for this evidence profile")
-        identity = str(int(campaign_id)) + ":" + login.lower()
-        proof_identity = str(int(campaign_id)) + ":" + str(int(position_id)) + ":" + p.candidate.as_hex.lower() + ":" + login.lower()
-        if bool(self.used_github.get(identity) or False):
-            raise gl.vm.UserError("GitHub identity is already bound in this campaign")
-        self.used_github[identity] = True
+        participant_key = str(int(campaign_id)) + ":" + p.candidate.as_hex.lower()
+        if bool(self.participated.get(participant_key) or False):
+            raise gl.vm.UserError("candidate already accepted a position in this campaign")
+        identity = str(int(campaign_id)) + ":" + (login.lower() if login else p.candidate.as_hex.lower())
+        proof_identity = str(int(campaign_id)) + ":" + str(int(position_id)) + ":" + p.candidate.as_hex.lower() + ":" + login.lower() + ":" + str(int(p.reserved_at)) + ":" + str(now)
+        if bool(self.used_identity.get(identity) or False):
+            raise gl.vm.UserError("identity is already bound in this campaign")
+        self.used_identity[identity] = True
+        self.participated[participant_key] = True
         pending_key = self._pending_key(int(campaign_id), p.referrer)
         pending_count = int(self.pending_by_referrer.get(pending_key) or 0)
         if pending_count > 0:
@@ -462,10 +478,10 @@ class ReferralRailV2(gl.contract.Contract):
     @gl.public.write
     def submit_evidence(self, campaign_id: gl.u256, position_id: gl.u256, evidence_uri: str) -> None:
         c = self._campaign(campaign_id); p = self._position(campaign_id, position_id); now = now_ts()
-        if c.evidence_profile not in ("X_POST", "PUBLIC_URL") or int(p.state) != POS_ACCEPTED or gl.message.sender_address != p.candidate or now > int(p.work_deadline):
+        if c.evidence_profile != "PUBLIC_WEB" or int(p.state) != POS_ACCEPTED or gl.message.sender_address != p.candidate or now > int(p.work_deadline):
             raise gl.vm.UserError("profile evidence submission is not allowed")
         uri = text(evidence_uri, 300)
-        if not uri.startswith("https://") or len(uri) < 12:
+        if not public_url_ok(uri) or len(uri) < 12:
             raise gl.vm.UserError("evidence must be a public HTTPS URL")
         p.evidence_uri = uri
         self._request_judgment(c, p)
@@ -485,7 +501,7 @@ class ReferralRailV2(gl.contract.Contract):
             p.pr_number = gl.u256(pr_number)
         else:
             uri = text(submission, 300)
-            if not uri.startswith("https://") or len(uri) < 12:
+            if not public_url_ok(uri) or len(uri) < 12:
                 raise gl.vm.UserError("profile retry requires a public HTTPS URL")
             p.evidence_uri = uri
         self._request_judgment(c, p)
@@ -594,7 +610,7 @@ class ReferralRailV2(gl.contract.Contract):
     @gl.public.view
     def get_position(self, campaign_id: gl.u256, position_id: gl.u256) -> dict:
         p = self._position(campaign_id, position_id)
-        return {"campaign_id": int(p.campaign_id), "position_id": int(p.position_id), "candidate": p.candidate.as_hex, "referrer": p.referrer.as_hex, "identity_handle": p.github_login, "identity_platform": "GITHUB" if self._campaign(campaign_id).evidence_profile == "GITHUB_PR" else ("X" if self._campaign(campaign_id).evidence_profile == "X_POST" else "PUBLIC_URL"), "github_login": p.github_login, "challenge": p.challenge, "state": position_name(int(p.state)), "state_code": int(p.state), "reserved_at": int(p.reserved_at), "reservation_deadline": int(p.reservation_deadline), "accepted_at": int(p.accepted_at), "work_deadline": int(p.work_deadline), "pr_number": int(p.pr_number), "evidence_uri": p.evidence_uri, "attempts": int(p.attempts), "active_attempt": int(p.active_attempt), "judgment_timeout": int(p.judgment_timeout), "retry_deadline": int(p.retry_deadline), "outcome": outcome_name(int(p.outcome)), "outcome_code": int(p.outcome), "evidence_digest": p.evidence_digest, "reason": p.reason, "candidate_paid": bool(p.candidate_paid), "referrer_paid": bool(p.referrer_paid), "settlement_released": bool(p.candidate_paid and p.referrer_paid), "terminal_reason": p.terminal_reason}
+        return {"campaign_id": int(p.campaign_id), "position_id": int(p.position_id), "candidate": p.candidate.as_hex, "referrer": p.referrer.as_hex, "identity_handle": p.github_login, "identity_platform": "GITHUB" if self._campaign(campaign_id).evidence_profile == "GITHUB_PR" else ("PUBLIC_WEB"), "github_login": p.github_login, "challenge": p.challenge, "state": position_name(int(p.state)), "state_code": int(p.state), "reserved_at": int(p.reserved_at), "reservation_deadline": int(p.reservation_deadline), "accepted_at": int(p.accepted_at), "work_deadline": int(p.work_deadline), "pr_number": int(p.pr_number), "evidence_uri": p.evidence_uri, "attempts": int(p.attempts), "active_attempt": int(p.active_attempt), "judgment_timeout": int(p.judgment_timeout), "retry_deadline": int(p.retry_deadline), "outcome": outcome_name(int(p.outcome)), "outcome_code": int(p.outcome), "evidence_digest": p.evidence_digest, "reason": p.reason, "candidate_paid": bool(p.candidate_paid), "referrer_paid": bool(p.referrer_paid), "settlement_released": bool(p.candidate_paid and p.referrer_paid), "terminal_reason": p.terminal_reason}
 
     @gl.public.view
     def list_campaigns(self, offset: gl.u256 = gl.u256(0), limit: gl.u256 = gl.u256(20)) -> list:
@@ -610,8 +626,7 @@ class ReferralRailV2(gl.contract.Contract):
 
     @gl.public.view
     def get_protocol_config(self) -> dict:
-        return {"version": "2", "chain_id": 61997, "identity_address": self.identity_address.as_hex, "evidence_profiles": ["GITHUB_PR", "X_POST", "PUBLIC_URL"], "max_positions": MAX_POSITIONS, "max_attempts": MAX_ATTEMPTS, "judgment_timeout_seconds": JUDGMENT_TIMEOUT, "retry_window_seconds": RETRY_WINDOW, "min_seconds": MIN_SECONDS, "max_seconds": MAX_SECONDS, "state_model": "campaign capacity is success based; terminal failure reopens a funded slot while intake is active"}
-
+        return {"version": "2", "chain_id": 61997, "identity_address": self.identity_address.as_hex, "evidence_profiles": ["GITHUB_PR", "PUBLIC_WEB"], "max_positions": MAX_POSITIONS, "max_attempts": MAX_ATTEMPTS, "judgment_timeout_seconds": JUDGMENT_TIMEOUT, "retry_window_seconds": RETRY_WINDOW, "min_seconds": MIN_SECONDS, "max_seconds": MAX_SECONDS, "state_model": "campaign capacity is success based; terminal failure reopens a funded slot while intake is active"}
 
 
 

@@ -1,7 +1,7 @@
-# SDK, MCP, and Skill
+# v2 SDK, MCP and skill surface
 
-The v2 SDK is exported as `@referralrail/sdk/v2` and provides typed campaign, position, accounting, and judgment reads plus named lifecycle writes. It locks chain 61997 and the canonical RPC, quotes message and external transfer fees, explicitly attempts finalisation, and verifies the resulting state.
+The SDK exposes profile-aware campaign creation, generic identity fields, PUBLIC_WEB evidence submission, bounded retry, finalized reads, dynamic fee quoting, explorer URLs, and settlement readback.
 
-MCP is read-only by default. V2 tools are registered only when both v2 addresses are configured. Writes additionally require `REFERRALRAIL_WRITE_ENABLED=true` and a process signer. Keys and arbitrary method names are never tool arguments.
+The MCP surface exposes read-only v2 reads by default. Writes require explicit write enablement and a signer. v2 creation accepts GITHUB_PR or PUBLIC_WEB. The retry tool accepts a PR number or a replacement public HTTPS URL according to the frozen campaign mode.
 
-The portable Skill in `.agents/skills/referralrail/SKILL.md` documents capacity, judgment, retry, recovery, settlement, and evidence rules.
+The ReferralRail skill requires finalized transaction readback, candidate and referrer payout confirmation, exact accounting conservation, strict evidence ownership checks, and truthful redirect limitations.
