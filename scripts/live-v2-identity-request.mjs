@@ -26,6 +26,6 @@ const quote = await client.estimateTransactionFeesForWrite({ account: client.acc
 const hash = await client.writeContract({ account: client.account, address: manifest.identity.address, functionName: "request_github", args, value: 0n, fees: { distribution: quote.distribution, feeValue: quote.feeValue } });
 const receipt = await finalize(hash);
 const identity = await client.readContract({ address: manifest.identity.address, functionName: "get_identity", args: [client.account.address, "GITHUB"] });
-const out = { chainId: 61997, identityAddress: manifest.identity.address, wallet: client.account.address, requestTransaction: hash, receipt, identity };
+const out = { chainId: 61997, identityAddress: manifest.identity.address, wallet: client.account.address, requestTransaction: hash, identity };
 writeFileSync(process.env.V2_IDENTITY_REQUEST_OUTPUT || "deployment/v2-live-identity-request.json", JSON.stringify(out, null, 2, (_, value) => typeof value === "bigint" ? value.toString() : value) + "\n");
 console.log(JSON.stringify({ requestTransaction: hash, wallet: client.account.address, challenge: identity.challenge, identity }, null, 2));

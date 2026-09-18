@@ -1,0 +1,17 @@
+{
+  "chainId": 61997,
+  "identityAddress": "0xCfC3aefAAcbb142bAfb010979bb7974Ad8422933",
+  "wallet": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+  "requestTransaction": "0x4793305071735f014e8b9c37ecdf066bce7c2955c3aa506cc6e333f08338b372",
+  "identity": {
+    "canonical_id": "",
+    "challenge": "RR-ID:61997:GITHUB:0xb29Ead15B1E8A2420faE84de974088f67a15ccC2:1",
+    "handle": "ometere123",
+    "platform": "GITHUB",
+    "proof_url": "",
+    "state": "PENDING",
+    "state_code": 1,
+    "updated_at": 1789719606,
+    "wallet": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2"
+  }
+}

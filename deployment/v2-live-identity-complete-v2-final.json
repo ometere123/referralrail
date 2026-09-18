@@ -1,0 +1,18 @@
+{
+  "chainId": 61997,
+  "identityAddress": "0xCfC3aefAAcbb142bAfb010979bb7974Ad8422933",
+  "wallet": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+  "challenge": "RR-ID:61997:GITHUB:0xb29Ead15B1E8A2420faE84de974088f67a15ccC2:1",
+  "transaction": "0x5e28d2170e0482eb895c53c61ae21c1d9fcd78aa11065446e4e31dda148889da",
+  "identity": {
+    "canonical_id": "45469370",
+    "challenge": "RR-ID:61997:GITHUB:0xb29Ead15B1E8A2420faE84de974088f67a15ccC2:1",
+    "handle": "ometere123",
+    "platform": "GITHUB",
+    "proof_url": "",
+    "state": "ACTIVE",
+    "state_code": 2,
+    "updated_at": 1789719675,
+    "wallet": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2"
+  }
+}

@@ -1,242 +1,123 @@
 {
+  "version": "v2",
+  "generatedAt": "2026-09-18T08:51:03.2915320Z",
   "network": "Studio Next / Studionet Dev",
   "chainId": 61997,
   "rpc": "https://studio-dev.genlayer.com/api",
-  "contracts": {
-    "referralRail": "0x935A6fD995b4db5d64E1139D57a37a3f73BE2Ef8",
-    "outcomeJudge": "0x7842393CeEAB5F053B3024673B5986fDdb95A4C9"
-  },
-  "generatedAt": "2026-09-16T15:16:24.851674+00:00",
-  "cases": [
-    {
-      "opportunity_id": 3,
-      "repo": "ometere123/evifix",
-      "pr": 1,
-      "expected_state": "PAID",
-      "transactions": {
-        "create": {
-          "hash": "0x8f73fbf7361b61c3a0f540d4c1a769ea9f32a5db43d808f5788989db30061fc1",
-          "lifecycle": {
-            "state": "finalized",
-            "outcome": "accepted"
-          },
-          "result": "MAJORITY_AGREE",
-          "execution": "FINISHED_WITH_RETURN",
-          "children": []
-        },
-        "referral": {
-          "hash": "0xf35eeff4d509d9052b1f16683f5efc3e4029e1349e04c45d688b2bb10b29f10a",
-          "lifecycle": {
-            "state": "finalized",
-            "outcome": "accepted"
-          },
-          "result": "MAJORITY_AGREE",
-          "execution": "FINISHED_WITH_RETURN",
-          "children": []
-        },
-        "acceptance": {
-          "hash": "0xd50ad11912cdfe4018b9dcf08c09a534f34d2e5651f76bd196b9828b5b10bae7",
-          "lifecycle": {
-            "state": "finalized",
-            "outcome": "accepted"
-          },
-          "result": "MAJORITY_AGREE",
-          "execution": "FINISHED_WITH_RETURN",
-          "children": []
-        },
-        "submission": {
-          "hash": "0x02b800c1417d96a41a694354c9f78e06f5311a10a32cd56bca2aaf457386b6f0",
-          "lifecycle": {
-            "state": "finalized",
-            "outcome": "accepted"
-          },
-          "result": "MAJORITY_AGREE",
-          "execution": "FINISHED_WITH_RETURN",
-          "children": [
-            "0x6eaaeb13ec565b3bfc889a25ea518d609ad509cfa26ded30e021382e93da6a73"
-          ]
-        },
-        "resolution": {
-          "hash": "0x8cbcbc5a5457cc272231dccacf61756ddd939a3d3b7c6cfbfc8f6c3cd83b16b2",
-          "lifecycle": {
-            "state": "finalized",
-            "outcome": "accepted"
-          },
-          "result": "MAJORITY_AGREE",
-          "execution": "FINISHED_WITH_RETURN",
-          "children": []
-        },
-        "settlement": {
-          "hash": "0x58783737a76741f570b1e3ffc31002caebfab9f64fff1bee017407eef303621c",
-          "lifecycle": {
-            "state": "finalized",
-            "outcome": "accepted"
-          },
-          "result": "MAJORITY_AGREE",
-          "execution": "FINISHED_WITH_RETURN",
-          "children": []
-        }
-      },
-      "judgment": {
-        "attempt_id": 1,
-        "audit": "repo=1|author=1|merged=1|deadline=1|pr=1|sha=afe3cfb6a296aef4e32393dcce5778d128ea8a3a|changed_files=26|readable_patches=25|digest=314a1e2569c3fd890a07e3af4202c94e20e81196e4799465cf389ab18d9917d7",
-        "decided_at": 1789570163,
-        "evidence_digest": "314a1e2569c3fd890a07e3af4202c94e20e81196e4799465cf389ab18d9917d7",
-        "opportunity_id": 3,
-        "outcome": "COMPLETED",
-        "outcome_code": 1,
-        "reason": "The PR is publicly readable in repository ometere123/evifix, shows as merged (state closed with merged_at and merge commit), and the author is ometere123 matching the candidate identity. The diff shows substantive implementation changes in core contract files (notably large rewrites of contracts/evifix_gate.py and contracts/evifix_target_v1.py) plus supporting fixtures/docs, and the PR body explicitly states expanded tests while the changed files include test-related updates/documentation explaining the redesign."
-      },
-      "settled_opportunity": {
-        "acceptance_criteria": "The submitted pull request must be publicly readable and merged into the repository. The candidate identity must match the pull request author. The changed files must contain a substantive implementation and its tests or documentation must explain the change.",
-        "accepted_at": 1789570083,
-        "active_attempt": 1,
-        "active_pr_number": 1,
-        "attempt_count": 1,
-        "brief": "Real success case for ometere123/evifix PR #1. This is a real Studio Next evidence run using the public repository and PR listed here.",
-        "candidate": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
-        "candidate_github": "ometere123",
-        "candidate_payment": 2000000000000000000,
-        "closed_at": 1789570677,
-        "completion_deadline": 1790174765,
-        "created_at": 1789569965,
-        "employer": "0xfcef676044658B5402f590daBe9E04A0F640522f",
-        "evidence_submitted_at": 1789570127,
-        "funded_amount": 3000000000000000000,
-        "id": 3,
-        "judgment_timeout_at": 1789656527,
-        "last_audit": "repo=1|author=1|merged=1|deadline=1|pr=1|sha=afe3cfb6a296aef4e32393dcce5778d128ea8a3a|changed_files=26|readable_patches=25|digest=314a1e2569c3fd890a07e3af4202c94e20e81196e4799465cf389ab18d9917d7",
-        "last_evidence_digest": "314a1e2569c3fd890a07e3af4202c94e20e81196e4799465cf389ab18d9917d7",
-        "last_outcome": "COMPLETED",
-        "last_outcome_code": 1,
-        "last_reason": "The PR is publicly readable in repository ometere123/evifix, shows as merged (state closed with merged_at and merge commit), and the author is ometere123 matching the candidate identity. The diff shows substantive implementation changes in core contract files (notably large rewrites of contracts/evifix_gate.py and contracts/evifix_target_v1.py) plus supporting fixtures/docs, and the PR body explicitly states expanded tests while the changed files include test-related updates/documentation explaining the redesign.",
-        "referral_deadline": 1789656365,
-        "referral_reward": 1000000000000000000,
-        "referred_at": 1789570020,
-        "referrer": "0x81301DD9C3605a7DA743D87b803156d8445620B0",
-        "repo_name": "evifix",
-        "repo_owner": "ometere123",
-        "retry_deadline": 0,
-        "settlement_released": true,
-        "state": "PAID",
-        "state_code": 6,
-        "title": "Live success verification"
-      }
+  "deployment": {
+    "version": "2",
+    "network": "Studio Next / Studionet Dev",
+    "chainId": 61997,
+    "rpc": "https://studio-dev.genlayer.com/api",
+    "identity": {
+      "txId": "0x6a0a7e86fa0a19ce0184defcb194d2fb8cfb5fadf7b70bf3601cf796d91c38d2",
+      "address": "0xCfC3aefAAcbb142bAfb010979bb7974Ad8422933"
     },
-    {
-      "opportunity_id": 2,
-      "repo": "ometere123/thedadsbot",
-      "pr": 13,
-      "expected_state": "REFUNDED",
-      "transactions": {
-        "create": {
-          "hash": "0xe18e4b6fea202125ae3813cdc4edd87ff3da1997de32c24a36e0e07de088a903",
-          "lifecycle": {
-            "state": "finalized",
-            "outcome": "accepted"
-          },
-          "result": "MAJORITY_AGREE",
-          "execution": "FINISHED_WITH_RETURN",
-          "children": []
-        },
-        "referral": {
-          "hash": "0x812f957061ebf992c9fa52bf46c660c98786a0b2c14f3cf8b0984c89b1b273bf",
-          "lifecycle": {
-            "state": "finalized",
-            "outcome": "accepted"
-          },
-          "result": "MAJORITY_AGREE",
-          "execution": "FINISHED_WITH_RETURN",
-          "children": []
-        },
-        "acceptance": {
-          "hash": "0x3a7f1746bacb4168e0ba3efbf5139194a03c1cb77dbf726f069fffe1846b97a0",
-          "lifecycle": {
-            "state": "finalized",
-            "outcome": "accepted"
-          },
-          "result": "MAJORITY_AGREE",
-          "execution": "FINISHED_WITH_RETURN",
-          "children": []
-        },
-        "submission": {
-          "hash": "0x6b7c339957a370f89c94851685b71728f4fa7e5c6ed6281b5961b49e56135e8d",
-          "lifecycle": {
-            "state": "finalized",
-            "outcome": "accepted"
-          },
-          "result": "MAJORITY_AGREE",
-          "execution": "FINISHED_WITH_RETURN",
-          "children": [
-            "0x3cbda0cfc2e456eac41965aa58e229ce217f45498b6d84f7db52cd44c13233e1"
-          ]
-        },
-        "resolution": {
-          "hash": "0xe9d43341234868e86be44b7fa43972295b6ba2f3581ede478e933210983010df",
-          "lifecycle": {
-            "state": "finalized",
-            "outcome": "accepted"
-          },
-          "result": "MAJORITY_AGREE",
-          "execution": "FINISHED_WITH_RETURN",
-          "children": []
-        },
-        "settlement": {
-          "hash": "0x2d33d7fd5524086febd5ba49c3d22cc34bb0ab4219de9e074ace8d3c57b195f1",
-          "lifecycle": {
-            "state": "finalized",
-            "outcome": "accepted"
-          },
-          "result": "MAJORITY_AGREE",
-          "execution": "FINISHED_WITH_RETURN",
-          "children": []
-        }
-      },
-      "judgment": {
-        "attempt_id": 1,
-        "audit": "repo=1|author=0|merged=0|deadline=0|pr=13|sha=b37be673dbd8ef81dd2cafc3ca1c7c6c2e49d9eb",
-        "decided_at": 1789569398,
-        "evidence_digest": "d4c809df4b619671d08361f56cd39790b16cd433034c7e8cebbdee6ea5edc421",
-        "opportunity_id": 2,
-        "outcome": "NOT_COMPLETED",
-        "outcome_code": 2,
-        "reason": "The pull request author does not match the GitHub identity locked by the candidate at referral acceptance."
-      },
-      "settled_opportunity": {
-        "acceptance_criteria": "The submitted pull request must be publicly readable and merged into the repository. The candidate identity must match the pull request author. The changed files must contain a substantive implementation and its tests or documentation must explain the change.",
-        "accepted_at": 1789569309,
-        "active_attempt": 1,
-        "active_pr_number": 13,
-        "attempt_count": 1,
-        "brief": "Real negative case for ometere123/thedadsbot PR #13. This is a real Studio Next evidence run using the public repository and PR listed here.",
-        "candidate": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
-        "candidate_github": "ometere123",
-        "candidate_payment": 2000000000000000000,
-        "closed_at": 1789571270,
-        "completion_deadline": 1790174002,
-        "created_at": 1789569202,
-        "employer": "0xfcef676044658B5402f590daBe9E04A0F640522f",
-        "evidence_submitted_at": 1789569363,
-        "funded_amount": 3000000000000000000,
-        "id": 2,
-        "judgment_timeout_at": 1789655763,
-        "last_audit": "repo=1|author=0|merged=0|deadline=0|pr=13|sha=b37be673dbd8ef81dd2cafc3ca1c7c6c2e49d9eb",
-        "last_evidence_digest": "d4c809df4b619671d08361f56cd39790b16cd433034c7e8cebbdee6ea5edc421",
-        "last_outcome": "NOT_COMPLETED",
-        "last_outcome_code": 2,
-        "last_reason": "The pull request author does not match the GitHub identity locked by the candidate at referral acceptance.",
-        "referral_deadline": 1789655602,
-        "referral_reward": 1000000000000000000,
-        "referred_at": 1789569257,
-        "referrer": "0x81301DD9C3605a7DA743D87b803156d8445620B0",
-        "repo_name": "thedadsbot",
-        "repo_owner": "ometere123",
-        "retry_deadline": 0,
-        "settlement_released": true,
-        "state": "REFUNDED",
-        "state_code": 7,
-        "title": "Live negative verification"
+    "rail": {
+      "txId": "0x1d81878361e22fe79dbf0d6f3bcd7c75eba052b707b65c09aeb66ee310ec6fd6",
+      "address": "0xc998C5A9363B510120601437dA31680eaBF358e0"
+    },
+    "judge": {
+      "txId": "0x11807ac4c5a55e1b19f45f74f6c9a5701bd7f2e923edf4b813ca2ad3ca8862fc",
+      "address": "0x755c276d95D613232697265B9C6DDf859f6fBc11"
+    },
+    "identityBindingTransaction": "0x3bc44d25f400f9bbb4fb6dd8826fb61deca3b71f48a28f3b458d4af79d370f85",
+    "bindingTransaction": "0x02f1fb02c55b8abc9c12656a5eee92fa8df793f38bd7fc7c197f653734f65b13",
+    "protocol": {
+      "chain_id": 61997,
+      "evidence_profiles": [
+        "GITHUB_PR",
+        "X_POST",
+        "PUBLIC_URL"
+      ],
+      "identity_address": "0xCfC3aefAAcbb142bAfb010979bb7974Ad8422933",
+      "judgment_timeout_seconds": 86400,
+      "max_attempts": 2,
+      "max_positions": 1000,
+      "max_seconds": 3888000,
+      "min_seconds": 60,
+      "retry_window_seconds": 86400,
+      "state_model": "campaign capacity is success based; terminal failure reopens a funded slot while intake is active",
+      "version": "2"
+    },
+    "generatedAt": "2026-09-18T08:19:42.135Z"
+  },
+  "identity": {
+    "requestTransaction": "0x4793305071735f014e8b9c37ecdf066bce7c2955c3aa506cc6e333f08338b372",
+    "completionTransaction": "0x5e28d2170e0482eb895c53c61ae21c1d9fcd78aa11065446e4e31dda148889da",
+    "state": "ACTIVE",
+    "handle": "ometere123",
+    "canonicalId": "45469370"
+  },
+  "success": {
+    "campaignId": 3,
+    "positionId": 1,
+    "repository": "ometere123/evifix",
+    "requestedPr1": {
+      "created_at": "2026-09-14T14:09:07Z",
+      "head_sha": "1504131d1b025876aeb1fb54345b5748693a5ac0",
+      "html_url": "https://github.com/ometere123/evifix/pull/1",
+      "number": 1,
+      "state": "closed"
+    },
+    "freshVerifiedPr21": {
+      "number": 21,
+      "url": "https://github.com/ometere123/evifix/pull/21",
+      "headSha": "c1a1c7c8a040e9c734e4acf3ba3cc3391f76082f",
+      "submitTransaction": "0x218f45b8a64c29844b3bf61d6acb60c706ef793760cb64e2f8febf83b3747562",
+      "settlementTransaction": "0x856f7f7f3ccdc88dd3ed9bf2192ac44619cea16c891b30641e5f1424fb1eedcd",
+      "state": "PAID",
+      "outcome": "COMPLETED",
+      "candidatePaid": true,
+      "referrerPaid": true,
+      "settlementReleased": true,
+      "evidenceDigest": "c9fbd5c05767946b9761bb4dd576503668e4c4d8583326a01541bffb72e7a2c9",
+      "accounting": {
+        "available_capacity": 0,
+        "conserved": true,
+        "initial_funding": 200000000000000,
+        "occupied_capacity": 0,
+        "paid": 200000000000000,
+        "pending_successes": 0,
+        "refunded": 0,
+        "reusable_capacity": 0,
+        "still_locked": 0,
+        "successful": 1
       }
     }
+  },
+  "negative": {
+    "campaignId": 4,
+    "positionId": 1,
+    "repository": "ometere123/thedadsbot",
+    "pr": {
+      "created_at": "2026-09-13T19:36:18Z",
+      "head_sha": "81ee86ba0de90316ee2979b11ac5dfdb50687095",
+      "html_url": "https://github.com/ometere123/thedadsbot/pull/13",
+      "number": 13,
+      "state": "open"
+    },
+    "submitTransaction": "0x42556e013d955ad72491cbc0e66f1ebbf8f78d9f846f52d75f382c7a22f135ce",
+    "positionState": "REFUNDED",
+    "outcome": "NOT_COMPLETED",
+    "finalizeTransaction": "0x00a896244ae8f98ef6ceb37f3a56d99a94f9c20fdb3f257e6f22c727775c59da",
+    "refundedTotal": 200000000000000,
+    "accounting": {
+      "available_capacity": 1,
+      "conserved": true,
+      "initial_funding": 200000000000000,
+      "occupied_capacity": 0,
+      "paid": 0,
+      "pending_successes": 0,
+      "refunded": 200000000000000,
+      "reusable_capacity": 1,
+      "still_locked": 0,
+      "successful": 0
+    }
+  },
+  "notes": [
+    "PR #1 was verified as closed and stale for the fresh acceptance window, so it was not misreported as a success.",
+    "PR #21 is the fresh substantive success proof used for PAID.",
+    "No validator receipt blobs or private keys are included."
   ]
 }
