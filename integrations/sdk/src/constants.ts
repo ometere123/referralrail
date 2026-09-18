@@ -5,8 +5,8 @@ export const CANONICAL = {
   chainName: "GenLayer Studio Next",
   rpcUrl: "https://studio-dev.genlayer.com/api",
   explorerUrl: "https://explorer-studio-dev.genlayer.com",
-  referralRail: "0x935A6fD995b4db5d64E1139D57a37a3f73BE2Ef8" as Address,
-  outcomeJudge: "0x7842393CeEAB5F053B3024673B5986fDdb95A4C9" as Address,
+  referralRail: "0x1BB0B68da8cD29C77aa2B5F4C312E806BfCDCEA5" as Address,
+  outcomeJudge: "0xd0C840fdD6654f501060b048F163BAD526A80724" as Address,
 } as const;
 
 export const NETWORK = { id: CANONICAL.chainId, name: CANONICAL.chainName, nativeCurrency: { name: "GEN", symbol: "GEN", decimals: 18 }, rpcUrls: { default: { http: [CANONICAL.rpcUrl] } } } as const;

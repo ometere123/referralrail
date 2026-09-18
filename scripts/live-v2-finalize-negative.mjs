@@ -17,7 +17,7 @@ async function waitForFinalized(hash) {
       try { await client.finalizeTransaction({ txId: hash }); } catch {}
     }
     if (lifecycle.storedStatus === "Finalized" || lifecycle.projectedStatus === "Finalized" || !lifecycle.decisionActive) {
-      const receipt = await client.waitForFinalization({ hash, retries: 10, interval: 2000, fullTransaction: true });
+      const receipt = await client.waitForFinalization({ hash, retries: 10, interval: 2000, fullTransaction: false });
       if (!isSuccessful(receipt)) throw new Error(`${hash}: ${receipt.txExecutionResultName}`);
       return receipt;
     }
@@ -29,7 +29,7 @@ async function waitForFinalized(hash) {
 async function write(method, args) {
   const quote = await client.estimateTransactionFeesForWrite({ account: client.account, address: manifest.rail.address, functionName: method, args, value: 0n });
   const hash = await client.writeContract({ account: client.account, address: manifest.rail.address, functionName: method, args, value: 0n, fees: { distribution: quote.distribution, feeValue: quote.feeValue, messageAllocations: quote.messageAllocations } });
-  return { hash, receipt: await waitForFinalized(hash) };
+  await waitForFinalized(hash); return { hash };
 }
 
 const judgment = await client.readContract({ address: manifest.judge.address, functionName: "get_judgment", args: [campaignId, positionId, attemptId] });

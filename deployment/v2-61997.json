@@ -4,27 +4,26 @@
   "chainId": 61997,
   "rpc": "https://studio-dev.genlayer.com/api",
   "identity": {
-    "txId": "0x6a0a7e86fa0a19ce0184defcb194d2fb8cfb5fadf7b70bf3601cf796d91c38d2",
-    "address": "0xCfC3aefAAcbb142bAfb010979bb7974Ad8422933"
+    "txId": "0x931ef5f31bedfcdb89caecfd7414916af7e44452372ecbb93d38407c95dcf420",
+    "address": "0x9d4f77D5DCc0f9A0F03a5de3f5E9460335D742F5"
   },
   "rail": {
-    "txId": "0x1d81878361e22fe79dbf0d6f3bcd7c75eba052b707b65c09aeb66ee310ec6fd6",
-    "address": "0xc998C5A9363B510120601437dA31680eaBF358e0"
+    "txId": "0xe89de52cccbc50666a083261a1cb7176a40d20317a1ced155bfaf1862bd022ae",
+    "address": "0x1BB0B68da8cD29C77aa2B5F4C312E806BfCDCEA5"
   },
   "judge": {
-    "txId": "0x11807ac4c5a55e1b19f45f74f6c9a5701bd7f2e923edf4b813ca2ad3ca8862fc",
-    "address": "0x755c276d95D613232697265B9C6DDf859f6fBc11"
+    "txId": "0x0ceaecde19bd809d835509290f4a8c57d26ade67367901af8a01c7df945592b9",
+    "address": "0xd0C840fdD6654f501060b048F163BAD526A80724"
   },
-  "identityBindingTransaction": "0x3bc44d25f400f9bbb4fb6dd8826fb61deca3b71f48a28f3b458d4af79d370f85",
-  "bindingTransaction": "0x02f1fb02c55b8abc9c12656a5eee92fa8df793f38bd7fc7c197f653734f65b13",
+  "identityBindingTransaction": "0x72ddf58af78c8b30895931b493ff6aa295ef5a8dc201708cab9bc17a105eb335",
+  "bindingTransaction": "0x22e51fb41c22516c216286be54bd8f39526e6b919b4606f7a5c62ea13b02c915",
   "protocol": {
     "chain_id": 61997,
     "evidence_profiles": [
       "GITHUB_PR",
-      "X_POST",
-      "PUBLIC_URL"
+      "PUBLIC_WEB"
     ],
-    "identity_address": "0xCfC3aefAAcbb142bAfb010979bb7974Ad8422933",
+    "identity_address": "0x9d4f77D5DCc0f9A0F03a5de3f5E9460335D742F5",
     "judgment_timeout_seconds": 86400,
     "max_attempts": 2,
     "max_positions": 1000,
@@ -34,5 +33,5 @@
     "state_model": "campaign capacity is success based; terminal failure reopens a funded slot while intake is active",
     "version": "2"
   },
-  "generatedAt": "2026-09-18T08:19:42.135Z"
+  "generatedAt": "2026-09-18T10:21:03.452Z"
 }
