@@ -306,6 +306,7 @@ class ReferralRailV2(gl.contract.Contract):
             raise gl.vm.UserError("public URL campaigns require an allowed host")
         if profile != "GITHUB_PR":
             repo_owner = ""; repo_name = ""; base_branch = ""
+        n = int(max_positions)
         rw = int(reservation_window_seconds)
         wd = int(work_duration_seconds)
         cd = int(campaign_duration_seconds)
