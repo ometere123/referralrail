@@ -14,4 +14,4 @@ export const NETWORK = { id: CANONICAL.chainId, name: CANONICAL.chainName, nativ
 export function explorerTx(hash: string): string { return `${CANONICAL.explorerUrl}/tx/${hash}`; }
 export function explorerAddress(address: string): string { return `${CANONICAL.explorerUrl}/address/${address}`; }
 
-export const V2_CANONICAL = { ...CANONICAL, referralRail: "0xe26b9eAA0B956fdcaC1EF5F7c423C9f77CA703a3" as Address, outcomeJudge: "0xdf7d48A4739C44b335B36Fe1F09ABd18eEc73087" as Address, identity: "0xbB5cbE643013B6a0408c64c8D3cF1D2B74282fD1" as Address } as const;
+export const V2_CANONICAL = { ...CANONICAL, referralRail: "0xA7084fDdf0F795F132d0eA069b47615FEDac0294" as Address, outcomeJudge: "0x811DE43E61aC7a9a2eB640C1B2973De950CFBB20" as Address, identity: "0xb033E3EaDF931f2B9db494C7A5B52b01e717E366" as Address } as const;

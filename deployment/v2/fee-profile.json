@@ -1,204 +1,132 @@
 {
   "schema": "referralrail-v2-fee-profile-1",
-  "generatedAt": "2026-09-18T21:47:42.8877108Z",
+  "generatedAt": "2026-09-19T01:59:59.2502511Z",
   "chainId": 61997,
   "rpc": "https://studio-dev.genlayer.com/api",
   "deployment": {
     "identity": {
-      "txId": "0x8811f93962e1f0ee9f800edbd48839dd2456f0d9c12b93ff5580bf535100329a",
-      "address": "0xbdDf4AAC3ff8F963CE294C3D6A1f1796C90A17D9"
+      "txId": "0xcea256b3bb92abba62ca0996e2abe073da9242eae7ec423c87119051c8aeabbb",
+      "address": "0xb033E3EaDF931f2B9db494C7A5B52b01e717E366"
     },
     "referralRailV2": {
-      "txId": "0xd336d586ced4af6271ad6a0db15f1661a65b18f0acbe9267f7e9299771c64055",
-      "address": "0x20dCa01b999955c93cc5a6a912eA1143958103Fd"
+      "txId": "0xb2e8d1db31ddc0c93feb8e0e50483d067695ca97f82b970948e9265072209702",
+      "address": "0xA7084fDdf0F795F132d0eA069b47615FEDac0294"
     },
     "outcomeJudgeV2": {
-      "txId": "0x01278261d229feb33e0c79b765fd8665d97bd4a80238dd747f3c6c214e982870",
-      "address": "0x98C9e3B5deE82d4e284dc27dfEcA51C45C645c3A"
+      "txId": "0xb48b5566db54b30bab846185bd0d311ca68f41c76e2e91c9cd66cf5f305b7a4f",
+      "address": "0x811DE43E61aC7a9a2eB640C1B2973De950CFBB20"
     },
-    "identityBindingTransaction": "0x3404fe98547d3e28f2be282839b61a09e7d7a84c0d782afe4c991f9e664a3105",
-    "bindingTransaction": "0x611916542a5f4b3c233e851e60eeb124b2ada5226dab59c692cbff9af9767588"
+    "identityBindingTransaction": "0x6a6ce0c41b9e5d5c1e8ca41c44b0380dba9d5af2cb33e5f31622a12b780e8b24",
+    "bindingTransaction": "0xb0c237b3d26e39c06f10031726ed9b89d7a3b388d9f65818bf6649484e0bc120"
   },
   "estimationPolicy": "Production SDK uses estimateTransactionFeesForWrite with execution and message headroom; no hard-coded allocation is used for v2 writes.",
   "transactions": [
     {
+      "method": "public_web_success_create",
+      "transactionHash": "0xb92def005798ec3c85e9a5c6a4b1adc6715c6284469f13e3b4818ac38846c3f0",
+      "finalized": true,
+      "feeAccounting": "not recoverable from recorded transaction metadata"
+    },
+    {
+      "method": "public_web_negative_create",
+      "transactionHash": "0x4fcab9e625839126b025a12152e8c02ba9db1b0bc8571c0c022422c5b1212dec",
+      "finalized": true,
+      "feeAccounting": "not recoverable from recorded transaction metadata"
+    },
+    {
+      "method": "public_web_success_join",
+      "transactionHash": "0x36c923249726d3d37867288833bd405ac8c9829f7a2c26df09c34522c7aa68e4",
+      "finalized": true,
+      "feeAccounting": "not recoverable from recorded transaction metadata"
+    },
+    {
+      "method": "public_web_negative_join",
+      "transactionHash": "0xfb63aa8708fd3ecfd3c5eb422a2ee787bc1d9660e5f21a0cc97fc38dab71c23d",
+      "finalized": true,
+      "feeAccounting": "not recoverable from recorded transaction metadata"
+    },
+    {
+      "method": "public_web_success_accept",
+      "transactionHash": "0xfb6baac60b4a81934a4c768dd3a8e9eb9067b189e7a79a6332ce32e6ebdf1e7b",
+      "finalized": true,
+      "feeAccounting": "not recoverable from recorded transaction metadata"
+    },
+    {
+      "method": "public_web_negative_accept",
+      "transactionHash": "0xa2f9d781bdf75baf8b9aff39b0f31d22e8255cd7d321a3c86f11db1122404d39",
+      "finalized": true,
+      "feeAccounting": "not recoverable from recorded transaction metadata"
+    },
+    {
+      "method": "public_web_success_submit",
+      "transactionHash": "0x41a9ba2e609600ccc806938108b7293b67c369d8373fe376b4d34c39649ec115",
+      "finalized": true,
+      "feeAccounting": "not recoverable from recorded transaction metadata"
+    },
+    {
+      "method": "public_web_negative_submit",
+      "transactionHash": "0x7a30f055fb9c7a9dec39547862fc0114a905681fb39f56dba1a51bdd9d6d0b77",
+      "finalized": true,
+      "feeAccounting": "not recoverable from recorded transaction metadata"
+    },
+    {
+      "method": "public_web_success_settle",
+      "transactionHash": "0x3798b65275eea20b492e15ab35e72601ca5ab1e896fa778b8450a7483001c35a",
+      "finalized": true,
+      "feeAccounting": "not recoverable from recorded transaction metadata"
+    },
+    {
+      "method": "public_web_negative_close",
+      "transactionHash": "0x096b3fecacf5ef9238fe9ae32a306bc786562596ddc3413bf01559ee50847ca4",
+      "finalized": true,
+      "feeAccounting": "not recoverable from recorded transaction metadata"
+    },
+    {
+      "method": "public_web_negative_finalise",
+      "transactionHash": "0x538d903dcaa85a00368d6c5f96b7035424b905607cf40b8f6fef31b0ac7dcccc",
+      "finalized": true,
+      "feeAccounting": "not recoverable from recorded transaction metadata"
+    },
+    {
       "method": "deploy_identity",
-      "transactionHash": "0x8811f93962e1f0ee9f800edbd48839dd2456f0d9c12b93ff5580bf535100329a",
+      "transactionHash": "0xcea256b3bb92abba62ca0996e2abe073da9242eae7ec423c87119051c8aeabbb",
       "finalized": true,
       "feeAccounting": "not recoverable from recorded transaction metadata"
     },
     {
       "method": "deploy_referral_rail_v2",
-      "transactionHash": "0xd336d586ced4af6271ad6a0db15f1661a65b18f0acbe9267f7e9299771c64055",
+      "transactionHash": "0xb2e8d1db31ddc0c93feb8e0e50483d067695ca97f82b970948e9265072209702",
       "finalized": true,
       "feeAccounting": "not recoverable from recorded transaction metadata"
     },
     {
       "method": "deploy_outcome_judge_v2",
-      "transactionHash": "0x01278261d229feb33e0c79b765fd8665d97bd4a80238dd747f3c6c214e982870",
+      "transactionHash": "0xb48b5566db54b30bab846185bd0d311ca68f41c76e2e91c9cd66cf5f305b7a4f",
       "finalized": true,
       "feeAccounting": "not recoverable from recorded transaction metadata"
     },
     {
       "method": "bind_identity",
-      "transactionHash": "0x3404fe98547d3e28f2be282839b61a09e7d7a84c0d782afe4c991f9e664a3105",
+      "transactionHash": "0x6a6ce0c41b9e5d5c1e8ca41c44b0380dba9d5af2cb33e5f31622a12b780e8b24",
       "finalized": true,
       "feeAccounting": "not recoverable from recorded transaction metadata"
     },
     {
       "method": "bind_judge",
-      "transactionHash": "0x611916542a5f4b3c233e851e60eeb124b2ada5226dab59c692cbff9af9767588",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "create_campaign_public_success",
-      "transactionHash": "0x9a66cb85839bf8c0177c6979455147fe830e22038dec96feddd42d55051e664d",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "join_via_referral_public_success",
-      "transactionHash": "0x594440b0a564e08d46ba0add5a60b7d22c6ffbed9fb23f87081d4d956e786a2b",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "accept_referral_public_success",
-      "transactionHash": "0x1ede3a0d3b452fc7927eedba6c342c48038cdd90a4ffd27522319a8fc4488b11",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "submit_evidence_public_success",
-      "transactionHash": "0xd01e36fc75e8b6180479c9104fc34f675acf13cdfa0642b499ecd72b5ca216e4",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "child_judge_public_success",
-      "transactionHash": null,
-      "finalized": false,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "resolve_judgment_public_success",
-      "transactionHash": "0x85127ee58adb718bf104171b70d19c0923c207e66d4f60c2b687fa5d6c0c32e2",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "settle_position_public_success",
-      "transactionHash": "0x048a8d77ff9dd023c3109f57aafad7a2df4a531f62aadf2d9a722c6e4b55e736",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "create_campaign_public_negative",
-      "transactionHash": "0x660dacfb39cc1e4488b60f512276ecc246a871e38388bf566d09ab3e04e78faf",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "submit_evidence_public_negative",
-      "transactionHash": "0xd75097e9b4035831d0a6dacbbc3c7ab1ee9fe109752f06c065188fc508edce3c",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "resolve_judgment_public_negative",
-      "transactionHash": "0x169999cd6f55832bac9d7c2c1e8858eebaf293eff58ce36df56f470f54f1f5b9",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "close_intake_public_negative",
-      "transactionHash": "0x3a142e59ec30ea4c30f4b9a434d87471015869008fb5e5d850b9e380081b266a",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "finalise_campaign_public_negative",
-      "transactionHash": "0xaf9e7d75826e939c5dd8ba68a5efc0f9b9f2af270cad20bafa39a9678e9d949e",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "historical_github_submit",
-      "transactionHash": "0xd64dc0428f0ba612e95fac248ff672e8868c59b70174aaac901590664987208f",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "historical_github_child_judge",
-      "transactionHash": "0xc6e0c2c6f65f4cb85034d8d9704764c43fc73727f1f138c8a7c72f4ce932df96",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "historical_github_settle",
-      "transactionHash": "0x92090dc38c8fc8697f35eedbbbcbb87e72de0cd994cf84ce03f268be4343dc16",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "deploy_identity_v2_final",
-      "transactionHash": "0xe58ed1cd05811b960302064cee26fdfe9a967c75259276b7ae09dd1fe4d13b43",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "deploy_referral_rail_v2_final",
-      "transactionHash": "0x2960a65b281a984b30c84612a6bf9164d835327b5c550deed8c725e995d159a7",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "deploy_outcome_judge_v2_final",
-      "transactionHash": "0xc8fdf924e3c2a1ae52ff4f9f490fc2d0789fcc287705e6d57a9a5d63de8e57fa",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "bind_identity_v2_final",
-      "transactionHash": "0x4b9bf273a4e72f39bec2cb471b34320070a488bae6ef83d12c660f07b20229ff",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "bind_judge_v2_final",
-      "transactionHash": "0x248435a647557fa1824e80c0da5e2e90c07cadab300fefce46ca40111458f7ea",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "public_web_success_settle_final",
-      "transactionHash": "0x4f33969c775d9f66f61be103c513e33620c47e60f5796ae5f4fac9839c10f415",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "public_web_negative_close_final",
-      "transactionHash": "0xdf0349b00de91b3e7623539dc417170c9e0a1bdb31f83a9ad6481268212afc70",
-      "finalized": true,
-      "feeAccounting": "not recoverable from recorded transaction metadata"
-    },
-    {
-      "method": "public_web_negative_finalise_final",
-      "transactionHash": "0xf369dd25e3703369baeb4dca0a8c6fae03fd29e77b39c1b112cd25bef1e34f36",
+      "transactionHash": "0xb0c237b3d26e39c06f10031726ed9b89d7a3b388d9f65818bf6649484e0bc120",
       "finalized": true,
       "feeAccounting": "not recoverable from recorded transaction metadata"
     }
   ],
   "notes": [
     "Values are evidence-only and are not used as production fee limits.",
-    "The fresh v2 deployment and public lifecycle hashes are real finalized transactions.",
-    "A child judge hash was not exposed by the fresh script receipt and is recorded as not recoverable rather than inferred.",
-    "Historical GitHub and multi-profile fee observations remain in deployment/v2/history."
+    "All listed deployment and lifecycle hashes are from the fresh v2 generation.",
+    "Unavailable fee accounting is explicitly marked rather than inferred.",
+    "Historical fee observations remain in deployment/v2/history."
   ],
   "contracts": {
-    "identity": "0xbB5cbE643013B6a0408c64c8D3cF1D2B74282fD1",
-    "referralRailV2": "0xe26b9eAA0B956fdcaC1EF5F7c423C9f77CA703a3",
-    "outcomeJudgeV2": "0xdf7d48A4739C44b335B36Fe1F09ABd18eEc73087"
+    "identity": "0xb033E3EaDF931f2B9db494C7A5B52b01e717E366",
+    "referralRailV2": "0xA7084fDdf0F795F132d0eA069b47615FEDac0294",
+    "outcomeJudgeV2": "0x811DE43E61aC7a9a2eB640C1B2973De950CFBB20"
   }
 }

@@ -604,7 +604,7 @@ class ReferralRailV2(gl.contract.Contract):
     @gl.public.write
     def cancel_campaign(self, campaign_id: gl.u256) -> None:
         c = self._campaign(campaign_id)
-        if gl.message.sender_address != c.employer or int(c.state) != CAMPAIGN_ACTIVE or int(c.occupied) != 0:
+        if gl.message.sender_address != c.employer or int(c.state) != CAMPAIGN_ACTIVE or int(c.occupied) != 0 or int(c.successful) != 0 or int(c.paid_total) != 0:
             raise gl.vm.UserError("campaign cannot be cancelled")
         amount = int(c.initial_funding); c.refunded_total = gl.u256(amount); self.total_refunded = gl.u256(int(self.total_refunded) + amount); c.state = gl.u256(CAMPAIGN_CANCELLED); self._send(c.employer, amount); CampaignSettled(campaign_id, gl.u256(amount), terminal="CANCELLED").emit()
 

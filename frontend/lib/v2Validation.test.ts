@@ -47,6 +47,8 @@ describe("v2 frontend validation", () => {
     expect(validPublicEvidenceUrl("https://172.16.0.1/")).toBe(false);
     expect(validPublicEvidenceUrl("https://172.2.0.1/")).toBe(true);
     expect(validPublicEvidenceUrl("https://example.com/path", "docs.example.com")).toBe(false);
+    expect(validPublicEvidenceUrl("https://example.com/" + "a".repeat(300))).toBe(false);
+    expect(validPublicEvidenceUrl("https://example.com/path@evil")).toBe(false);
   });
   it("accepts real addresses and rejects malformed, zero, employer, or self values at the action layer", () => {
     expect(validAddress("0x1111111111111111111111111111111111111111")).toBe(true);

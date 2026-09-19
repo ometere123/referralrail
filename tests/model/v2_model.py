@@ -39,6 +39,9 @@ class CampaignModel:
     def settle(self, i):
         p = self.positions[i]; assert p.state == COMPLETED; p.state = PAID; self.pending_successes -= 1; self.paid += self.unit
     def close(self): self.state = RESOLVING
+    def cancel(self):
+        assert self.state == ACTIVE and self.occupied == 0 and self.successful == 0 and self.paid == 0
+        self.refunded += self.initial; self.state = REFUNDED
     def finalise(self):
         assert self.state == RESOLVING and self.occupied == 0 and self.pending_successes == 0
         self.refunded += (self.capacity - self.successful) * self.unit; self.state = REFUNDED

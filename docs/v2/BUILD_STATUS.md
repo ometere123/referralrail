@@ -17,7 +17,7 @@ Current deployment and evidence:
 - Historical previous generation: `deployment/v2/history/live-evidence-pre-final-readback.json`
 - General-path pointer: `deployment/live-evidence.json`
 
-The fresh v2 generation has a real PUBLIC_WEB success that reached `PAID` with `candidate_paid=true`, `referrer_paid=true`, and `settlement_released=true`. Its real negative case reached `FAILED` and then campaign `REFUNDED`. Historical GitHub evidence remains preserved, including PR #24 success and PR #13 negative refund.
+The fresh v2 generation has a real PUBLIC_WEB success that reached `PAID` with `candidate_paid=true`, `referrer_paid=true`, and `settlement_released=true`. Its real negative case reached `FAILED` and then campaign `REFUNDED`. The corrected contract now permits `cancel_campaign` only for an untouched ACTIVE campaign with zero occupied positions, zero successful positions, and zero paid total. Partial-success accounting is covered by Direct Mode and model regressions. Historical GitHub evidence remains preserved, including PR #24 success and PR #13 negative refund.
 
 V2 is an isolated branch build. It is not deployed to Vercel production. `https://referralrail.vercel.app` remains the v1 production alias and is not a v2 URL.
 

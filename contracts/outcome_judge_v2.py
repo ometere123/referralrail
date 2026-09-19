@@ -186,6 +186,15 @@ class JudgmentDecided(gl.chain.Event):
     def __init__(self, campaign_id: gl.u256, position_id: gl.u256, /, **blob): ...
 
 
+def substantive_validator_agrees(candidate: dict, independent: dict) -> bool:
+    if not isinstance(candidate, dict) or not isinstance(independent, dict):
+        return False
+    if int(candidate.get("outcome", 0)) not in (OUTCOME_COMPLETED, OUTCOME_NOT_COMPLETED, OUTCOME_INCONCLUSIVE):
+        return False
+    if int(independent.get("outcome", 0)) not in (OUTCOME_COMPLETED, OUTCOME_NOT_COMPLETED, OUTCOME_INCONCLUSIVE):
+        return False
+    return candidate.get("objective_key") == independent.get("objective_key") and candidate.get("evidence_digest") == independent.get("evidence_digest") and int(candidate.get("outcome")) == int(independent.get("outcome"))
+
 class OutcomeJudgeV2(gl.contract.Contract):
     settlement_address: gl.Address
     judgments: gl.storage.TreeMap[gl.u256, Judgment]
@@ -216,7 +225,7 @@ class OutcomeJudgeV2(gl.contract.Contract):
                 return False
             try:
                 other = evaluate_once(repo_owner, repo_name, base_branch, int(pr_number), github_login, challenge, brief, criteria, int(accepted_at), int(work_deadline), evidence_profile, evidence_uri, allowed_host, require_work_challenge)
-                return candidate.get("objective_key") == other.get("objective_key") and candidate.get("evidence_digest") == other.get("evidence_digest") and int(candidate.get("outcome")) == int(other.get("outcome"))
+                return substantive_validator_agrees(candidate, other)
             except Exception:
                 return False
         result = gl.vm.run_nondet(leader, validator)

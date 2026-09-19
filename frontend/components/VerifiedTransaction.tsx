@@ -10,7 +10,7 @@ const short = (value?: string) => value ? `${value.slice(0, 10)}…${value.slice
 const explorer = (value?: string) => value ? `${REFERRALRAIL_NETWORK.explorerUrl + "/"}tx/${value}` : "";
 
 export default function VerifiedTransaction({ tx, userValue, verify, onVerified }: { tx: SubmitInput; userValue?: bigint; verify: () => Promise<boolean>; onVerified?: () => void | Promise<void> }) {
-  const { address, correctNetwork } = useWallet(); const kit = useTransactionKit(address);
+  const { address, correctNetwork } = useWallet(); const [submittedHash, setSubmittedHash] = useState<`0x${string}`>(); const kit = useTransactionKit(address, setSubmittedHash);
   const [phase, setPhase] = useState<"tracking" | "readback" | "confirmed" | "failed">("tracking"); const [message, setMessage] = useState(""); const [status, setStatus] = useState<TrackedStatus>();
   const done = async (next: TrackedStatus) => {
     setStatus(next);
@@ -22,7 +22,7 @@ export default function VerifiedTransaction({ tx, userValue, verify, onVerified 
   if (!address) return <div className="notice warning">Connect the wallet that must perform this protocol action.</div>;
   if (!correctNetwork) return <div className="notice warning">Switch to Studio Next / Studionet Dev chain 61997 before signing.</div>;
   if (!kit) return <div className="notice warning">Transaction Kit is unavailable for this wallet session.</div>;
-  const txHash = status?.genlayerTxId || status?.evmTxHash;
+  const txHash = submittedHash || status?.genlayerTxId || status?.evmTxHash;
   return <div className="tx-shell">
     <div className="tx-proofline"><span>Signature</span><span>Submitted</span><span>Consensus</span><span>Finalized</span><span>Readback</span></div>
     {phase !== "confirmed" && phase !== "failed" && <GenLayerTransactionPanel kit={kit} tx={tx} userValue={userValue} network={REFERRALRAIL_NETWORK.chainName} theme="dark" trackUntil="finalized" onDone={done} />}

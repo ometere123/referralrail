@@ -68,3 +68,15 @@ def test_v2_participation_guard_is_before_new_position_allocation():
         body = V2_SETTLE[start:V2_SETTLE.find("\n    @gl.public", start + len(method))]
         assert "participated" in body
         assert "candidate already participated" in body
+
+
+def test_v2_cancel_requires_unused_campaign_invariant():
+    start = V2_SETTLE.index("def cancel_campaign")
+    body = V2_SETTLE[start:V2_SETTLE.find("\n    def _campaign_dict", start)]
+    for token in ["int(c.successful) != 0", "int(c.paid_total) != 0", "initial_funding"]:
+        assert token in body
+
+
+def test_v2_validator_compares_substantive_evidence():
+    assert "def substantive_validator_agrees" in V2_JUDGE
+    assert "return substantive_validator_agrees(candidate, other)" in V2_JUDGE

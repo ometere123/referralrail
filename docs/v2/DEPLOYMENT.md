@@ -4,9 +4,9 @@ The v2 deployment uses GenLayer Studio development chain `61997` and RPC `https:
 
 Current v2 contracts:
 
-- ReferralIdentityV2: `0xbB5cbE643013B6a0408c64c8D3cF1D2B74282fD1`
-- ReferralRailV2: `0xe26b9eAA0B956fdcaC1EF5F7c423C9f77CA703a3`
-- OutcomeJudgeV2: `0xdf7d48A4739C44b335B36Fe1F09ABd18eEc73087`
+- ReferralIdentityV2: `0xb033E3EaDF931f2B9db494C7A5B52b01e717E366`
+- ReferralRailV2: `0xA7084fDdf0F795F132d0eA069b47615FEDac0294`
+- OutcomeJudgeV2: `0x811DE43E61aC7a9a2eB640C1B2973De950CFBB20`
 
 The current v2 evidence is `deployment/v2/live-evidence.json`. The previous deployment generation is retained under `deployment/v2/history/live-evidence-pre-final-readback.json`. Fee observations are documented in `deployment/v2/fee-profile.json`.
 

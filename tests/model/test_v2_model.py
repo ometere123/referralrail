@@ -46,3 +46,34 @@ def test_double_settlement_and_early_finalisation_are_rejected():
     c.settle(i)
     try: c.settle(i); assert False
     except AssertionError: pass
+
+def test_unused_campaign_cancel_refunds_full_escrow():
+    c = CampaignModel(capacity=2)
+    c.cancel()
+    assert c.refunded == c.initial and c.paid == 0 and c.conservation()
+
+
+def test_partial_success_cannot_cancel_and_separate_campaigns_conserve():
+    c = CampaignModel(capacity=2); i = c.refer("ref", "candidate"); c.accept(i, "candidate"); c.submit(i, "candidate"); c.resolve(i, "COMPLETED"); c.settle(i)
+    try: c.cancel(); assert False
+    except AssertionError: pass
+    other = CampaignModel(capacity=1); other.cancel()
+    assert c.paid == 12 and c.refunded == 0 and c.conservation()
+    assert other.refunded == other.initial and other.conservation()
+
+def test_validator_disagreement_rejects_different_objective_result():
+    import ast
+    from pathlib import Path
+    source = Path(__file__).parents[2].joinpath("contracts", "outcome_judge_v2.py").read_text()
+    tree = ast.parse(source)
+    node = next(item for item in tree.body if isinstance(item, ast.FunctionDef) and item.name == "substantive_validator_agrees")
+    namespace = {"OUTCOME_COMPLETED": 1, "OUTCOME_NOT_COMPLETED": 2, "OUTCOME_INCONCLUSIVE": 3}
+    exec(compile(ast.Module(body=[node], type_ignores=[]), "outcome_judge_v2.py", "exec"), namespace)
+    substantive_validator_agrees = namespace["substantive_validator_agrees"]
+    leader = {"outcome": 1, "objective_key": "criterion=met", "evidence_digest": "digest-a"}
+    different_evidence = {"outcome": 1, "objective_key": "criterion=not-met", "evidence_digest": "digest-b"}
+    different_outcome = {"outcome": 2, "objective_key": "criterion=met", "evidence_digest": "digest-a"}
+    same = dict(leader)
+    assert substantive_validator_agrees(leader, same)
+    assert not substantive_validator_agrees(leader, different_evidence)
+    assert not substantive_validator_agrees(leader, different_outcome)

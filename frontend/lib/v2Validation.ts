@@ -37,7 +37,7 @@ export function validAddress(value: string): value is `0x${string}` {
 export function validPublicEvidenceUrl(value: string, allowedHost = ""): boolean {
   try {
     const parsed = new URL(value.trim());
-    if (parsed.protocol !== "https:" || parsed.username || parsed.password || parsed.port) return false;
+    if (value.trim().length > 300 || value.includes("@") || parsed.protocol !== "https:" || parsed.username || parsed.password || parsed.port) return false;
     const hostname = parsed.hostname.toLowerCase();
     if (hostname === "localhost" || hostname === "::1") return false;
     const parts = hostname.split(".");
