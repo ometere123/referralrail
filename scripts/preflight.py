@@ -34,9 +34,9 @@ def main():
     elif args.submission: good=False; fail("deployment/v2-61997.json missing")
     if ve.exists():
         try:
-            d=json.loads(ve.read_text()); success=d.get("success") or {}; negative=d.get("negative") or {}; txs=[]
+            d=json.loads(ve.read_text()); success=d.get("success") or {}; negative=d.get("negative") or {}; partial=d.get("partialCancellation") or {}; txs=[]
             for case in (success,negative): txs.extend(v for v in (case.get("transactions") or {}).values() if v)
-            checks=[d.get("chainId")==EXPECTED_CHAIN,success.get("finalPosition",{}).get("state")=="PAID",success.get("finalPosition",{}).get("settlement_released") is True,negative.get("finalCampaign",{}).get("state")=="REFUNDED",bool(txs) and all(HASH.match(str(v)) for v in txs)]
+            checks=[d.get("chainId")==EXPECTED_CHAIN,success.get("finalPosition",{}).get("state")=="PAID",success.get("finalPosition",{}).get("settlement_released") is True,negative.get("finalCampaign",{}).get("state")=="REFUNDED",partial.get("finalCampaign",{}).get("state")=="REFUNDED",(partial.get("transactions",{}).get("cancel") or {}).get("rejected") is True,partial.get("accounting",{}).get("conserved") is True,partial.get("accounting",{}).get("still_locked")==0,bool(txs) and all(HASH.match(str(v)) for v in txs)]
             good &= all(checks); (ok if all(checks) else fail)("v2 live evidence assertions")
         except Exception as e: good=False; fail(f"v2 live evidence parse: {e}")
     elif args.submission: good=False; fail("deployment/v2/live-evidence.json missing")
