@@ -17,3 +17,6 @@ integrations/**/dist/
 integrations/**/node_modules/
 .npm-cache/
 .vercel
+# Exploratory live outputs stay local until promoted to a reviewed evidence file.
+deployment/v2-live-*.json
+deployment/v2/history/*pre-cancel-fix.json
