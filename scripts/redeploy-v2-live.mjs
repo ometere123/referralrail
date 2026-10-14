@@ -2,7 +2,7 @@ import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { chains, createAccount, createClient, isSuccessful } from "genlayer-js";
 
-const rpc = "https://studio-dev.genlayer.com/api";
+const rpc = process.env.REFERRALRAIL_DEPLOY_RPC || "https://studio-dev.genlayer.com/api";
 const key = process.env.STUDIO_NEXT_PRIVATE_KEY;
 if (!key) throw new Error("STUDIO_NEXT_PRIVATE_KEY is required");
 const realFetch = globalThis.fetch;

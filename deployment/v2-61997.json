@@ -4,26 +4,26 @@
   "chainId": 61997,
   "rpc": "https://studio-dev.genlayer.com/api",
   "identity": {
-    "txId": "0xcea256b3bb92abba62ca0996e2abe073da9242eae7ec423c87119051c8aeabbb",
-    "address": "0xb033E3EaDF931f2B9db494C7A5B52b01e717E366"
+    "txId": "0x4cfb665a322feeeaf1ed8ed40a4a0c7669ccf9e117def0ed10a8c24667d008b6",
+    "address": "0x1210cEe2E5B151826Db0ee458b51af1413D43AC3"
   },
   "rail": {
-    "txId": "0xb2e8d1db31ddc0c93feb8e0e50483d067695ca97f82b970948e9265072209702",
-    "address": "0xA7084fDdf0F795F132d0eA069b47615FEDac0294"
+    "txId": "0x24482518bf489c30760bbd4537655d0836d849246d5a7ee05c69abbcf5dca0b1",
+    "address": "0x520a0fA5A4c86bFbD50802E969D5aEA11352D63D"
   },
   "judge": {
-    "txId": "0xb48b5566db54b30bab846185bd0d311ca68f41c76e2e91c9cd66cf5f305b7a4f",
-    "address": "0x811DE43E61aC7a9a2eB640C1B2973De950CFBB20"
+    "txId": "0x3cc29780654b47dd627a2e3fc1d588dfc791a82732dcc278ebbb4400f5ba0af2",
+    "address": "0x83D67E068e40966a5DC901Ba4CaCCecF0C501259"
   },
-  "identityBindingTransaction": "0x6a6ce0c41b9e5d5c1e8ca41c44b0380dba9d5af2cb33e5f31622a12b780e8b24",
-  "bindingTransaction": "0xb0c237b3d26e39c06f10031726ed9b89d7a3b388d9f65818bf6649484e0bc120",
+  "identityBindingTransaction": "0xfeee2245659e76e2839bc9ef148bfbf66515af54a5c8185235b857d30fc51c33",
+  "bindingTransaction": "0xf0194d2f2ca112265ed8974d272db6d65b8fc9b0628ca8c0bdd3f7629d0aad89",
   "protocol": {
     "chain_id": 61997,
     "evidence_profiles": [
       "GITHUB_PR",
       "PUBLIC_WEB"
     ],
-    "identity_address": "0xb033E3EaDF931f2B9db494C7A5B52b01e717E366",
+    "identity_address": "0x1210cEe2E5B151826Db0ee458b51af1413D43AC3",
     "judgment_timeout_seconds": 86400,
     "max_attempts": 2,
     "max_positions": 1000,
@@ -33,5 +33,11 @@
     "state_model": "campaign capacity is success based; terminal failure reopens a funded slot while intake is active",
     "version": "2"
   },
-  "generatedAt": "2026-09-19T01:08:51.765Z"
+  "sourceCommit": "aaa0f02",
+  "toolVersions": {
+    "genlayerJs": "0.9.2",
+    "node": "v22.23.3"
+  },
+  "finalized": true,
+  "generatedAt": "2026-10-14T23:17:30.000Z"
 }
