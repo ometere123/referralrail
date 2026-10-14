@@ -37,12 +37,21 @@ def main():
             d=json.loads(ve.read_text()); success=d.get("success") or {}; negative=d.get("negative") or {}; partial=d.get("partialCancellation") or {}; txs=[]
             for case in (success,negative): txs.extend(v for v in (case.get("transactions") or {}).values() if v)
             checks=[d.get("chainId")==EXPECTED_CHAIN,success.get("finalPosition",{}).get("state")=="PAID",success.get("finalPosition",{}).get("settlement_released") is True,negative.get("finalCampaign",{}).get("state")=="REFUNDED",partial.get("finalCampaign",{}).get("state")=="REFUNDED",(partial.get("transactions",{}).get("cancel") or {}).get("rejected") is True,partial.get("accounting",{}).get("conserved") is True,partial.get("accounting",{}).get("still_locked")==0,bool(txs) and all(HASH.match(str(v)) for v in txs)]
+            manifest=json.loads(vm.read_text()) if vm.exists() else {}
+            evidence_contracts=d.get("contracts") or {}
+            evidence_rail=(evidence_contracts.get("rail") or evidence_contracts.get("referralRailV2") or {}).get("address")
+            evidence_judge=(evidence_contracts.get("judge") or evidence_contracts.get("outcomeJudgeV2") or {}).get("address")
+            current_addresses=evidence_rail == (manifest.get("rail") or {}).get("address") and evidence_judge == (manifest.get("judge") or {}).get("address")
+            if args.submission:
+                checks.append(current_addresses)
+            elif not current_addresses:
+                print("[warn] v2 live evidence belongs to a superseded deployment; use --submission only after fresh readback")
             good &= all(checks); (ok if all(checks) else fail)("v2 live evidence assertions")
+            if args.submission and not current_addresses: fail("v2 live evidence matches current manifest")
         except Exception as e: good=False; fail(f"v2 live evidence parse: {e}")
     elif args.submission: good=False; fail("deployment/v2/live-evidence.json missing")
     print("\nReferralRail preflight:","PASS" if good else "BLOCKED"); return 0 if good else 1
 if __name__=="__main__": raise SystemExit(main())
-
 
 
 
