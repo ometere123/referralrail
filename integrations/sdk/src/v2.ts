@@ -36,7 +36,7 @@ export class ReferralRailV2Client {
       { action: "authorize_referral", allowed: Boolean(actor) && c.state === "ACTIVE" && !employer, reason: !actor ? "referrer wallet required" : employer ? "employer cannot authorize referrals" : "available", movesFunds: false },
       { action: "join_via_referral", allowed: Boolean(actor) && c.state === "ACTIVE" && c.reusable_capacity > 0 && now <= c.participation_deadline && !employer, reason: !actor ? "candidate wallet required" : employer ? "employer cannot join via referral" : "the referrer must authorize this campaign first", movesFunds: false },
       { action: "close_intake", allowed: Boolean(actor) && c.state === "ACTIVE" && (Boolean(employer) || now > c.participation_deadline), reason: !actor ? "wallet required" : c.state !== "ACTIVE" ? "campaign is not active" : employer || now > c.participation_deadline ? "available" : "employer wallet required until the deadline", movesFunds: false },
-      { action: "cancel_campaign", allowed: Boolean(employer) && c.state === "ACTIVE" && c.occupied === 0 && c.successful === 0 && c.paid_total === 0, reason: employer ? "available" : "employer wallet required", movesFunds: true },
+      { action: "cancel_campaign", allowed: Boolean(employer) && c.state === "ACTIVE" && c.occupied === 0 && c.successful === 0 && c.paid_total === 0n, reason: employer ? "available" : "employer wallet required", movesFunds: true },
     ];
     if (positionId === undefined) return actions;
     const p = await this.getPosition(campaignId, positionId); const candidate = actor && actor.toLowerCase() === p.candidate.toLowerCase(); const referrer = actor && actor.toLowerCase() === p.referrer.toLowerCase();
