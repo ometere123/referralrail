@@ -1,6 +1,6 @@
 # ReferralRail v2 test report
 
-## Final tree
+## Current tree
 
 - Branch: `referralrail-v2`
 - Commit: current `referralrail-v2` branch head
@@ -10,29 +10,27 @@
 
 ## Automated gates
 
-- `python -m pytest -q`: 46 passed, 3 skipped.
-- `python -m pytest tests/direct -q`: 6 passed.
-- `python scripts/preflight.py --skip-tests`: PASS.
+- `python -m pytest tests/model tests/static -q`: 51 passed.
+- Direct Mode: blocked before contract loading because the pinned `py-genlayer` runner archive is not present in the installed or CI GenVM artifact bundle. No Direct Mode pass is claimed for this tree.
+- `python scripts/preflight.py --skip-tests`: PASS with a warning that the stored live evidence belongs to a superseded deployment.
+- `python scripts/preflight.py --submission --skip-tests`: correctly BLOCKED until fresh evidence matches the current manifest.
 - Frontend typecheck: PASS.
-- Frontend production build: PASS.
-- Frontend validation tests: 6 passed.
+- Frontend production build: PASS. Frontend tests: 8 passed.
 - SDK typecheck, build, tests, and pack dry-run: PASS. SDK tests: 12 passed, 1 skipped.
 - MCP typecheck, build, tests, STDIO E2E, and pack dry-run: PASS. MCP tests: 6 passed.
-- GenVM lint and validation passed for `referral_rail_v2.py`, `outcome_judge_v2.py`, and `referral_identity_v2.py`.
-- Agent Skill validation: PASS.
+- GenVM fast lint passed for all three v2 contracts. Semantic validation is blocked by the same missing pinned runner archive.
 - `git diff --check`: PASS.
 
-The Direct Mode harness does not propagate an exact payable value for the v2 method with default arguments. Exact v2 campaign funding is covered by the finalized fresh live campaign and the existing v1 payable Direct Mode test. Static and model tests cover the v2 participation and bounded host guards.
+The model and static suites cover v2 participation, referral authorization, campaign completion, capacity and bounded host guards. Direct Mode source tests remain present, but their execution is not claimed while the pinned runner artifact is unavailable.
 
 ## Fresh live matrix
 
-The current v2 generation was freshly deployed and bound on chain 61997.
+The corrected v2 generation was freshly deployed and bound on chain 61997. The deployment and binding transactions are finalized in `deployment/v2-61997.json`.
 
-- PUBLIC_WEB success: fresh campaign, final position `PAID`, `candidate_paid=true`, `referrer_paid=true`, and `settlement_released=true`.
-- PUBLIC_WEB negative: fresh campaign, final position `FAILED`, then campaign `REFUNDED`.
-- Historical real evidence preserved: `ometere123/evifix` PR #24 success, `ometere123/thedadsbot` PR #13 negative refund, PUBLIC_WEB host restriction, bounded inconclusive retry, multi-position capacity, and finalized child transaction IDs.
+- Fresh success and negative lifecycle readbacks for the corrected addresses are blocked by the Studio Dev `gen_call` provider error `Can't reconnect until invalid transaction is rolled back`.
+- The earlier PUBLIC_WEB and GitHub outputs remain historical and are not evidence for the corrected addresses.
 
-All live claims are sourced from `deployment/v2/live-evidence.json`. The prior generation is retained at `deployment/v2/history/live-evidence-pre-final-readback.json`. Private keys are not committed.
+Private keys are not committed. No replacement live claims are recorded until the provider returns authoritative readbacks.
 
 ## Frontend and release
 

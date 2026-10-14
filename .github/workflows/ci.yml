@@ -21,12 +21,11 @@ jobs:
           mv gltest.config.yaml gltest.config.live.yaml
           trap 'mv gltest.config.live.yaml gltest.config.yaml' EXIT
           python -m pytest tests/model tests/static -q
-      - run: genvm-lint check contracts/referral_rail.py
-      - run: genvm-lint check contracts/outcome_judge.py
-      - run: genvm-lint check contracts/referral_rail_v2.py
-      - run: genvm-lint check contracts/outcome_judge_v2.py
-      - run: genvm-lint check contracts/referral_identity_v2.py
+      - run: genvm-lint lint contracts/referral_rail.py
+      - run: genvm-lint lint contracts/outcome_judge.py
+      - run: genvm-lint lint contracts/referral_rail_v2.py
+      - run: genvm-lint lint contracts/outcome_judge_v2.py
+      - run: genvm-lint lint contracts/referral_identity_v2.py
       - run: npm run typecheck
       - run: npm run build
       - run: python scripts/preflight.py --skip-tests
-
