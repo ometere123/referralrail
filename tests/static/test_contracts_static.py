@@ -28,6 +28,11 @@ def test_identity_contract_has_canonical_github_ownership():
     for token in ['class ReferralIdentityV2','request_github','complete_github','request_x','complete_x','lookup_github_id','lookup_x_handle','github_owner','x_owner','strict_eq']:
         assert token in V2_IDENTITY
 
+def test_identity_replacement_clears_the_former_canonical_owner():
+    assert 'previous = self.identities.get(key)' in V2_IDENTITY
+    assert 'self.github_owner[canonical_key("GITHUB", previous.canonical_id)] = ""' in V2_IDENTITY
+    assert 'self.x_owner[canonical_key("X", previous.canonical_id)] = ""' in V2_IDENTITY
+
 def test_substantive_validator_refetches_and_reruns():
     assert 'run_nondet(' in JUDGE and 'independent = evaluate_once' in JUDGE
     assert 'github_json' in JUDGE and 'objective_key' in JUDGE and 'evidence_digest' in JUDGE
@@ -49,6 +54,11 @@ def test_v2_paid_capacity_and_reusable_capacity_are_distinct():
 
 def test_v2_multislot_accounting_guards():
     for token in ['initial_funding','paid_total','refunded_total','still_locked','conserved']: assert token in V2_SETTLE
+
+def test_v2_terminal_and_referral_authorization_guards():
+    for token in ["CAMPAIGN_COMPLETED", "_maybe_complete_campaign", "authorize_referral", "referrer has not authorized this campaign", "is_referral_authorized"]:
+        assert token in V2_SETTLE
+    assert "now_ts() <= int(c.participation_deadline)" in V2_SETTLE
 
 
 

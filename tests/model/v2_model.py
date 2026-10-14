@@ -1,7 +1,7 @@
 """Executable economic model for the v2 campaign rules."""
 from dataclasses import dataclass
 
-ACTIVE, RESOLVING, REFUNDED = "ACTIVE", "RESOLVING", "REFUNDED"
+ACTIVE, RESOLVING, REFUNDED, CAMPAIGN_COMPLETED = "ACTIVE", "RESOLVING", "REFUNDED", "COMPLETED"
 RESERVED, ACCEPTED, JUDGING, INCONCLUSIVE, COMPLETED, PAID, FAILED = range(1, 8)
 
 @dataclass
@@ -15,7 +15,7 @@ class CampaignModel:
     def __init__(self, employer="employer", capacity=2, candidate_reward=10, referral_reward=2, deadline=100):
         self.employer = employer; self.capacity = capacity; self.unit = candidate_reward + referral_reward
         self.initial = capacity * self.unit; self.candidate_reward = candidate_reward; self.referral_reward = referral_reward
-        self.deadline = deadline; self.now = 0; self.state = ACTIVE; self.positions = []
+        self.deadline = deadline; self.now = 0; self.state = ACTIVE; self.positions = []; self.authorized = set()
         self.paid = 0; self.refunded = 0; self.pending_successes = 0
     @property
     def occupied(self): return sum(p.state in (RESERVED, ACCEPTED, JUDGING, INCONCLUSIVE, COMPLETED) for p in self.positions)
@@ -26,7 +26,17 @@ class CampaignModel:
     def refer(self, sender, candidate):
         assert self.state == ACTIVE and self.now <= self.deadline and sender not in (self.employer, candidate)
         assert self.reusable_capacity > 0
+        self.authorized.add(sender)
         p = Position(candidate, sender); self.positions.append(p); return len(self.positions) - 1
+    def authorize(self, sender):
+        assert self.state == ACTIVE and sender != self.employer
+        self.authorized.add(sender)
+    def join(self, sender, referrer, candidate=None):
+        candidate = candidate or sender
+        assert self.state == ACTIVE and self.now <= self.deadline and referrer in self.authorized
+        assert sender == candidate and sender not in (self.employer, referrer)
+        assert self.reusable_capacity > 0
+        p = Position(candidate, referrer); self.positions.append(p); return len(self.positions) - 1
     def accept(self, i, sender):
         p = self.positions[i]; assert p.state == RESERVED and p.candidate == sender; p.state = ACCEPTED
     def submit(self, i, sender):
@@ -38,11 +48,15 @@ class CampaignModel:
         else: p.state = INCONCLUSIVE
     def settle(self, i):
         p = self.positions[i]; assert p.state == COMPLETED; p.state = PAID; self.pending_successes -= 1; self.paid += self.unit
-    def close(self): self.state = RESOLVING
+        if self.successful == self.capacity and self.occupied == 0 and self.pending_successes == 0: self.state = CAMPAIGN_COMPLETED
+    def close(self, sender="employer"):
+        assert self.state == ACTIVE and (sender == self.employer or self.now > self.deadline)
+        self.state = RESOLVING
     def cancel(self):
         assert self.state == ACTIVE and self.occupied == 0 and self.successful == 0 and self.paid == 0
         self.refunded += self.initial; self.state = REFUNDED
     def finalise(self):
         assert self.state == RESOLVING and self.occupied == 0 and self.pending_successes == 0
+        assert self.successful < self.capacity
         self.refunded += (self.capacity - self.successful) * self.unit; self.state = REFUNDED
     def conservation(self): return self.initial == self.paid + self.refunded + (self.initial - self.paid - self.refunded)

@@ -3,7 +3,7 @@ networks:
 
   referralrail_studio_next:
     id: 61997
-    chain_type: studio_devnet
+    chain_type: studionet
     url: "https://studio-dev.genlayer.com/api"
     accounts:
       - "${STUDIO_NEXT_PRIVATE_KEY}"

@@ -2,7 +2,7 @@
 
 ReferralRail is a backend-free multi-position referral campaign escrow protocol.
 
-Employer creates and exactly funds a campaign. A referrer creates or shares a client-side referral link. A candidate joins, explicitly accepts, submits evidence, and is evaluated by OutcomeJudgeV2. COMPLETED creates a pending success and later PAID releases candidate and referrer rewards. NOT_COMPLETED releases capacity. INCONCLUSIVE permits bounded retry. Unused backing is refunded after intake closes and unresolved positions are terminal.
+Employer creates and exactly funds a campaign. A referrer first authorizes the campaign on chain, then creates or shares a client-side referral link. A candidate joins, explicitly accepts, submits evidence, and is evaluated by OutcomeJudgeV2. COMPLETED creates a pending success and later PAID releases candidate and referrer rewards. When every funded position is successful and paid, the campaign becomes COMPLETED. NOT_COMPLETED releases capacity. INCONCLUSIVE permits bounded retry. Unused backing is refunded after intake closes and unresolved positions are terminal.
 
 Evidence modes:
 

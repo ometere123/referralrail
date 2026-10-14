@@ -97,3 +97,30 @@ def test_partial_success_finalise_refunds_only_unused_unit_and_conserves(direct_
     assert campaign_view["paid_total"] == 300 and campaign_view["refunded_total"] == 300
     assert accounting["conserved"] and accounting["still_locked"] == 0
 
+def test_join_requires_referrer_authorization(direct_deploy, direct_vm, direct_owner):
+    rail = deploy_v2(direct_deploy, direct_vm, direct_owner)
+    referrer = "0x" + "2" * 40
+    candidate = "0x" + "3" * 40
+    create_campaign(rail, direct_vm, direct_owner, 300)
+    with direct_vm.expect_revert("referrer has not authorized"):
+        write(rail, direct_vm, candidate, "join_via_referral", 1, referrer)
+    write(rail, direct_vm, referrer, "authorize_referral", 1)
+    position_id = write(rail, direct_vm, candidate, "join_via_referral", 1, referrer)
+    position = write(rail, direct_vm, candidate, "get_position", 1, position_id)
+    assert position["candidate"].lower() == candidate.lower()
+    assert position["referrer"].lower() == referrer.lower()
+
+def test_full_success_marks_campaign_completed_after_settlement(direct_deploy, direct_vm, direct_owner):
+    rail = deploy_v2(direct_deploy, direct_vm, direct_owner)
+    referrer = "0x" + "2" * 40
+    candidate = "0x" + "3" * 40
+    create_campaign(rail, direct_vm, direct_owner, 300)
+    write(rail, direct_vm, referrer, "create_referral", 1, candidate)
+    campaign = rail.campaigns[1]
+    position = rail.positions[rail._key(1, 1)]
+    campaign.successful = 1
+    campaign.pending_successes = 1
+    position.state = 5
+    write(rail, direct_vm, direct_owner, "settle_position", 1, 1)
+    assert write(rail, direct_vm, direct_owner, "get_campaign", 1)["state"] == "COMPLETED"
+

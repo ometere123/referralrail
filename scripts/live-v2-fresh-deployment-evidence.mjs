@@ -59,6 +59,7 @@ async function runCase({ title, allowedHost, evidenceUri, expectRefund }) {
   const campaign = await campaignByTitle(title);
   if (!campaign) throw new Error("campaign readback missing: " + title);
   const campaignId = Number(campaign.id);
+  const authorize = await write(referrer, "authorize_referral", [campaignId]);
   const join = await write(candidate, "join_via_referral", [campaignId, referrer.account.address]);
   const reserved = await position(campaignId);
   const accept = await write(candidate, "accept_referral", [campaignId, Number(reserved.position_id), ""]);
@@ -83,7 +84,7 @@ async function runCase({ title, allowedHost, evidenceUri, expectRefund }) {
   const accounting = await employer.readContract({ address: manifest.rail.address, functionName: "get_campaign_accounting", args: [campaignId] });
   if (expectRefund && finalCampaign.state !== "REFUNDED") throw new Error("negative case did not refund");
   if (!expectRefund && (finalPosition.state !== "PAID" || !finalPosition.candidate_paid || !finalPosition.referrer_paid || !finalPosition.settlement_released)) throw new Error("success case did not prove settlement");
-  return { campaignId, positionId: Number(reserved.position_id), allowedHost, evidenceUri, transactions: { create: create.hash, join: join.hash, accept: accept.hash, submit: submit.hash, resolve: resolve?.hash || null, settle: settle?.hash || null, close: close?.hash || null, finalise: finalise?.hash || null }, judgment, judging, resolved, finalPosition, finalCampaign, accounting };
+  return { campaignId, positionId: Number(reserved.position_id), allowedHost, evidenceUri, transactions: { create: create.hash, authorize: authorize.hash, join: join.hash, accept: accept.hash, submit: submit.hash, resolve: resolve?.hash || null, settle: settle?.hash || null, close: close?.hash || null, finalise: finalise?.hash || null }, judgment, judging, resolved, finalPosition, finalCampaign, accounting };
 }
 const proof = "https://raw.githubusercontent.com/ometere123/evifix/referralrail-v2-live-success-1789729305/docs/referralrail-public-proof-6.md";
 const success = await runCase({ title: "Fresh v2 redeploy public success " + Date.now(), allowedHost: "raw.githubusercontent.com", evidenceUri: proof, expectRefund: false });

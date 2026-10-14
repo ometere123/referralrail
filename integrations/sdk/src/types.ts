@@ -21,7 +21,7 @@ export type CreateOpportunityInput = { title: string; brief: string; acceptanceC
 export type WriteResult = { txHash: `0x${string}`; successful: boolean; finalized: boolean; stateBefore?: Opportunity; stateAfter?: Opportunity; opportunity?: Opportunity; settlementReleased?: boolean; explorerUrl: string; transaction: unknown };
 export type ReferralRailConfig = { rpcUrl?: string; chainId?: number; chainName?: string; referralRailAddress?: Address; outcomeJudgeAddress?: Address; account?: Account | Address };
 
-export type CampaignState = "ACTIVE" | "RESOLVING" | "REFUNDED" | "CANCELLED";
+export type CampaignState = "ACTIVE" | "RESOLVING" | "REFUNDED" | "CANCELLED" | "COMPLETED";
 export type PositionState = "RESERVED" | "ACCEPTED" | "JUDGING" | "INCONCLUSIVE" | "COMPLETED" | "PAID" | "FAILED" | "EXPIRED" | "DECLINED";
 export type Campaign = { evidence_profile: EvidenceProfile; allowed_host: string; require_work_challenge: boolean; id: number; employer: Address; title: string; brief: string; criteria: string; repo_owner: string; repo_name: string; base_branch: string; max_positions: number; successful: number; pending_successes: number; occupied: number; open_positions: number; reusable_capacity: number; failed: number; candidate_reward: bigint; referral_reward: bigint; unit_funding: bigint; initial_funding: bigint; paid_total: bigint; refunded_total: bigint; locked_total: bigint; participation_deadline: number; state: CampaignState; state_code: number; created_at: number; closed_at: number };
 export type Position = { campaign_id: number; position_id: number; candidate: Address; referrer: Address; identity_handle: string; identity_platform: "GITHUB" | "X" | "PUBLIC_WEB"; github_login?: string; challenge: string; state: PositionState; state_code: number; reserved_at: number; reservation_deadline: number; accepted_at: number; work_deadline: number; pr_number: number; attempts: number; active_attempt: number; judgment_timeout: number; retry_deadline: number; outcome: Outcome; outcome_code: number; evidence_digest: string; reason: string; candidate_paid: boolean; referrer_paid: boolean; settlement_released: boolean; terminal_reason: string };
@@ -30,5 +30,4 @@ export type V2Action = { action: string; allowed: boolean | undefined; reason: s
 export type EvidenceProfile = "GITHUB_PR" | "PUBLIC_WEB";
 export type CreateCampaignInput = { title: string; brief: string; criteria: string; repoOwner?: string; repoName?: string; baseBranch?: string; maxPositions: number; candidateReward: bigint; referralReward: bigint; reservationWindowSeconds: number; workDurationSeconds: number; campaignDurationSeconds: number; maxPendingPerReferrer: number; evidenceProfile?: EvidenceProfile; allowedHost?: string; requireWorkChallenge?: boolean };
 export type ReferralRailV2Config = Omit<ReferralRailConfig, "referralRailAddress" | "outcomeJudgeAddress"> & { referralRailAddress: Address; outcomeJudgeAddress: Address };
-
 

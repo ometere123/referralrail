@@ -24,6 +24,7 @@ CAMPAIGN_ACTIVE = 1
 CAMPAIGN_RESOLVING = 2
 CAMPAIGN_REFUNDED = 3
 CAMPAIGN_CANCELLED = 4
+CAMPAIGN_COMPLETED = 5
 
 POS_RESERVED = 1
 POS_ACCEPTED = 2
@@ -94,7 +95,7 @@ def public_url_ok(value: str) -> bool:
     return host_ok(authority)
 
 def state_name(code: int) -> str:
-    return {1: "ACTIVE", 2: "RESOLVING", 3: "REFUNDED", 4: "CANCELLED"}.get(code, "UNKNOWN")
+    return {1: "ACTIVE", 2: "RESOLVING", 3: "REFUNDED", 4: "CANCELLED", 5: "COMPLETED"}.get(code, "UNKNOWN")
 
 
 def position_name(code: int) -> str:
@@ -222,6 +223,7 @@ class ReferralRailV2(gl.contract.Contract):
     participated: gl.storage.TreeMap[str, bool]
     live_candidates: gl.storage.TreeMap[str, bool]
     pending_by_referrer: gl.storage.TreeMap[str, gl.u256]
+    referral_authorized: gl.storage.TreeMap[str, bool]
     total_funded: gl.u256
     total_paid: gl.u256
     total_refunded: gl.u256
@@ -261,6 +263,15 @@ class ReferralRailV2(gl.contract.Contract):
 
     def _pending_key(self, cid: int, referrer: gl.Address) -> str:
         return str(cid) + ":" + referrer.as_hex.lower()
+
+    def _referral_auth_key(self, cid: int, referrer: gl.Address) -> str:
+        return str(cid) + ":" + referrer.as_hex.lower()
+
+    def _maybe_complete_campaign(self, c: Campaign) -> None:
+        if int(c.successful) >= int(c.max_positions) and int(c.occupied) == 0 and int(c.pending_successes) == 0:
+            c.state = gl.u256(CAMPAIGN_COMPLETED)
+            if int(c.closed_at) == 0:
+                c.closed_at = gl.u256(now_ts())
 
     def _transition(self, cid: gl.u256, p: Position, state: int, reason: str = "") -> None:
         old = int(p.state)
@@ -379,6 +390,7 @@ class ReferralRailV2(gl.contract.Contract):
         self.position_exists[key] = True
         self.live_candidates[candidate_key] = True
         self.pending_by_referrer[pending_key] = gl.u256(pending_count + 1)
+        self.referral_authorized[self._referral_auth_key(int(campaign_id), referrer)] = True
         c.occupied = gl.u256(int(c.occupied) + 1)
         PositionReserved(campaign_id, pid, candidate=candidate.as_hex, referrer=referrer.as_hex, reservation_deadline=int(p.reservation_deadline)).emit()
         return pid
@@ -396,6 +408,8 @@ class ReferralRailV2(gl.contract.Contract):
         referrer = gl.Address(referrer_address)
         if candidate == ZERO or referrer == ZERO or candidate == referrer or candidate == c.employer or referrer == c.employer:
             raise gl.vm.UserError("campaign roles must be distinct")
+        if not bool(self.referral_authorized.get(self._referral_auth_key(int(campaign_id), referrer)) or False):
+            raise gl.vm.UserError("referrer has not authorized this campaign")
         candidate_key = self._candidate_key(int(campaign_id), candidate)
         if bool(self.participated.get(candidate_key) or False):
             raise gl.vm.UserError("candidate already participated in this campaign")
@@ -417,9 +431,30 @@ class ReferralRailV2(gl.contract.Contract):
         self.position_exists[key] = True
         self.live_candidates[candidate_key] = True
         self.pending_by_referrer[pending_key] = gl.u256(pending_count + 1)
+        self.referral_authorized[self._referral_auth_key(int(campaign_id), referrer)] = True
         c.occupied = gl.u256(int(c.occupied) + 1)
         PositionReserved(campaign_id, pid, candidate=candidate.as_hex, referrer=referrer.as_hex, reservation_deadline=int(p.reservation_deadline)).emit()
         return pid
+
+    @gl.public.write
+    def authorize_referral(self, campaign_id: gl.u256) -> None:
+        c = self._campaign(campaign_id)
+        if int(c.state) != CAMPAIGN_ACTIVE or gl.message.sender_address == c.employer:
+            raise gl.vm.UserError("referral authorization is not available")
+        self.referral_authorized[self._referral_auth_key(int(campaign_id), gl.message.sender_address)] = True
+
+    @gl.public.write
+    def revoke_referral_authorization(self, campaign_id: gl.u256) -> None:
+        c = self._campaign(campaign_id)
+        referrer = gl.message.sender_address
+        if referrer == c.employer or int(self.pending_by_referrer.get(self._pending_key(int(campaign_id), referrer)) or 0) != 0:
+            raise gl.vm.UserError("referral authorization cannot be revoked while reserved")
+        self.referral_authorized[self._referral_auth_key(int(campaign_id), referrer)] = False
+
+    @gl.public.view
+    def is_referral_authorized(self, campaign_id: gl.u256, referrer_address: str) -> bool:
+        self._campaign(campaign_id)
+        return bool(self.referral_authorized.get(self._referral_auth_key(int(campaign_id), gl.Address(referrer_address))) or False)
 
     @gl.public.write
     def accept_referral(self, campaign_id: gl.u256, position_id: gl.u256, identity_handle: str) -> None:
@@ -516,12 +551,7 @@ class ReferralRailV2(gl.contract.Contract):
         self._request_judgment(c, p)
 
     @gl.public.write
-    def resolve_judgment(self, campaign_id: gl.u256, position_id: gl.u256, attempt_id: gl.u256) -> None:
-        c = self._campaign(campaign_id); p = self._position(campaign_id, position_id)
-        if int(p.state) != POS_JUDGING or int(p.active_attempt) != int(attempt_id):
-            raise gl.vm.UserError("judgment is not pending")
-        judge = contract_at(self.judge_address)
-        record = judge.view().get_judgment(int(campaign_id), int(position_id), int(attempt_id))
+    def _apply_judgment(self, campaign_id: gl.u256, c: Campaign, p: Position, record: dict) -> None:
         outcome = int(record.get("outcome_code", 0))
         if outcome not in (OUTCOME_COMPLETED, OUTCOME_NOT_COMPLETED, OUTCOME_INCONCLUSIVE):
             raise gl.vm.UserError("no finalized judgment exists")
@@ -537,22 +567,22 @@ class ReferralRailV2(gl.contract.Contract):
             c.state = gl.u256(CAMPAIGN_RESOLVING); c.closed_at = gl.u256(now_ts())
 
     @gl.public.write
+    def resolve_judgment(self, campaign_id: gl.u256, position_id: gl.u256, attempt_id: gl.u256) -> None:
+        c = self._campaign(campaign_id); p = self._position(campaign_id, position_id)
+        if int(p.state) != POS_JUDGING or int(p.active_attempt) != int(attempt_id):
+            raise gl.vm.UserError("judgment is not pending")
+        judge = contract_at(self.judge_address)
+        record = judge.view().get_judgment(int(campaign_id), int(position_id), int(attempt_id))
+        self._apply_judgment(campaign_id, c, p, record)
+
+    @gl.public.write
     def record_judgment(self, campaign_id: gl.u256, position_id: gl.u256, attempt_id: gl.u256, outcome: gl.u256, evidence_digest: str, reason: str) -> None:
         c = self._campaign(campaign_id); p = self._position(campaign_id, position_id)
         if gl.message.sender_address != self.judge_address or int(p.state) != POS_JUDGING or int(p.active_attempt) != int(attempt_id):
             raise gl.vm.UserError("unauthorized or stale judgment callback")
         if int(outcome) not in (OUTCOME_COMPLETED, OUTCOME_NOT_COMPLETED, OUTCOME_INCONCLUSIVE):
             raise gl.vm.UserError("invalid judgment outcome")
-        p.outcome = gl.u256(int(outcome)); p.evidence_digest = text(evidence_digest, 180); p.reason = text(reason, 700)
-        if int(outcome) == OUTCOME_COMPLETED:
-            c.successful = gl.u256(int(c.successful) + 1); c.pending_successes = gl.u256(int(c.pending_successes) + 1); self._transition(campaign_id, p, POS_COMPLETED, "GenLayer completed the work")
-        elif int(outcome) == OUTCOME_NOT_COMPLETED:
-            self._release_slot(c, p, POS_FAILED, "GenLayer found mandatory requirements incomplete")
-        else:
-            self._transition(campaign_id, p, POS_INCONCLUSIVE, "evidence was inconclusive")
-            p.retry_deadline = gl.u256(now_ts() if int(p.attempts) >= MAX_ATTEMPTS else now_ts() + RETRY_WINDOW)
-        if int(c.successful) >= int(c.max_positions):
-            c.state = gl.u256(CAMPAIGN_RESOLVING); c.closed_at = gl.u256(now_ts())
+        self._apply_judgment(campaign_id, c, p, {"outcome_code": int(outcome), "evidence_digest": evidence_digest, "reason": reason})
 
     @gl.public.write
     def settle_position(self, campaign_id: gl.u256, position_id: gl.u256) -> None:
@@ -567,6 +597,7 @@ class ReferralRailV2(gl.contract.Contract):
             p.referrer_paid = True; self._send(p.referrer, int(c.referral_reward)); c.paid_total = gl.u256(int(c.paid_total) + int(c.referral_reward)); self.total_paid = gl.u256(int(self.total_paid) + int(c.referral_reward))
         c.occupied = gl.u256(int(c.occupied) - 1); c.pending_successes = gl.u256(int(c.pending_successes) - 1)
         self._transition(campaign_id, p, POS_PAID, "both payout legs released")
+        self._maybe_complete_campaign(c)
 
     def _recover(self, c: Campaign, p: Position, reason: str) -> None:
         if int(p.state) == POS_RESERVED and now_ts() > int(p.reservation_deadline):
@@ -581,19 +612,26 @@ class ReferralRailV2(gl.contract.Contract):
 
     @gl.public.write
     def recover_position(self, campaign_id: gl.u256, position_id: gl.u256) -> None:
-        c = self._campaign(campaign_id); p = self._position(campaign_id, position_id); self._recover(c, p, "permissionless timeout recovery")
+        c = self._campaign(campaign_id); p = self._position(campaign_id, position_id)
+        if int(p.state) == POS_JUDGING and self.judge_address != ZERO:
+            record = contract_at(self.judge_address).view().get_judgment(int(campaign_id), int(position_id), int(p.active_attempt))
+            if int(record.get("outcome_code", 0)) in (OUTCOME_COMPLETED, OUTCOME_NOT_COMPLETED, OUTCOME_INCONCLUSIVE):
+                self._apply_judgment(campaign_id, c, p, record)
+                if int(p.state) != POS_INCONCLUSIVE:
+                    return
+        self._recover(c, p, "permissionless timeout recovery")
 
     @gl.public.write
     def close_intake(self, campaign_id: gl.u256) -> None:
         c = self._campaign(campaign_id)
-        if gl.message.sender_address != c.employer or int(c.state) != CAMPAIGN_ACTIVE:
+        if int(c.state) != CAMPAIGN_ACTIVE or (gl.message.sender_address != c.employer and now_ts() <= int(c.participation_deadline)):
             raise gl.vm.UserError("intake cannot be closed")
         c.state = gl.u256(CAMPAIGN_RESOLVING); c.closed_at = gl.u256(now_ts())
 
     @gl.public.write
     def finalise_campaign(self, campaign_id: gl.u256) -> None:
         c = self._campaign(campaign_id)
-        if int(c.state) != CAMPAIGN_RESOLVING or int(c.occupied) != 0 or int(c.successful) + int(c.failed) < int(c.max_positions) and now_ts() <= int(c.participation_deadline):
+        if int(c.state) != CAMPAIGN_RESOLVING or int(c.occupied) != 0 or int(c.pending_successes) != 0 or int(c.successful) >= int(c.max_positions) or int(c.successful) + int(c.failed) < int(c.max_positions) and now_ts() <= int(c.participation_deadline):
             raise gl.vm.UserError("campaign still has unresolved or legally replaceable positions")
         available = int(c.max_positions) - int(c.successful)
         amount = available * self._unit(c)
@@ -635,9 +673,7 @@ class ReferralRailV2(gl.contract.Contract):
 
     @gl.public.view
     def get_protocol_config(self) -> dict:
-        return {"version": "2", "chain_id": 61997, "identity_address": self.identity_address.as_hex, "evidence_profiles": ["GITHUB_PR", "PUBLIC_WEB"], "max_positions": MAX_POSITIONS, "max_attempts": MAX_ATTEMPTS, "judgment_timeout_seconds": JUDGMENT_TIMEOUT, "retry_window_seconds": RETRY_WINDOW, "min_seconds": MIN_SECONDS, "max_seconds": MAX_SECONDS, "state_model": "campaign capacity is success based; terminal failure reopens a funded slot while intake is active"}
-
-
+        return {"version": "2", "chain_id": 61997, "identity_address": self.identity_address.as_hex, "evidence_profiles": ["GITHUB_PR", "PUBLIC_WEB"], "max_positions": MAX_POSITIONS, "max_attempts": MAX_ATTEMPTS, "judgment_timeout_seconds": JUDGMENT_TIMEOUT, "retry_window_seconds": RETRY_WINDOW, "min_seconds": MIN_SECONDS, "max_seconds": MAX_SECONDS, "state_model": "ACTIVE to RESOLVING, REFUNDED, CANCELLED, or COMPLETED; terminal failure reopens a funded slot while intake is active", "referral_model": "referrers must authorize a campaign before join_via_referral attribution"}
 
 
 

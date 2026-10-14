@@ -21,12 +21,31 @@ def test_two_slots_one_paid_one_unused_refunds_unused_unit():
     c = CampaignModel(capacity=2); i = c.refer("ref", "candidate"); c.accept(i, "candidate"); c.submit(i, "candidate"); c.resolve(i, "COMPLETED"); c.settle(i); c.close(); c.finalise()
     assert c.successful == 1 and c.paid == 12 and c.refunded == 12 and c.reusable_capacity == 1 and c.conservation()
 
+def test_full_success_becomes_completed_after_last_settlement():
+    c = CampaignModel(capacity=1); i = c.refer("ref", "candidate"); c.accept(i, "candidate"); c.submit(i, "candidate"); c.resolve(i, "COMPLETED"); c.settle(i)
+    assert c.state == "COMPLETED" and c.paid == 12 and c.refunded == 0
+    try: c.finalise(); assert False
+    except AssertionError: pass
+
+def test_join_requires_campaign_referrer_authorization():
+    c = CampaignModel(capacity=1)
+    try: c.join("candidate", "ref"); assert False
+    except AssertionError: pass
+    c.authorize("ref")
+    assert c.join("candidate", "ref") == 0
+
+def test_anyone_can_close_only_after_deadline():
+    c = CampaignModel(capacity=1, deadline=10)
+    try: c.close("ref"); assert False
+    except AssertionError: pass
+    c.now = 11; c.close("ref"); assert c.state == "RESOLVING"
+
 def test_success_failure_and_replacement_never_exceeds_funded_capacity():
     c = CampaignModel(capacity=2); i = c.refer("ref", "one"); j = c.refer("ref2", "two")
     c.accept(i, "one"); c.submit(i, "one"); c.resolve(i, "COMPLETED"); c.settle(i)
     c.accept(j, "two"); c.submit(j, "two"); c.resolve(j, "NOT_COMPLETED")
-    k = c.refer("ref3", "three"); c.accept(k, "three"); c.submit(k, "three"); c.resolve(k, "COMPLETED"); c.settle(k); c.close(); c.finalise()
-    assert c.successful == 2 and c.paid == 24 and c.refunded == 0 and c.conservation()
+    k = c.refer("ref3", "three"); c.accept(k, "three"); c.submit(k, "three"); c.resolve(k, "COMPLETED"); c.settle(k)
+    assert c.state == "COMPLETED" and c.successful == 2 and c.paid == 24 and c.refunded == 0 and c.conservation()
 
 def test_all_failures_refund_every_unit():
     c = CampaignModel(capacity=2)

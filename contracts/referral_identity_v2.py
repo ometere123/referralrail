@@ -77,6 +77,9 @@ class ReferralIdentityV2(gl.contract.Contract):
             raise gl.vm.UserError("invalid GitHub login")
         wallet = gl.message.sender_address
         key = proof_key(wallet, "GITHUB")
+        previous = self.identities.get(key)
+        if previous and int(previous.state) == ACTIVE and previous.canonical_id:
+            self.github_owner[canonical_key("GITHUB", previous.canonical_id)] = ""
         nonce = int(self.next_nonce)
         self.next_nonce = gl.u256(nonce + 1)
         challenge = "RR-ID:61997:GITHUB:" + wallet.as_hex + ":" + str(nonce)
@@ -91,6 +94,9 @@ class ReferralIdentityV2(gl.contract.Contract):
             raise gl.vm.UserError("invalid X handle")
         wallet = gl.message.sender_address
         key = proof_key(wallet, "X")
+        previous = self.identities.get(key)
+        if previous and int(previous.state) == ACTIVE and previous.canonical_id:
+            self.x_owner[canonical_key("X", previous.canonical_id)] = ""
         nonce = int(self.next_nonce)
         self.next_nonce = gl.u256(nonce + 1)
         challenge = "RR-ID:61997:X:" + wallet.as_hex + ":" + str(nonce)
@@ -206,7 +212,6 @@ class ReferralIdentityV2(gl.contract.Contract):
     @gl.public.view
     def lookup_x_handle(self, handle: str) -> str:
         return self.x_owner.get(canonical_key("X", clean(handle, MAX_HANDLE).lstrip("@"))) or ZERO.as_hex
-
 
 
 
