@@ -1,7 +1,7 @@
 import { createAccount, createClient, chains, isSuccessful } from "genlayer-js";
 import { readFileSync, writeFileSync } from "node:fs";
 
-const rpc = "https://studio-dev.genlayer.com/api";
+const rpc = process.env.REFERRALRAIL_DEPLOY_RPC || "https://studio-dev.genlayer.com/api";
 const manifest = JSON.parse(readFileSync("deployment/v2-61997.json", "utf8"));
 const chain = { ...chains.studioDevnet, rpcUrls: { ...chains.studioDevnet.rpcUrls, default: { http: [rpc] } } };
 const need = (name) => process.env[name] || (() => { throw new Error(name + " is required"); })();

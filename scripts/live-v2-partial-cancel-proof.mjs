@@ -1,6 +1,6 @@
 import { createAccount, createClient, chains, isSuccessful } from "genlayer-js";
 import { readFileSync, writeFileSync } from "node:fs";
-const rpc="https://studio-dev.genlayer.com/api", manifest=JSON.parse(readFileSync("deployment/v2-61997.json","utf8"));
+const rpc=process.env.REFERRALRAIL_DEPLOY_RPC || "https://studio-dev.genlayer.com/api", manifest=JSON.parse(readFileSync("deployment/v2-61997.json","utf8"));
 const chain={...chains.studioDevnet,rpcUrls:{...chains.studioDevnet.rpcUrls,default:{http:[rpc]}}}; const need=n=>process.env[n]||(()=>{throw Error(n+" is required")})(); const make=n=>createClient({endpoint:rpc,chain,account:createAccount(need(n))});
 const employer=make("STUDIO_NEXT_EMPLOYER_PRIVATE_KEY"),referrer=make("STUDIO_NEXT_REFERRER_PRIVATE_KEY"),candidate=make("STUDIO_NEXT_CANDIDATE_PRIVATE_KEY"),candidate2=make("STUDIO_NEXT_PRIVATE_KEY"); const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function finalize(client,hash){for(let i=0;i<180;i++){const l=await client.advanced.getTransactionLifecycle({hash});if(l.resolutionAction==="Finalize"){try{await client.finalizeTransaction({txId:hash})}catch{}}if(l.storedStatus==="Finalized"||l.projectedStatus==="Finalized"){const r=await client.waitForFinalization({hash,retries:30,interval:2000,fullTransaction:true});if(!isSuccessful(r))throw Error(hash+" finalized unsuccessfully");return r}await sleep(10000)}throw Error(hash+" timeout")}
