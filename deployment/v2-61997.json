@@ -39,5 +39,7 @@
     "node": "v22.23.3"
   },
   "finalized": true,
+  "protocolReadbackVerified": false,
+  "readbackError": "Studio Dev gen_call returned Can't reconnect until invalid transaction is rolled back",
   "generatedAt": "2026-10-14T23:17:30.000Z"
 }

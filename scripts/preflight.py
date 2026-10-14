@@ -29,6 +29,10 @@ def main():
     if vm.exists():
         try:
             d=json.loads(vm.read_text()); sdk_v2=(ROOT/"integrations/sdk/src/constants.ts").read_text(); checks=[d.get("chainId")==EXPECTED_CHAIN,d.get("rpc")==EXPECTED_RPC,ADDR.match(str((d.get("rail") or {}).get("address",""))),ADDR.match(str((d.get("judge") or {}).get("address",""))),str((d.get("rail") or {}).get("address","")) in sdk_v2,str((d.get("judge") or {}).get("address","")) in sdk_v2]
+            if args.submission:
+                checks.append(d.get("protocolReadbackVerified") is True)
+            elif d.get("protocolReadbackVerified") is not True:
+                print("[warn] current v2 protocol configuration readback is not verified")
             good &= all(checks); (ok if all(checks) else fail)("v2 deployment manifest shape")
         except Exception as e: good=False; fail(f"v2 deployment manifest parse: {e}")
     elif args.submission: good=False; fail("deployment/v2-61997.json missing")
@@ -52,6 +56,5 @@ def main():
     elif args.submission: good=False; fail("deployment/v2/live-evidence.json missing")
     print("\nReferralRail preflight:","PASS" if good else "BLOCKED"); return 0 if good else 1
 if __name__=="__main__": raise SystemExit(main())
-
 
 
