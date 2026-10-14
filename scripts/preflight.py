@@ -47,8 +47,8 @@ def main():
             evidence_judge=(evidence_contracts.get("judge") or evidence_contracts.get("outcomeJudgeV2") or {}).get("address")
             current_addresses=evidence_rail == (manifest.get("rail") or {}).get("address") and evidence_judge == (manifest.get("judge") or {}).get("address")
             if args.submission:
-                checks.append(current_addresses)
-            elif not current_addresses:
+                checks.extend([current_addresses, d.get("evidenceStatus") == "CURRENT" and d.get("validForManifest") is True])
+            elif not current_addresses or d.get("evidenceStatus") != "CURRENT":
                 print("[warn] v2 live evidence belongs to a superseded deployment; use --submission only after fresh readback")
             good &= all(checks); (ok if all(checks) else fail)("v2 live evidence assertions")
             if args.submission and not current_addresses: fail("v2 live evidence matches current manifest")
@@ -56,5 +56,4 @@ def main():
     elif args.submission: good=False; fail("deployment/v2/live-evidence.json missing")
     print("\nReferralRail preflight:","PASS" if good else "BLOCKED"); return 0 if good else 1
 if __name__=="__main__": raise SystemExit(main())
-
 
